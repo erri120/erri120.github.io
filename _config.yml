@@ -32,7 +32,7 @@ i18n_dir: :lang
 skip_render:
 
 # Writing
-new_post_name: :title.md # File name of new posts
+new_post_name: :year-:month-:day-:title.md # File name of new posts
 default_layout: post
 titlecase: false # Transform title into titlecase
 external_link:
@@ -95,10 +95,62 @@ include:
 exclude:
 ignore:
 
+search:
+  patch: search.xml
+  field: post
+  content: true
+  format: html
+
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: next
+theme_config:
+  cache:
+    enable: true
+  minify: true
+  scheme: Gemini
+
+  favicon:
+    small: /images/favicon-16x16.png
+    medium: /images/favicon-32x32.png
+    apple_touch_icon: /images/apple-touch-icon.png
+    safari_pinned_tab: /images/safari-pinned-tab.svg
+
+  custom_logo: /images/logo.png
+
+  creative_commons:
+    license: by-sa
+    sidebar: true
+    #post: true
+    language: deed.en
+
+  disable_baidu_transformation: true
+  index_with_subtitle: true
+
+  motion:
+    enable: false
+
+  local_search:
+    enable: true
+    trigger: auto
+    top_n_per_article: 1
+    unescape: false
+    preload: false
+
+  custom_file_path:
+    head: source/_data/head.html
+
+  social:
+    GitHub: https://github.com/erri120 || fab fa-github
+    Twitter: https://twitter.com/erri120 || fab fa-twitter
+    YouTube: https://www.youtube.com/channel/UCA4feoMa03w1xLYsvyvxcUw || fab fa-youtube
+    E-Mail: mailto:erri120@protonmail.com || fa fa-envelope
+  social_icons:
+    enable: true
+    icons_only: true
+
+  google_site_verification: c-L5KbBKeVyZ9YNKiotqlpl7zsiDRiGcWJa4ZxVpzAo
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
