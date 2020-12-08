@@ -3,17 +3,17 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
+title: erri120's Blog
 subtitle: ''
-description: ''
+description: 'Just some random blog of a random person.'
 keywords:
-author: John Doe
+author: erri120
 language: en
-timezone: ''
+timezone: 'Europe/Berlin'
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://example.com/child' and root as '/child/'
-url: http://example.com
+url: http://erri120.github.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
