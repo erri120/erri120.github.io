@@ -138,8 +138,8 @@ theme_config:
     unescape: false
     preload: false
 
-  custom_file_path:
-    head: source/_data/head.html
+  #custom_file_path:
+  #  head: source/_data/head.html
 
   social:
     GitHub: https://github.com/erri120 || fab fa-github
@@ -150,7 +150,7 @@ theme_config:
     enable: true
     icons_only: true
 
-  google_site_verification: c-L5KbBKeVyZ9YNKiotqlpl7zsiDRiGcWJa4ZxVpzAo
+  #google_site_verification: c-L5KbBKeVyZ9YNKiotqlpl7zsiDRiGcWJa4ZxVpzAo
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
