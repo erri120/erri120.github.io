@@ -26,6 +26,7 @@
     "hexo-theme-next": "^8.1.0"
   },
   "devDependencies": {
+    "hexo-generator-sitemap": "^2.1.0",
     "hexo-github-include": "zbicin/hexo-github-include",
     "nodemon": "^2.0.6"
   }

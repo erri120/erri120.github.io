@@ -101,6 +101,13 @@ search:
   content: true
   format: html
 
+sitemap:
+  path: sitemap.xml
+  #template: ./node_modules/hexo-generator-sitemap/sitemap.xml
+  rel: false
+  tags: true
+  categories: true
+
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
@@ -151,6 +158,11 @@ theme_config:
     icons_only: true
 
   #google_site_verification: c-L5KbBKeVyZ9YNKiotqlpl7zsiDRiGcWJa4ZxVpzAo
+
+  codeblock:
+    copy_button:
+      enable: true
+      style: 'flat'
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
