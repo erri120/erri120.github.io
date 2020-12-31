@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://erri120.github.io/2020/12/08/Hexo-NexT/</loc>
+    
+    <lastmod>2020-12-31</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://erri120.github.io/2020/12/19/Creating-a-GitHub-Actions-Release-Pipeline-for-NET-Core-3-1-NET-5/</loc>
+    
+    <lastmod>2020-12-31</lastmod>
+    
+  </url>
+  
+
+  <url>
+    <loc>http://erri120.github.io/</loc>
+    <lastmod>2020-12-31</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>http://erri120.github.io/tags/GitHub-Actions/</loc>
+    <lastmod>2020-12-31</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://erri120.github.io/tags/Release-Pipelines/</loc>
+    <lastmod>2020-12-31</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://erri120.github.io/tags/NET/</loc>
+    <lastmod>2020-12-31</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://erri120.github.io/tags/NET-Core-3-1/</loc>
+    <lastmod>2020-12-31</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://erri120.github.io/tags/NET-5/</loc>
+    <lastmod>2020-12-31</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  
+  <url>
+    <loc>http://erri120.github.io/categories/GitHub-Actions/</loc>
+    <lastmod>2020-12-31</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://erri120.github.io/categories/GitHub-Actions/Release-Pipelines/</loc>
+    <lastmod>2020-12-31</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+</urlset>
