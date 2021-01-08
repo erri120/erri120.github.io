@@ -14,14 +14,14 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - name: Cache NPM dependencies
+      - name: Cache dependencies
         uses: actions/cache@v2
         with:
           path: node_modules
-          key: ${{ runner.OS }}-npm-cache
+          key: ${{ runner.OS }}-cache
           restore-keys: |
-            ${{ runner.OS }}-npm-cache
+            ${{ runner.OS }}-cache
       - name: Install Dependencies
-        run: npm install
+        run: yarn
       - name: Build
-        run: npm run build
+        run: yarn build
