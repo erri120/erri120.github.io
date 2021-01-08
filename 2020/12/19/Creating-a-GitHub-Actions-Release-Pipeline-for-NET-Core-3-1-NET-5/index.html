@@ -11,8 +11,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
   <link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#222">
-  <meta http-equiv="Cache-Control" content="no-transform">
-  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="google-site-verification" content="c-L5KbBKeVyZ9YNKiotqlpl7zsiDRiGcWJa4ZxVpzAo">
 
 <link rel="stylesheet" href="/css/main.css">
 
@@ -22,7 +21,7 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"erri120.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.1.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+    var CONFIG = {"hostname":"erri120.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 <meta name="description" content="GitHub Actions Release Workflows can be very tricky to set up and require a lot of experimenting to get right. Your project will also likely have something unique about it which means you need a workf">
 <meta property="og:type" content="article">
@@ -32,7 +31,7 @@
 <meta property="og:description" content="GitHub Actions Release Workflows can be very tricky to set up and require a lot of experimenting to get right. Your project will also likely have something unique about it which means you need a workf">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-12-19T16:11:31.000Z">
-<meta property="article:modified_time" content="2020-12-31T12:11:43.966Z">
+<meta property="article:modified_time" content="2021-01-08T09:34:08.834Z">
 <meta property="article:author" content="erri120">
 <meta property="article:tag" content="GitHub Actions">
 <meta property="article:tag" content="Release Pipelines">
@@ -53,9 +52,11 @@
     isPost : true,
     lang   : 'en'
   };
-</script>
+</script><meta name="google-site-verification" content="c-L5KbBKeVyZ9YNKiotqlpl7zsiDRiGcWJa4ZxVpzAo" />
+
 <title>Creating a GitHub Actions Release Pipeline for .NET Core 3.1/.NET 5 | erri120's Blog</title>
   
+
 
 
 
@@ -103,7 +104,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
     </div>
   </div>
 
@@ -147,7 +148,7 @@
            placeholder="Searching..." spellcheck="false"
            type="search" class="search-input">
   </div>
-  <span class="popup-btn-close">
+  <span class="popup-btn-close" role="button">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
@@ -163,7 +164,7 @@
 </div>
         
   
-  <div class="toggle sidebar-toggle">
+  <div class="toggle sidebar-toggle" role="button">
     <span class="toggle-line"></span>
     <span class="toggle-line"></span>
     <span class="toggle-line"></span>
@@ -183,12 +184,12 @@
 
       <div class="sidebar-panel-container">
         <!--noindex-->
-        <section class="post-toc-wrap sidebar-panel">
+        <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Step-by-Step"><span class="nav-number">1.</span> <span class="nav-text">Step by Step</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Trigger"><span class="nav-number">1.1.</span> <span class="nav-text">Trigger</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Environment-Variables"><span class="nav-number">1.2.</span> <span class="nav-text">Environment Variables</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Checkout-and-SDK-Setup"><span class="nav-number">1.3.</span> <span class="nav-text">Checkout and SDK Setup</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Building-for-multiple-Runtimes"><span class="nav-number">1.4.</span> <span class="nav-text">Building for multiple Runtimes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Changelog-and-Versioning"><span class="nav-number">1.5.</span> <span class="nav-text">Changelog and Versioning</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Getting-the-Current-Version"><span class="nav-number">1.5.1.</span> <span class="nav-text">Getting the Current Version</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Setting-the-Project-Version"><span class="nav-number">1.5.2.</span> <span class="nav-text">Setting the Project Version</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Getting-the-current-Changelog"><span class="nav-number">1.5.3.</span> <span class="nav-text">Getting the current Changelog</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Creating-a-Release"><span class="nav-number">1.6.</span> <span class="nav-text">Creating a Release</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Uploading-Files"><span class="nav-number">1.7.</span> <span class="nav-text">Uploading Files</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Complete-File"><span class="nav-number">2.</span> <span class="nav-text">Complete File</span></a></li></ol></div>
-        </section>
+        </div>
         <!--/noindex-->
 
-        <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview-wrap sidebar-panel">
           <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
   <p class="site-author-name" itemprop="name">erri120</p>
   <div class="site-description" itemprop="description">Just some random blog of a random person.</div>
@@ -231,7 +232,7 @@
 
 
 
-        </section>
+        </div>
       </div>
     </div>
   </aside>
@@ -241,7 +242,7 @@
     </header>
 
     
-  <div class="back-to-top">
+  <div class="back-to-top" role="button">
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
@@ -293,7 +294,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-12-31 13:11:43" itemprop="dateModified" datetime="2020-12-31T13:11:43+01:00">2020-12-31</time>
+        <time title="Modified: 2021-01-08 10:34:08" itemprop="dateModified" datetime="2021-01-08T10:34:08+01:00">2021-01-08</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -530,7 +531,7 @@ jobs:
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -547,7 +548,6 @@ jobs:
 <script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
 
   
-
 <script src="/js/local-search.js"></script>
 
 
@@ -556,7 +556,6 @@ jobs:
 
 
   
-
 
 
 
