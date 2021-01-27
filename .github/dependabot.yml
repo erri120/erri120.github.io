@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    assignees:
+      - "erri120"
+    open-pull-request-limit: 10
+    rebase-strategy: "auto"
