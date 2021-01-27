@@ -11,8 +11,6 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
   <link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#222">
-  <meta http-equiv="Cache-Control" content="no-transform">
-  <meta http-equiv="Cache-Control" content="no-siteapp">
   <meta name="google-site-verification" content="c-L5KbBKeVyZ9YNKiotqlpl7zsiDRiGcWJa4ZxVpzAo">
 
 <link rel="stylesheet" href="/css/main.css">
@@ -23,7 +21,7 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"erri120.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.1.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+    var CONFIG = {"hostname":"erri120.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.2.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 <meta name="description" content="Image Steganography is nothing new or groundbreaking, steganography has been around since 440 BC and digital steganography started appearing once personal computers became a thing. This post is about">
 <meta property="og:type" content="article">
@@ -38,7 +36,7 @@
 <meta property="og:image" content="http://erri120.github.io/2021/01/27/Image-Steganography-in-Koikatsu-and-AI-Shoujo/Mona.jpg">
 <meta property="og:image" content="http://erri120.github.io/2021/01/27/Image-Steganography-in-Koikatsu-and-AI-Shoujo/jpeg-preset-in-hxd.png">
 <meta property="article:published_time" content="2021-01-27T09:08:08.000Z">
-<meta property="article:modified_time" content="2021-01-27T10:35:16.066Z">
+<meta property="article:modified_time" content="2021-01-27T10:38:53.992Z">
 <meta property="article:author" content="erri120">
 <meta property="article:tag" content="Koikatsu!&#x2F;コイカツ！">
 <meta property="article:tag" content="AI Shoujo&#x2F;AI 少女">
@@ -61,6 +59,7 @@
 
 <title>Image Steganography in Koikatsu! and AI Shoujo | erri120's Blog</title>
   
+
 
 
 
@@ -108,7 +107,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
     </div>
   </div>
 
@@ -152,7 +151,7 @@
            placeholder="Searching..." spellcheck="false"
            type="search" class="search-input">
   </div>
-  <span class="popup-btn-close">
+  <span class="popup-btn-close" role="button">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
@@ -168,7 +167,7 @@
 </div>
         
   
-  <div class="toggle sidebar-toggle">
+  <div class="toggle sidebar-toggle" role="button">
     <span class="toggle-line"></span>
     <span class="toggle-line"></span>
     <span class="toggle-line"></span>
@@ -188,12 +187,12 @@
 
       <div class="sidebar-panel-container">
         <!--noindex-->
-        <section class="post-toc-wrap sidebar-panel">
+        <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Character-Presets-in-Illusion-Games"><span class="nav-number">1.</span> <span class="nav-text">Character Presets in Illusion Games</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-this-works"><span class="nav-number">2.</span> <span class="nav-text">Why this works</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">3.</span> <span class="nav-text">Conclusion</span></a></li></ol></div>
-        </section>
+        </div>
         <!--/noindex-->
 
-        <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview-wrap sidebar-panel">
           <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
   <p class="site-author-name" itemprop="name">erri120</p>
   <div class="site-description" itemprop="description">Just some random blog of a random person.</div>
@@ -236,7 +235,7 @@
 
 
 
-        </section>
+        </div>
       </div>
     </div>
   </aside>
@@ -246,7 +245,7 @@
     </header>
 
     
-  <div class="back-to-top">
+  <div class="back-to-top" role="button">
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
@@ -292,7 +291,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2021-01-27 10:08:08 / Modified: 11:35:16" itemprop="dateCreated datePublished" datetime="2021-01-27T10:08:08+01:00">2021-01-27</time>
+      <time title="Created: 2021-01-27 10:08:08 / Modified: 11:38:53" itemprop="dateCreated datePublished" datetime="2021-01-27T10:08:08+01:00">2021-01-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -410,7 +409,6 @@
 <script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
 
   
-
 <script src="/js/local-search.js"></script>
 
 
@@ -419,7 +417,6 @@
 
 
   
-
 
 
 
