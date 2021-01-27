@@ -8,3 +8,12 @@ updates:
       - "erri120"
     open-pull-requests-limit: 10
     rebase-strategy: "auto"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    assignees:
+      - "erri120"
+    open-pull-requests-limit: 2
+    rebase-strategy: "disabled"
