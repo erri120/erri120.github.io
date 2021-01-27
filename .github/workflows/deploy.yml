@@ -2,6 +2,13 @@ name: Deployment
 
 on:
   push:
+    paths:
+      - '_config.yml'
+      - 'package.json'
+      - 'yarn.lock'
+      - '.github/workflows/deploy.yml'
+      - 'source/**'
+      - 'themes/**'
     branches:
       - master
 
