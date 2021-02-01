@@ -12,7 +12,7 @@ tags:
   - .NET 5
 ---
 
-GitHub Actions Release Workflows can be very tricky to set up and require a lot of experimenting to get right. Your project will also likely have something unique about it which means you need a workflow that is tailored to your project. This being said, the workflow we will set up, builds a .NET Core project for multiple runtimes (Linux and Windows for multiple architectures), compresses all of the builds into zip files and then creates a new GitHub Release with a changelog.
+GitHub Actions Release Workflows can be very tricky to set up and require a lot of experimenting to get right. Your project will also likely have something unique about it which means you need a workflow that is tailored to your project. That being said, the workflow we will set up builds a .NET Core project for multiple runtimes (Linux and Windows for multiple architectures), compresses all of the builds into zip files and then creates a new GitHub Release with a changelog.
 
 ## Step by Step
 
@@ -22,18 +22,31 @@ Now that you have created a dummy repository, head over to the Actions tab and c
 
 ### Trigger
 
-There are multiple different triggers that you can use (see [GitHub Actions Reference](https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows)) but we want to use the `push` trigger, specifically the push trigger for tags:
+There are multiple different triggers that you can use (see [GitHub Actions Reference](https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows)) but we want to use `workflow_dispatch` which is a manual trigger that accepts inputs.
 
 ```yaml
 name: Create Release
 
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'
+        required: true
+```
+
+The reason we are using `workflow_dispatch` and not something like
+
+```yaml
 on:
   push:
     tags:
       - 'v*'
 ```
 
-`on push` would normally run whenever we push a commit to the repository but we can specify a filter so that we only trigger this workflow when we push a tag that starts with `v`. You can create and push a tag locally with git using `git tag <tag_name>` and then `git push origin --tags`. Alternatively you can also create a GitHub Release manually which will create a tag for you.
+is so we don't have to push a tag or manually create a GitHub Release. Using `on push` like above also has some issues on its own because you can't create a new release since the tag already exists. Using `workflow_dispatch` with an input `version` we can simply go to GitHub and manually run the workflow with our desired version:
+
+![workflow dispatch on github](workflow_dispatch-github.png)
 
 ### Environment Variables
 
@@ -97,7 +110,7 @@ The main problem with targeting multiple runtimes when dealing with release work
 
 The general idea is to have an array of Runtimes in the Environment Variable `VARIANTS` of the step so we can loop over all the variants and call `publish` on each one.
 
-In publish we will restore the dependencies using `dotnet restore` and then use `dotnet publish` to publish the project to a folder:
+In `publish` we will restore the dependencies using `dotnet restore` and then use `dotnet publish` to publish the project to a folder:
 
 ```bash
 publish() {
@@ -109,7 +122,7 @@ publish() {
 }
 ```
 
-You can see that we make heavy use of the environment variables we previously declared which keeps this code clean and reuseable. Going over some arguments for the `dotnet` commands, we supply the path the project, set the configuration and framework and publish the project for runtime `-r "${1}"` to the folder `-o "out/${1}"`. The arguments `-p:PublishSingleFile=true` and `-p:PublishTrimmed=true` are optional, I recommend reading up on those in the docs: [dotnet publish](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-publish) and deciding if you want to use them or not. The `--no-restore` makes sure that `dotnet publish` does not restore the dependencies. I added an explicit `dotnet restore` call before because `dotnet publish` did not successfully restore all dependencies.
+You can see that we make heavy use of the environment variables we previously declared which keeps this code clean and reuseable. Going over some arguments for the `dotnet` commands, we supply the path of the project, set the configuration and framework and publish the project for runtime `-r "${1}"` to the folder `-o "out/${1}"`. The arguments `-p:PublishSingleFile=true` and `-p:PublishTrimmed=true` are optional, I recommend reading up on those in the docs: [dotnet publish](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-publish) and deciding if you want to use them or not. The `--no-restore` makes sure that `dotnet publish` does not restore the dependencies. I added an explicit `dotnet restore` call because `dotnet publish` did not successfully restore all dependencies when I tested this.
 
 Since we build the project multiple times, I recommend cleaning up the output directory before each build. I have run into some issues before when building for different runtimes without cleaning the output directory so a simple command will prevent that from happening again.
 
@@ -188,14 +201,16 @@ This means your `CHANGELOG.md` should look something like this (see [Keep a Chan
 
 #### Getting the Current Version
 
-Lets start by getting the current version with another simple bash script:
+Lets start by getting the current version with another simple bash script that takes the version input we defined before:
 
 ```yaml
-- name: Get version from tag
+- name: Get version from input
   id: tag_name
   shell: bash
+  env:
+    INPUT_VERSION: ${{ github.event.inputs.version }}
   run: |
-    echo ::set-output name=current_version::${GITHUB_REF#refs/tags/v}
+    echo ::set-output name=current_version::${INPUT_VERSION}
 ```
 
 You can get the output of a step in GitHub Actions using `${{ steps.<step id>.outputs }}` (see [GitHub Actions Reference](https://docs.github.com/en/free-pro-team@latest/actions/reference/context-and-expression-syntax-for-github-actions#steps-context)) and we can set the output in a bash script with `echo ::set-output`.
@@ -229,44 +244,28 @@ Forwarding the Version with `-p:Version` will set the [`FileVersion`](https://do
     path: ./CHANGELOG.md
 ```
 
-We are again using the output of our little bash script to get the Changelog. This action also has some outputs we will later use when creating the release.
+We are again using the output of our little bash script to get the Changelog. This action also has some outputs we will use when creating the release.
 
 ### Creating a Release
 
-Now we are finally ready to create a new GitHub Release using the [`create-release`](https://github.com/actions/create-release) action.
+Now we are finally ready to create a new GitHub Release using the [`softprops/action-gh-release`](https://github.com/softprops/action-gh-release) action.
 
 ```yaml
 - name: Create Release
   id: create_release
-  uses: actions/create-release@v1
+  uses: softprops/action-gh-release@v1
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
   with:
     tag_name: v${{ steps.changelog_reader.outputs.version }}
-    release_name: Release ${{ steps.changelog_reader.outputs.version }}
+    name: Release ${{ steps.changelog_reader.outputs.version }}
     body: ${{ steps.changelog_reader.outputs.changes }}
     draft: ${{ steps.changelog_reader.outputs.status == 'unreleased' }}
     prerelease: ${{ steps.changelog_reader.outputs.status == 'prereleased' }}
+    files: "out/${{ env.PROJECT_PREFIX }}-*.*"
 ```
 
 As you can see, we are only using variables for this action as everything is provided by the `changelog_reader` step.
-
-### Uploading Files
-
-I hope you didn't forget about this step. We created a release and can use the `upload_url` output to upload our archives to GitHub:
-
-```yaml
-- name: Upload Release Assets
-  id: upload_release_assets
-  uses: NBTX/upload-release-assets@v1
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  with:
-    upload_url: ${{ steps.create_release.outputs.upload_url }}
-    targets: "out/${{ env.PROJECT_PREFIX }}-*.*"
-```
-
-I'm using [NBTX/upload-release-assets](https://github.com/NBTX/upload-release-assets) instead of [upload-release-asset](https://github.com/actions/upload-release-asset) because it uses glob matching to upload multiple files instead of just one.
 
 ## Complete File
 
