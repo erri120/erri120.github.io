@@ -23,33 +23,40 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"erri120.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.2.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
-<meta name="description" content="Just some random blog of a random person.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="erri120&#39;s Blog">
-<meta property="og:url" content="http://erri120.github.io/index.html">
+<meta name="description" content="“Continuous Integration and Deployment&#x2F;Delivery is awesome” is what you will hear most of the time from programmers (who didn’t have to set it up themselves) when talking about CI&#x2F;CD. In programming w">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CI&#x2F;CD for RPG Maker Game Development">
+<meta property="og:url" content="http://erri120.github.io/2021/02/04/CI-CD-for-RPG-Maker-Games/index.html">
 <meta property="og:site_name" content="erri120&#39;s Blog">
-<meta property="og:description" content="Just some random blog of a random person.">
+<meta property="og:description" content="“Continuous Integration and Deployment&#x2F;Delivery is awesome” is what you will hear most of the time from programmers (who didn’t have to set it up themselves) when talking about CI&#x2F;CD. In programming w">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-02-04T14:41:07.000Z">
+<meta property="article:modified_time" content="2021-02-05T07:52:47.252Z">
 <meta property="article:author" content="erri120">
+<meta property="article:tag" content="Continuous Integration">
+<meta property="article:tag" content="Continuous Deployment">
+<meta property="article:tag" content="Continuous Delivery">
+<meta property="article:tag" content="CI&#x2F;CD">
+<meta property="article:tag" content="RPG Maker">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://erri120.github.io/">
+<link rel="canonical" href="http://erri120.github.io/2021/02/04/CI-CD-for-RPG-Maker-Games/">
 
 
 <script class="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'en'
   };
 </script><meta name="google-site-verification" content="c-L5KbBKeVyZ9YNKiotqlpl7zsiDRiGcWJa4ZxVpzAo" />
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
-<title>erri120's Blog</title>
+<title>CI/CD for RPG Maker Game Development | erri120's Blog</title>
   
 
 
@@ -167,7 +174,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -180,6 +187,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CI-CD-for-non-programmers"><span class="nav-number">1.</span> <span class="nav-text">CI&#x2F;CD for non-programmers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Release-Pipeline-for-RPG-Maker"><span class="nav-number">2.</span> <span class="nav-text">Release Pipeline for RPG Maker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Setup"><span class="nav-number">2.1.</span> <span class="nav-text">Setup</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploying-with-RPGMPacker"><span class="nav-number">2.2.</span> <span class="nav-text">Deploying with RPGMPacker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zipping"><span class="nav-number">2.3.</span> <span class="nav-text">Zipping</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Uploading-to-itch-io-using-Butler"><span class="nav-number">2.4.</span> <span class="nav-text">Uploading to itch.io using Butler</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">3.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Final-Script"><span class="nav-number">4.</span> <span class="nav-text">Final Script</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -246,16 +254,17 @@
 </noscript>
 
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
     <link itemprop="mainEntityOfPage" href="http://erri120.github.io/2021/02/04/CI-CD-for-RPG-Maker-Games/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -268,9 +277,9 @@
       <meta itemprop="name" content="erri120's Blog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/02/04/CI-CD-for-RPG-Maker-Games/" class="post-title-link" itemprop="url">CI/CD for RPG Maker Game Development</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          CI/CD for RPG Maker Game Development
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -309,7 +318,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>“Continuous Integration and Deployment/Delivery is awesome” is what you will hear most of the time from programmers (who didn’t have to set it up themselves) when talking about CI/CD. In programming we have tons of tools that help us automate tedious tasks so we can focus on actual programming which is why I am let down by multiple game engines when you can’t automate the build. This post will focus on RPG Maker (MV/MZ only) and how you can build your game for multiple platforms in a pipeline using <a target="_blank" rel="noopener" href="https://github.com/erri120/rpgmpacker">RPGMPacker</a>.</p>
+        <p>“Continuous Integration and Deployment/Delivery is awesome” is what you will hear most of the time from programmers (who didn’t have to set it up themselves) when talking about CI/CD. In programming we have tons of tools that help us automate tedious tasks so we can focus on actual programming which is why I am let down by multiple game engines when you can’t automate the build. This post will focus on RPG Maker (MV/MZ only) and how you can build your game for multiple platforms in a pipeline using <a target="_blank" rel="noopener" href="https://github.com/erri120/rpgmpacker">RPGMPacker</a>.</p>
 <h2 id="CI-CD-for-non-programmers"><a href="#CI-CD-for-non-programmers" class="headerlink" title="CI/CD for non-programmers"></a>CI/CD for non-programmers</h2><p>Before we go and talk about the pipeline I want to briefly explain CI/CD for non-programmers as I know a ton of Game Developers who focus on Art and Story instead of Programming. That being said, I still expect you to know about version control with git so make sure you watched the two amazing videos by <a target="_blank" rel="noopener" href="https://www.youtube.com/channel/UCsBjURrPoezykLs9EqgamOA">Fireship</a>: <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=hwP7WQkmECE">Git in 100 Seconds</a> and <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=HkdAHXoRtos">How to use Git and GitHub</a>.</p>
 <p>Continuous Integration means running a pipeline on every change you commit to a repository. This pipeline consists of one or multiple jobs where one job could be running some tests or building the project. If you run the tests on every change you can easily track down the commit where a bug was introduced to the project. A common pipeline would be the following:</p>
 <ol>
@@ -374,7 +383,6 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Zipping files</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> platform <span class="keyword">in</span> <span class="variable">$output</span>/*; <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">command</span> -v 7z &gt;/dev/null; <span class="keyword">then</span></span><br><span class="line">        7z a -tzip -o<span class="variable">$output</span> <span class="variable">$platform</span>-<span class="variable">$version</span>.zip <span class="variable">$platform</span>/*</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;7z not found!&quot;</span></span><br><span class="line">        <span class="built_in">break</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uploading to itch.io using Butler</span></span><br><span class="line"></span><br><span class="line">./<span class="variable">$butler</span> login</span><br><span class="line">./<span class="variable">$butler</span> push <span class="variable">$output</span>/Windows-<span class="variable">$version</span>.zip <span class="variable">$butlerProject</span>:windows-beta --userversion <span class="variable">$version</span></span><br><span class="line">./<span class="variable">$butler</span> push <span class="variable">$output</span>/Linux-<span class="variable">$version</span>.zip <span class="variable">$butlerProject</span>:linux-beta --userversion <span class="variable">$version</span></span><br></pre></td></tr></table></figure>
 <h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>This is the end of my little guide on creating a simple build pipeline in bash that will help you speed up your deployment process. Since this was also an introduction to bash scripting itself, you should be able to modify the script to further suit your needs because every project has something unique about it and there is no “One Pipeline to rule them all”.</p>
 <h2 id="Final-Script"><a href="#Final-Script" class="headerlink" title="Final Script"></a>Final Script</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-Variables</span></span><br><span class="line"><span class="comment">#$1 is the first argument, this can be replaced with a static version number</span></span><br><span class="line">version=<span class="variable">$1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#--Directories</span></span><br><span class="line">input=<span class="string">&quot;./Project1&quot;</span></span><br><span class="line">output=<span class="string">&quot;./build&quot;</span></span><br><span class="line">tools=<span class="string">&quot;./tools&quot;</span></span><br><span class="line">rpgmaker=<span class="string">&quot;M:\SteamLibrary\steamapps\common\RPG Maker MV&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#--Versions</span></span><br><span class="line"><span class="comment">#see https://broth.itch.ovh/butler</span></span><br><span class="line">butlerChannel=<span class="string">&quot;windows-amd64&quot;</span> <span class="comment">#darwin-amd64 for Mac and linux-amd64 for Linux</span></span><br><span class="line">butlerVersion=<span class="string">&quot;15.20.0&quot;</span></span><br><span class="line">butlerFile=<span class="string">&quot;butler.exe&quot;</span> <span class="comment">#butler for Mac or Linux</span></span><br><span class="line"><span class="comment">#see https://github.com/erri120/rpgmpacker/releases</span></span><br><span class="line">rpgmpackerFile=<span class="string">&quot;RPGMPacker-Windows.exe&quot;</span> <span class="comment">#RPGMPacker-Linux for Linux</span></span><br><span class="line">rpgmpackerVersion=<span class="string">&quot;1.0.0&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#--RPGMPacker Variables</span></span><br><span class="line"><span class="comment">#see https://github.com/erri120/rpgmpacker#Usage for all possible arguments</span></span><br><span class="line">platforms=<span class="string">&quot;win,linux&quot;</span></span><br><span class="line">encryptImages=<span class="string">&quot;true&quot;</span></span><br><span class="line">encryptAudio=<span class="string">&quot;true&quot;</span></span><br><span class="line">encryptionKey=<span class="string">&quot;1337&quot;</span></span><br><span class="line">hardlinks=<span class="string">&quot;true&quot;</span></span><br><span class="line">cache=<span class="string">&quot;true&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#--Butler Variables</span></span><br><span class="line"><span class="built_in">export</span> BUTLER_API_KEY=<span class="string">&quot;your-key&quot;</span></span><br><span class="line">butlerProject=<span class="string">&quot;erri120/testing&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#-Tools</span></span><br><span class="line">mkdir <span class="variable">$tools</span>/downloads -p</span><br><span class="line"></span><br><span class="line"><span class="comment">#--Butler</span></span><br><span class="line">mkdir <span class="variable">$tools</span>/butler -p</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ ! -d <span class="string">&quot;<span class="variable">$tools</span>/butler/<span class="variable">$butlerVersion</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    curl -L -o <span class="variable">$tools</span>/downloads/butler.zip https://broth.itch.ovh/butler/<span class="variable">$butlerChannel</span>/<span class="variable">$butlerVersion</span>/archive/default</span><br><span class="line">    unzip -o <span class="variable">$tools</span>/downloads/butler.zip -d <span class="variable">$tools</span>/butler/<span class="variable">$butlerVersion</span></span><br><span class="line">    <span class="comment">#chmod +x $tools/butler/$butlerVersion/$butlerFile</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Butler version <span class="variable">$butlerVersion</span> (<span class="variable">$butlerChannel</span>) already downloaded&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#--RPGMPacker</span></span><br><span class="line">mkdir <span class="variable">$tools</span>/RPGMPacker -p</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ ! -d <span class="string">&quot;<span class="variable">$tools</span>/RPGMPacker/<span class="variable">$rpgmpackerVersion</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    curl -L -o <span class="variable">$tools</span>/downloads/<span class="variable">$rpgmpackerFile</span> https://github.com/erri120/rpgmpacker/releases/download/v<span class="variable">$rpgmpackerVersion</span>/<span class="variable">$rpgmpackerFile</span></span><br><span class="line">    mkdir <span class="variable">$tools</span>/RPGMPacker/<span class="variable">$rpgmpackerVersion</span> -p</span><br><span class="line">    cp <span class="variable">$tools</span>/downloads/<span class="variable">$rpgmpackerFile</span> <span class="variable">$tools</span>/RPGMPacker/<span class="variable">$rpgmpackerVersion</span>/<span class="variable">$rpgmpackerFile</span></span><br><span class="line">    <span class="comment">#chmod +x $tools/RPGMPacker/$rpgmpackerVersion/$rpgmpackerFile</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;RPGMPacker version <span class="variable">$rpgmpackerVersion</span> (<span class="variable">$rpgmpackerFile</span>) already downloaded&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">butler=<span class="string">&quot;<span class="variable">$tools</span>/butler/<span class="variable">$butlerVersion</span>/<span class="variable">$butlerFile</span>&quot;</span></span><br><span class="line">rpgmpacker=<span class="string">&quot;<span class="variable">$tools</span>/RPGMPacker/<span class="variable">$rpgmpackerVersion</span>/<span class="variable">$rpgmpackerFile</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Deployment using RPGMPacker</span></span><br><span class="line"></span><br><span class="line">mkdir <span class="variable">$output</span> -p</span><br><span class="line"></span><br><span class="line">./<span class="variable">$rpgmpacker</span> -i <span class="variable">$input</span> -o <span class="variable">$output</span> --rpgmaker=<span class="string">&quot;<span class="variable">$rpgmaker</span>&quot;</span> --platforms=<span class="string">&quot;<span class="variable">$platforms</span>&quot;</span> --encryptImages=<span class="variable">$encryptImages</span> --encryptAudio=<span class="variable">$encryptAudio</span> --encryptionKey=<span class="string">&quot;<span class="variable">$encryptionKey</span>&quot;</span> --hardlinks=<span class="variable">$hardlinks</span> --cache=<span class="variable">$cache</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Zipping files</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> platform <span class="keyword">in</span> <span class="variable">$output</span>/*; <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">command</span> -v 7z &gt;/dev/null; <span class="keyword">then</span></span><br><span class="line">        7z a -tzip -o<span class="variable">$output</span> <span class="variable">$platform</span>-<span class="variable">$version</span>.zip <span class="variable">$platform</span>/*</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;7z not found!&quot;</span></span><br><span class="line">        <span class="built_in">break</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uploading to itch.io using Butler</span></span><br><span class="line"></span><br><span class="line">./<span class="variable">$butler</span> login</span><br><span class="line">./<span class="variable">$butler</span> push <span class="variable">$output</span>/Windows-<span class="variable">$version</span>.zip <span class="variable">$butlerProject</span>:windows-beta --userversion <span class="variable">$version</span></span><br><span class="line">./<span class="variable">$butler</span> push <span class="variable">$output</span>/Linux-<span class="variable">$version</span>.zip <span class="variable">$butlerProject</span>:linux-beta --userversion <span class="variable">$version</span></span><br></pre></td></tr></table></figure>
-      
     </div>
 
     
@@ -382,400 +390,29 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+          <div class="post-tags">
+              <a href="/tags/Continuous-Integration/" rel="tag"># Continuous Integration</a>
+              <a href="/tags/Continuous-Deployment/" rel="tag"># Continuous Deployment</a>
+              <a href="/tags/Continuous-Delivery/" rel="tag"># Continuous Delivery</a>
+              <a href="/tags/CI-CD/" rel="tag"># CI/CD</a>
+              <a href="/tags/RPG-Maker/" rel="tag"># RPG Maker</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/01/27/Image-Steganography-in-Koikatsu-and-AI-Shoujo/" rel="prev" title="Image Steganography in Koikatsu! and AI Shoujo">
+                  <i class="fa fa-chevron-left"></i> Image Steganography in Koikatsu! and AI Shoujo
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
     </footer>
   </article>
 </div>
 
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://erri120.github.io/2021/01/27/Image-Steganography-in-Koikatsu-and-AI-Shoujo/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="erri120">
-      <meta itemprop="description" content="Just some random blog of a random person.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="erri120's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/27/Image-Steganography-in-Koikatsu-and-AI-Shoujo/" class="post-title-link" itemprop="url">Image Steganography in Koikatsu! and AI Shoujo</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-01-27 10:08:08" itemprop="dateCreated datePublished" datetime="2021-01-27T10:08:08+01:00">2021-01-27</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-02-05 08:52:47" itemprop="dateModified" datetime="2021-02-05T08:52:47+01:00">2021-02-05</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Game-Development/" itemprop="url" rel="index"><span itemprop="name">Game Development</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Game-Development/Random-Stuff/" itemprop="url" rel="index"><span itemprop="name">Random Stuff</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Image Steganography is nothing new or groundbreaking, steganography has been around since <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Steganography#History">440 BC</a> and digital steganography started appearing once personal computers became a thing. This post is about the method used in games by <a target="_blank" rel="noopener" href="http://www.illusion.jp/">イリュージョン</a> (Illusion) like コイカツ！ (Koikatsu!) or AI 少女 (AI Shoujo).</p>
-<h2 id="Character-Presets-in-Illusion-Games"><a href="#Character-Presets-in-Illusion-Games" class="headerlink" title="Character Presets in Illusion Games"></a>Character Presets in Illusion Games</h2><p>In most Illusion Games you have an extensive editor for designing the appearance of your character or of characters that are later found in the game world. The preset is stored as a PNG like this one:</p>
-<p><img src="/2021/01/27/Image-Steganography-in-Koikatsu-and-AI-Shoujo/Mona.png" alt="mona-preset"></p>
-<p>Opening this image in a hex editor like <a target="_blank" rel="noopener" href="https://mh-nexus.de/en/hxd/">HxD</a> you will find your normal PNG data but at the end of the file after the end-marker <code>IEND</code> you have the actual preset data:</p>
-<p><img src="/2021/01/27/Image-Steganography-in-Koikatsu-and-AI-Shoujo/preset-in-hxd.png" alt="preset-in-hxd"></p>
-<h2 id="Why-this-works"><a href="#Why-this-works" class="headerlink" title="Why this works"></a>Why this works</h2><p>The reason this works is because the PNG file format has a clear structure with indicators for start and end:</p>
-<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Portable_Network_Graphics#Examples"><img src="/2021/01/27/Image-Steganography-in-Koikatsu-and-AI-Shoujo/wikipedia-png-structure.png" alt="wikipedia-png-structure"></a></p>
-<p>A PNG parser will never read beyond <code>IEND</code> so the preset data won’t be read. You could also use JPEG for this because it also has an End Of Image (EOI) marker (<code>0xFF</code>, <code>0xD9</code>) and append the preset at the end:</p>
-<p><img src="/2021/01/27/Image-Steganography-in-Koikatsu-and-AI-Shoujo/Mona.jpg" alt="mona-preset-jpeg"></p>
-<p><img src="/2021/01/27/Image-Steganography-in-Koikatsu-and-AI-Shoujo/jpeg-preset-in-hxd.png" alt="jpeg-preset-in-hxd"></p>
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>While it might seem very trivial and gimmicky at first, it has been implemented across multiple games and editors and provides a very easy way to share presets with others. Not only can you share character presets in Illusion games, you can also share entire scenes, outfits, textures, materials and more with this method. The community discord for those games is has very active share channels where you simply upload the png and be done with it. No need for an external site or additional files because everything is hidden in the image.</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://erri120.github.io/2020/12/19/Creating-a-GitHub-Actions-Release-Pipeline-for-NET-Core-3-1-NET-5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="erri120">
-      <meta itemprop="description" content="Just some random blog of a random person.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="erri120's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/12/19/Creating-a-GitHub-Actions-Release-Pipeline-for-NET-Core-3-1-NET-5/" class="post-title-link" itemprop="url">Creating a GitHub Actions Release Pipeline for .NET Core 3.1/.NET 5</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2020-12-19 17:11:31" itemprop="dateCreated datePublished" datetime="2020-12-19T17:11:31+01:00">2020-12-19</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-02-05 08:52:47" itemprop="dateModified" datetime="2021-02-05T08:52:47+01:00">2021-02-05</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/GitHub-Actions/" itemprop="url" rel="index"><span itemprop="name">GitHub Actions</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/GitHub-Actions/Release-Pipelines/" itemprop="url" rel="index"><span itemprop="name">Release Pipelines</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>GitHub Actions Release Workflows can be very tricky to set up and require a lot of experimenting to get right. Your project will also likely have something unique about it which means you need a workflow that is tailored to your project. That being said, the workflow we will set up builds a .NET Core project for multiple runtimes (Linux and Windows for multiple architectures), compresses all of the builds into zip files and then creates a new GitHub Release with a changelog.</p>
-<h2 id="Step-by-Step"><a href="#Step-by-Step" class="headerlink" title="Step by Step"></a>Step by Step</h2><p>Before we begin I want to encourage you to create a test repository with some dummy projects before implementing this in your actual repository. Using a test repo will keep your commit log clean and makes the entire process easier and faster as you don’t have to wait for your massive project to build.</p>
-<p>Now that you have created a dummy repository, head over to the Actions tab and create a new blank workflow.</p>
-<h3 id="Trigger"><a href="#Trigger" class="headerlink" title="Trigger"></a>Trigger</h3><p>There are multiple different triggers that you can use (see <a target="_blank" rel="noopener" href="https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows">GitHub Actions Reference</a>) but we want to use <code>workflow_dispatch</code> which is a manual trigger that accepts inputs.</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">Create</span> <span class="string">Release</span></span><br><span class="line"></span><br><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">workflow_dispatch:</span></span><br><span class="line">    <span class="attr">inputs:</span></span><br><span class="line">      <span class="attr">version:</span></span><br><span class="line">        <span class="attr">description:</span> <span class="string">&#x27;Version&#x27;</span></span><br><span class="line">        <span class="attr">required:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-<p>The reason we are using <code>workflow_dispatch</code> and not something like</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">tags:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&#x27;v*&#x27;</span></span><br></pre></td></tr></table></figure>
-<p>is so we don’t have to push a tag or manually create a GitHub Release. Using <code>on push</code> like above also has some issues on its own because you can’t create a new release since the tag already exists. Using <code>workflow_dispatch</code> with an input <code>version</code> we can simply go to GitHub and manually run the workflow with our desired version:</p>
-<p><img src="/2020/12/19/Creating-a-GitHub-Actions-Release-Pipeline-for-NET-Core-3-1-NET-5/workflow_dispatch-github.png" alt="workflow dispatch on github"></p>
-<h3 id="Environment-Variables"><a href="#Environment-Variables" class="headerlink" title="Environment Variables"></a>Environment Variables</h3><p>I recommend using environment variables for stuff like SDK Version or configuration, this makes the workflow very easy to configure further down the line and easy to copy and paste into different repositories without having to change a ton of lines.</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">env:</span></span><br><span class="line">  <span class="attr">PROJECT_FOLDER:</span> <span class="string">FunWithGithubActions</span></span><br><span class="line">  <span class="attr">PROJECT_FILE:</span> <span class="string">FunWithGithubActions/FunWithGithubActions.csproj</span></span><br><span class="line">  <span class="attr">PROJECT_PREFIX:</span> <span class="string">&quot;Fun With GitHub Actions&quot;</span></span><br><span class="line">  <span class="attr">DOTNET_SDK_VERSION:</span> <span class="string">&quot;3.1.x&quot;</span></span><br><span class="line">  <span class="attr">FRAMEWORK:</span> <span class="string">netcoreapp3.1</span></span><br><span class="line">  <span class="attr">CONFIGURATION:</span> <span class="string">Release</span></span><br></pre></td></tr></table></figure>
-<p>Here we want SDK <code>3.1.x</code> because the project uses <code>netcoreapp3.1</code>. If you are targeting <code>net5</code> then you want <code>DOTNET_SDK_VERSION: &quot;5.0.x&quot;</code>.</p>
-<h3 id="Checkout-and-SDK-Setup"><a href="#Checkout-and-SDK-Setup" class="headerlink" title="Checkout and SDK Setup"></a>Checkout and SDK Setup</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">build:</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-latest</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/checkout@v2</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Setup</span> <span class="string">.NET</span> <span class="string">Core</span></span><br><span class="line">        <span class="attr">uses:</span> <span class="string">actions/setup-dotnet@v1</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">dotnet-version:</span> <span class="string">$&#123;&#123;</span> <span class="string">env.DOTNET_SDK_VERSION</span> <span class="string">&#125;&#125;</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Verify</span> <span class="string">.NET</span> <span class="string">Core</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">dotnet</span> <span class="string">--info</span></span><br></pre></td></tr></table></figure>
-<p>Nothing special here, we are just doing a checkout and setting up .NET for the specific SDK Version. You could skip the verification of .NET but this is just to be 100% sure it installed correctly and if something goes wrong then we can always check the log file and see the exact information about the installed .NET SDK.</p>
-<p>I recommend using <code>ubuntu-latest</code> instead of <code>windows-latest</code> because everything from setting up the SDK to building and even testing is faster on Ubuntu than on Windows.</p>
-<h3 id="Building-for-multiple-Runtimes"><a href="#Building-for-multiple-Runtimes" class="headerlink" title="Building for multiple Runtimes"></a>Building for multiple Runtimes</h3><p>The main problem with targeting multiple runtimes when dealing with release workflows is figuring out a way to not repeat yourself. Since we want to do the same thing (<code>dotnet restore</code>, <code>dotnet publish</code> and then compressing) for every runtime we can just use a simple bash script that goes over an array of runtimes:</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Building</span></span><br><span class="line">  <span class="attr">env:</span></span><br><span class="line">    <span class="attr">VARIANTS:</span> <span class="string">linux-arm</span> <span class="string">linux-arm64</span> <span class="string">linux-x64</span> <span class="string">win-x64</span> <span class="string">win-x86</span></span><br><span class="line">  <span class="attr">shell:</span> <span class="string">bash</span></span><br><span class="line">  <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line">    <span class="string">set</span> <span class="string">-eu</span></span><br><span class="line"></span><br><span class="line">    <span class="string">publish()</span> &#123;</span><br><span class="line">      <span class="comment">#TODO</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="string">for</span> <span class="string">variant</span> <span class="string">in</span> <span class="string">$VARIANTS;</span> <span class="string">do</span></span><br><span class="line">        <span class="string">publish</span> <span class="string">&quot;$variant&quot;</span></span><br><span class="line">    <span class="string">done</span></span><br></pre></td></tr></table></figure>
-<p>The general idea is to have an array of Runtimes in the Environment Variable <code>VARIANTS</code> of the step so we can loop over all the variants and call <code>publish</code> on each one.</p>
-<p>In <code>publish</code> we will restore the dependencies using <code>dotnet restore</code> and then use <code>dotnet publish</code> to publish the project to a folder:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">publish</span></span>() &#123;</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;Building for runtime <span class="variable">$&#123;1&#125;</span>&quot;</span></span><br><span class="line">  rm -rf <span class="string">&quot;<span class="variable">$&#123;PROJECT_FOLDER&#125;</span>/bin&quot;</span></span><br><span class="line">  rm -rf <span class="string">&quot;<span class="variable">$&#123;PROJECT_FOLDER&#125;</span>/obj&quot;</span></span><br><span class="line">  dotnet restore <span class="string">&quot;<span class="variable">$&#123;PROJECT_FILE&#125;</span>&quot;</span> -r <span class="string">&quot;<span class="variable">$&#123;1&#125;</span>&quot;</span></span><br><span class="line">  dotnet publish <span class="string">&quot;<span class="variable">$&#123;PROJECT_FILE&#125;</span>&quot;</span> -c <span class="string">&quot;<span class="variable">$&#123;CONFIGURATION&#125;</span>&quot;</span> -f <span class="string">&quot;<span class="variable">$&#123;FRAMEWORK&#125;</span>&quot;</span> -o <span class="string">&quot;out/<span class="variable">$&#123;1&#125;</span>&quot;</span> -r <span class="string">&quot;<span class="variable">$&#123;1&#125;</span>&quot;</span> -p:PublishSingleFile=<span class="literal">true</span> -p:PublishTrimmed=<span class="literal">true</span> --no-restore</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>You can see that we make heavy use of the environment variables we previously declared which keeps this code clean and reuseable. Going over some arguments for the <code>dotnet</code> commands, we supply the path of the project, set the configuration and framework and publish the project for runtime <code>-r &quot;$&#123;1&#125;&quot;</code> to the folder <code>-o &quot;out/$&#123;1&#125;&quot;</code>. The arguments <code>-p:PublishSingleFile=true</code> and <code>-p:PublishTrimmed=true</code> are optional, I recommend reading up on those in the docs: <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-publish">dotnet publish</a> and deciding if you want to use them or not. The <code>--no-restore</code> makes sure that <code>dotnet publish</code> does not restore the dependencies. I added an explicit <code>dotnet restore</code> call because <code>dotnet publish</code> did not successfully restore all dependencies when I tested this.</p>
-<p>Since we build the project multiple times, I recommend cleaning up the output directory before each build. I have run into some issues before when building for different runtimes without cleaning the output directory so a simple command will prevent that from happening again.</p>
-<p>The remaining step to do in our script is compressing the files to an archive using <code>7z</code> or <code>zip</code>, depending on what is available:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="built_in">command</span> -v 7z &gt;/dev/null; <span class="keyword">then</span></span><br><span class="line">    7z a -bd -slp -tzip -mm=Deflate -mx=1 <span class="string">&quot;out/<span class="variable">$&#123;PROJECT_PREFIX&#125;</span>-<span class="variable">$&#123;1&#125;</span>.zip&quot;</span> <span class="string">&quot;<span class="variable">$&#123;GITHUB_WORKSPACE&#125;</span>/out/<span class="variable">$&#123;1&#125;</span>/*&quot;</span></span><br><span class="line"><span class="keyword">elif</span> <span class="built_in">command</span> -v zip &gt;/dev/null; <span class="keyword">then</span></span><br><span class="line">    (</span><br><span class="line">        <span class="built_in">cd</span> <span class="string">&quot;<span class="variable">$&#123;GITHUB_WORKSPACE&#125;</span>/out/<span class="variable">$&#123;1&#125;</span>&quot;</span></span><br><span class="line">        zip -1 -q -r <span class="string">&quot;../<span class="variable">$&#123;PROJECT_PREFIX&#125;</span>-<span class="variable">$&#123;1&#125;</span>.zip&quot;</span> .</span><br><span class="line">    )</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;ERROR: No supported zip tool!&quot;</span></span><br><span class="line">    <span class="built_in">return</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-<p>With this our little bash script is complete:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> -eu</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">publish</span></span>() &#123;</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;Building for runtime <span class="variable">$&#123;1&#125;</span>&quot;</span></span><br><span class="line">  rm -rf <span class="string">&quot;<span class="variable">$&#123;PROJECT_FOLDER&#125;</span>/bin&quot;</span></span><br><span class="line">  rm -rf <span class="string">&quot;<span class="variable">$&#123;PROJECT_FOLDER&#125;</span>/obj&quot;</span></span><br><span class="line">  dotnet restore <span class="string">&quot;<span class="variable">$&#123;PROJECT_FILE&#125;</span>&quot;</span> -r <span class="string">&quot;<span class="variable">$&#123;1&#125;</span>&quot;</span></span><br><span class="line">  dotnet publish <span class="string">&quot;<span class="variable">$&#123;PROJECT_FILE&#125;</span>&quot;</span> -c <span class="string">&quot;<span class="variable">$&#123;CONFIGURATION&#125;</span>&quot;</span> -f <span class="string">&quot;<span class="variable">$&#123;FRAMEWORK&#125;</span>&quot;</span> -o <span class="string">&quot;out/<span class="variable">$&#123;1&#125;</span>&quot;</span> -r <span class="string">&quot;<span class="variable">$&#123;1&#125;</span>&quot;</span> -p:PublishSingleFile=<span class="literal">true</span> -p:PublishTrimmed=<span class="literal">true</span> --no-restore</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> <span class="built_in">command</span> -v 7z &gt;/dev/null; <span class="keyword">then</span></span><br><span class="line">      7z a -bd -slp -tzip -mm=Deflate -mx=1 <span class="string">&quot;out/<span class="variable">$&#123;PROJECT_PREFIX&#125;</span>-<span class="variable">$&#123;1&#125;</span>.zip&quot;</span> <span class="string">&quot;<span class="variable">$&#123;GITHUB_WORKSPACE&#125;</span>/out/<span class="variable">$&#123;1&#125;</span>/*&quot;</span></span><br><span class="line">  <span class="keyword">elif</span> <span class="built_in">command</span> -v zip &gt;/dev/null; <span class="keyword">then</span></span><br><span class="line">      (</span><br><span class="line">          <span class="built_in">cd</span> <span class="string">&quot;<span class="variable">$&#123;GITHUB_WORKSPACE&#125;</span>/out/<span class="variable">$&#123;1&#125;</span>&quot;</span></span><br><span class="line">          zip -1 -q -r <span class="string">&quot;../<span class="variable">$&#123;PROJECT_PREFIX&#125;</span>-<span class="variable">$&#123;1&#125;</span>.zip&quot;</span> .</span><br><span class="line">      )</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">      <span class="built_in">echo</span> <span class="string">&quot;ERROR: No supported zip tool!&quot;</span></span><br><span class="line">      <span class="built_in">return</span> 1</span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> variant <span class="keyword">in</span> <span class="variable">$VARIANTS</span>; <span class="keyword">do</span></span><br><span class="line">    publish <span class="string">&quot;<span class="variable">$variant</span>&quot;</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-<h3 id="Changelog-and-Versioning"><a href="#Changelog-and-Versioning" class="headerlink" title="Changelog and Versioning"></a>Changelog and Versioning</h3><p>The reason we are doing all of this is because we are lazy and don’t want to do tedious and repetitive tasks. Following this trend we are going to use <a target="_blank" rel="noopener" href="https://github.com/mindsers/changelog-reader-action">Changelog Reader</a> to read the Changelog from our Changelog file and use it in our GitHub Release.</p>
-<p><strong>This action only works if your Changelog file follows the <a target="_blank" rel="noopener" href="https://github.com/olivierlacan/keep-a-changelog">Keep a Changelog</a> standard.</strong></p>
-<p>This means your <code>CHANGELOG.md</code> should look something like this (see <a target="_blank" rel="noopener" href="https://github.com/olivierlacan/keep-a-changelog">Keep a Changelog</a> for more information):</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># Changelog</span></span><br><span class="line"></span><br><span class="line"><span class="section">## [Unreleased]</span></span><br><span class="line"></span><br><span class="line"><span class="section">## [1.0.0] - 2020-12-19</span></span><br><span class="line"></span><br><span class="line"><span class="section">### Added</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> Added something</span><br><span class="line"></span><br><span class="line"><span class="section">### Fixed</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> Fixed something</span><br></pre></td></tr></table></figure>
-<h4 id="Getting-the-Current-Version"><a href="#Getting-the-Current-Version" class="headerlink" title="Getting the Current Version"></a>Getting the Current Version</h4><p>Lets start by getting the current version with another simple bash script that takes the version input we defined before:</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Get</span> <span class="string">version</span> <span class="string">from</span> <span class="string">input</span></span><br><span class="line">  <span class="attr">id:</span> <span class="string">tag_name</span></span><br><span class="line">  <span class="attr">shell:</span> <span class="string">bash</span></span><br><span class="line">  <span class="attr">env:</span></span><br><span class="line">    <span class="attr">INPUT_VERSION:</span> <span class="string">$&#123;&#123;</span> <span class="string">github.event.inputs.version</span> <span class="string">&#125;&#125;</span></span><br><span class="line">  <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line">    <span class="string">echo</span> <span class="string">::set-output</span> <span class="string">name=current_version::$&#123;INPUT_VERSION&#125;</span></span><br></pre></td></tr></table></figure>
-<p>You can get the output of a step in GitHub Actions using <code>$&#123;&#123; steps.<step id>.outputs &#125;&#125;</code> (see <a target="_blank" rel="noopener" href="https://docs.github.com/en/free-pro-team@latest/actions/reference/context-and-expression-syntax-for-github-actions#steps-context">GitHub Actions Reference</a>) and we can set the output in a bash script with <code>echo ::set-output</code>.</p>
-<h4 id="Setting-the-Project-Version"><a href="#Setting-the-Project-Version" class="headerlink" title="Setting the Project Version"></a>Setting the Project Version</h4><p>Now that we have the current Version of the Release we can actually forward it to <code>dotnet publish</code> by adding <code>PUBLISH_VERSION: $&#123;&#123; steps.tag_name.outputs.current_version &#125;&#125;</code> to the <code>Building</code> job Environment Variables and adding <code>-p:Version=&quot;$&#123;PUBLISH_VERSION&#125;&quot;</code> to <code>dotnet publish</code>:</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Building</span></span><br><span class="line">  <span class="attr">env:</span></span><br><span class="line">    <span class="attr">VARIANTS:</span> <span class="string">linux-arm</span> <span class="string">linux-arm64</span> <span class="string">linux-x64</span> <span class="string">win-x64</span> <span class="string">win-x86</span></span><br><span class="line">    <span class="attr">PUBLISH_VERSION:</span> <span class="string">$&#123;&#123;</span> <span class="string">steps.tag_name.outputs.current_version</span> <span class="string">&#125;&#125;</span></span><br><span class="line">  <span class="attr">shell:</span> <span class="string">bash</span></span><br><span class="line">  <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line">      <span class="comment">#...</span></span><br><span class="line">      <span class="string">dotnet</span> <span class="string">publish</span> <span class="string">&quot;$&#123;PROJECT_FILE&#125;&quot;</span> <span class="string">-c</span> <span class="string">&quot;$&#123;CONFIGURATION&#125;&quot;</span> <span class="string">-f</span> <span class="string">&quot;$&#123;FRAMEWORK&#125;&quot;</span> <span class="string">-o</span> <span class="string">&quot;out/$&#123;1&#125;&quot;</span> <span class="string">-r</span> <span class="string">&quot;$&#123;1&#125;&quot;</span> <span class="string">-p:PublishSingleFile=true</span> <span class="string">-p:PublishTrimmed=true</span> <span class="string">-p:Version=&quot;$&#123;PUBLISH_VERSION&#125;&quot;</span> <span class="string">--no-restore</span></span><br><span class="line">      <span class="comment">#...</span></span><br></pre></td></tr></table></figure>
-<p>Forwarding the Version with <code>-p:Version</code> will set the <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.fileversioninfo.fileversion?view=net-5.0"><code>FileVersion</code></a> and <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.fileversioninfo.productversion?view=net-5.0"><code>ProductVersion</code></a> of the output executable so we don’t have to spend a commit on version bumping.</p>
-<h4 id="Getting-the-current-Changelog"><a href="#Getting-the-current-Changelog" class="headerlink" title="Getting the current Changelog"></a>Getting the current Changelog</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Get</span> <span class="string">Changelog</span> <span class="string">Entry</span></span><br><span class="line">  <span class="attr">id:</span> <span class="string">changelog_reader</span></span><br><span class="line">  <span class="attr">uses:</span> <span class="string">mindsers/changelog-reader-action@v2</span></span><br><span class="line">  <span class="attr">with:</span></span><br><span class="line">    <span class="attr">version:</span> <span class="string">$&#123;&#123;</span> <span class="string">steps.tag_name.outputs.current_version</span> <span class="string">&#125;&#125;</span></span><br><span class="line">    <span class="attr">path:</span> <span class="string">./CHANGELOG.md</span></span><br></pre></td></tr></table></figure>
-<p>We are again using the output of our little bash script to get the Changelog. This action also has some outputs we will use when creating the release.</p>
-<h3 id="Creating-a-Release"><a href="#Creating-a-Release" class="headerlink" title="Creating a Release"></a>Creating a Release</h3><p>Now we are finally ready to create a new GitHub Release using the <a target="_blank" rel="noopener" href="https://github.com/softprops/action-gh-release"><code>softprops/action-gh-release</code></a> action.</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Create</span> <span class="string">Release</span></span><br><span class="line">  <span class="attr">id:</span> <span class="string">create_release</span></span><br><span class="line">  <span class="attr">uses:</span> <span class="string">softprops/action-gh-release@v1</span></span><br><span class="line">  <span class="attr">env:</span></span><br><span class="line">    <span class="attr">GITHUB_TOKEN:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.GITHUB_TOKEN</span> <span class="string">&#125;&#125;</span> <span class="comment"># This token is provided by Actions, you do not need to create your own token</span></span><br><span class="line">  <span class="attr">with:</span></span><br><span class="line">    <span class="attr">tag_name:</span> <span class="string">v$&#123;&#123;</span> <span class="string">steps.changelog_reader.outputs.version</span> <span class="string">&#125;&#125;</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">Release</span> <span class="string">$&#123;&#123;</span> <span class="string">steps.changelog_reader.outputs.version</span> <span class="string">&#125;&#125;</span></span><br><span class="line">    <span class="attr">body:</span> <span class="string">$&#123;&#123;</span> <span class="string">steps.changelog_reader.outputs.changes</span> <span class="string">&#125;&#125;</span></span><br><span class="line">    <span class="attr">draft:</span> <span class="string">$&#123;&#123;</span> <span class="string">steps.changelog_reader.outputs.status</span> <span class="string">==</span> <span class="string">&#x27;unreleased&#x27;</span> <span class="string">&#125;&#125;</span></span><br><span class="line">    <span class="attr">prerelease:</span> <span class="string">$&#123;&#123;</span> <span class="string">steps.changelog_reader.outputs.status</span> <span class="string">==</span> <span class="string">&#x27;prereleased&#x27;</span> <span class="string">&#125;&#125;</span></span><br><span class="line">    <span class="attr">files:</span> <span class="string">&quot;out/$<span class="template-variable">&#123;&#123; env.PROJECT_PREFIX &#125;&#125;</span>-*.*&quot;</span></span><br></pre></td></tr></table></figure>
-<p>As you can see, we are only using variables for this action as everything is provided by the <code>changelog_reader</code> step.</p>
-<h2 id="Complete-File"><a href="#Complete-File" class="headerlink" title="Complete File"></a>Complete File</h2><p>You can view the entire <a target="_blank" rel="noopener" href="https://github.com/erri120/fun-with-github-actions/blob/master/.github/workflows/release.yml"><code>release.yml</code></a> file on my <a target="_blank" rel="noopener" href="https://github.com/erri120/fun-with-github-actions">Fun with GitHub Actions</a> repository or below.</p>
-<pre><code class="yaml">name: Create Release
-
-on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: &#39;Version&#39;
-        required: true
-
-env:
-  PROJECT_FOLDER: FunWithGithubActions
-  PROJECT_FILE: FunWithGithubActions/FunWithGithubActions.csproj
-  PROJECT_PREFIX: &quot;Fun With GitHub Actions&quot;
-  DOTNET_SDK_VERSION: &quot;3.1.x&quot;
-  FRAMEWORK: netcoreapp3.1
-  CONFIGURATION: Release
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Get version from input
-      id: tag_name
-      shell: bash
-      env:
-        INPUT_VERSION: ${{ github.event.inputs.version }}
-      run: |
-        echo ::set-output name=current_version::${INPUT_VERSION}
-
-    - uses: actions/checkout@v2
-
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ env.DOTNET_SDK_VERSION }}
-
-    - name: Verify .NET Core
-      run: dotnet --info
-
-    - name: Building
-      env:
-        VARIANTS: linux-arm linux-arm64 linux-x64 win-x64 win-x86
-        PUBLISH_VERSION: ${{ steps.tag_name.outputs.current_version }}
-      shell: bash
-      run: |
-        set -eu
-
-        publish() {
-          echo &quot;Building for runtime ${1}&quot;
-          rm -rf &quot;${PROJECT_FOLDER}/bin&quot;
-          rm -rf &quot;${PROJECT_FOLDER}/obj&quot;
-          dotnet restore &quot;${PROJECT_FILE}&quot; -r &quot;${1}&quot;
-          dotnet publish &quot;${PROJECT_FILE}&quot; -c &quot;${CONFIGURATION}&quot; -f &quot;${FRAMEWORK}&quot; -o &quot;out/${1}&quot; -r &quot;${1}&quot; -p:PublishSingleFile=true -p:PublishTrimmed=true -p:Version=&quot;${PUBLISH_VERSION}&quot; --no-restore
-
-          if command -v 7z &gt;/dev/null; then
-              7z a -bd -slp -tzip -mm=Deflate -mx=1 &quot;out/${PROJECT_PREFIX}-${1}.zip&quot; &quot;${GITHUB_WORKSPACE}/out/${1}/*&quot;
-          elif command -v zip &gt;/dev/null; then
-              (
-                  cd &quot;${GITHUB_WORKSPACE}/out/${1}&quot;
-                  zip -1 -q -r &quot;../${PROJECT_PREFIX}-${1}.zip&quot; .
-              )
-          else
-              echo &quot;ERROR: No supported zip tool!&quot;
-              return 1
-          fi
-        }
-
-        for variant in $VARIANTS; do
-            publish &quot;$variant&quot;
-        done
-
-    #- name: Upload Artifact
-    #  uses: actions/upload-artifact@v2
-    #  with:
-    #    path: &quot;out/${{ env.PROJECT_PREFIX }}-*.zip&quot;
-
-    - name: Get Changelog Entry
-      id: changelog_reader
-      uses: mindsers/changelog-reader-action@v2
-      with:
-        version: ${{ steps.tag_name.outputs.current_version }}
-        path: ./CHANGELOG.md
-
-    - name: Create Release
-      id: create_release
-      uses: softprops/action-gh-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      with:
-        tag_name: v${{ steps.changelog_reader.outputs.version }}
-        name: Release ${{ steps.changelog_reader.outputs.version }}
-        body: ${{ steps.changelog_reader.outputs.changes }}
-        draft: ${{ steps.changelog_reader.outputs.status == &#39;unreleased&#39; }}
-        prerelease: ${{ steps.changelog_reader.outputs.status == &#39;prereleased&#39; }}
-        files: &quot;out/${{ env.PROJECT_PREFIX }}-*.*&quot;
-
-</code></pre>
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://erri120.github.io/2020/12/08/Hexo-NexT/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="erri120">
-      <meta itemprop="description" content="Just some random blog of a random person.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="erri120's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/12/08/Hexo-NexT/" class="post-title-link" itemprop="url">Hexo+NexT</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2020-12-08 11:27:23" itemprop="dateCreated datePublished" datetime="2020-12-08T11:27:23+01:00">2020-12-08</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-02-05 08:52:47" itemprop="dateModified" datetime="2021-02-05T08:52:47+01:00">2021-02-05</time>
-      </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Look at this beautiful blog site made with <a target="_blank" rel="noopener" href="https://www.hexo.io/">Hexo</a> and the <a target="_blank" rel="noopener" href="https://theme-next.js.org/">NexT</a> theme!</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
 
 
 

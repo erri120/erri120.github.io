@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://erri120.github.io/2021/01/27/Image-Steganography-in-Koikatsu-and-AI-Shoujo/</loc>
+    <loc>http://erri120.github.io/2021/02/04/CI-CD-for-RPG-Maker-Games/</loc>
     
     <lastmod>2021-02-05</lastmod>
     
@@ -17,6 +17,13 @@
   
   <url>
     <loc>http://erri120.github.io/2020/12/19/Creating-a-GitHub-Actions-Release-Pipeline-for-NET-Core-3-1-NET-5/</loc>
+    
+    <lastmod>2021-02-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://erri120.github.io/2021/01/27/Image-Steganography-in-Koikatsu-and-AI-Shoujo/</loc>
     
     <lastmod>2021-02-05</lastmod>
     
@@ -67,6 +74,13 @@
   </url>
   
   <url>
+    <loc>http://erri120.github.io/tags/Continuous-Integration/</loc>
+    <lastmod>2021-02-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://erri120.github.io/tags/Koikatsu-%E3%82%B3%E3%82%A4%E3%82%AB%E3%83%84%EF%BC%81/</loc>
     <lastmod>2021-02-05</lastmod>
     <changefreq>daily</changefreq>
@@ -75,6 +89,34 @@
   
   <url>
     <loc>http://erri120.github.io/tags/AI-Shoujo-AI-%E5%B0%91%E5%A5%B3/</loc>
+    <lastmod>2021-02-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://erri120.github.io/tags/Continuous-Deployment/</loc>
+    <lastmod>2021-02-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://erri120.github.io/tags/Continuous-Delivery/</loc>
+    <lastmod>2021-02-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://erri120.github.io/tags/CI-CD/</loc>
+    <lastmod>2021-02-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://erri120.github.io/tags/RPG-Maker/</loc>
     <lastmod>2021-02-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -90,14 +132,14 @@
   </url>
   
   <url>
-    <loc>http://erri120.github.io/categories/GitHub-Actions/Release-Pipelines/</loc>
+    <loc>http://erri120.github.io/categories/Game-Development/</loc>
     <lastmod>2021-02-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://erri120.github.io/categories/Game-Development/</loc>
+    <loc>http://erri120.github.io/categories/GitHub-Actions/Release-Pipelines/</loc>
     <lastmod>2021-02-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
