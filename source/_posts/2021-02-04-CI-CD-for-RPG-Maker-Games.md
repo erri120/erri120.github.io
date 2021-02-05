@@ -287,6 +287,8 @@ done
 
 This is the end of my little guide on creating a simple build pipeline in bash that will help you speed up your deployment process. Since this was also an introduction to bash scripting itself, you should be able to modify the script to further suit your needs because every project has something unique about it and there is no "One Pipeline to rule them all".
 
+If you have any issues with RPGMPacker itself, create an [Issue on GitHub](https://github.com/erri120/rpgmpacker) so I can see and fix it.
+
 ## Final Script
 
 ```bash
