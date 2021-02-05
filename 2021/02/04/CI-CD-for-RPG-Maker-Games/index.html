@@ -31,7 +31,7 @@
 <meta property="og:description" content="“Continuous Integration and Deployment&#x2F;Delivery is awesome” is what you will hear most of the time from programmers (who didn’t have to set it up themselves) when talking about CI&#x2F;CD. In programming w">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-02-04T14:41:07.000Z">
-<meta property="article:modified_time" content="2021-02-05T09:43:02.837Z">
+<meta property="article:modified_time" content="2021-02-05T09:43:59.848Z">
 <meta property="article:author" content="erri120">
 <meta property="article:tag" content="Continuous Integration">
 <meta property="article:tag" content="Continuous Deployment">
@@ -296,7 +296,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-02-05 10:43:02" itemprop="dateModified" datetime="2021-02-05T10:43:02+01:00">2021-02-05</time>
+        <time title="Modified: 2021-02-05 10:43:59" itemprop="dateModified" datetime="2021-02-05T10:43:59+01:00">2021-02-05</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -339,7 +339,7 @@
 <li>upload the output to itch.io using <a target="_blank" rel="noopener" href="https://itch.io/docs/butler/">Butler</a></li>
 </ol>
 <p>This is, as you can see, very simple but will save you tons of time and mental health (there is nothing more annoying than uploading a broken build and having to re-upload the fixed version by hand). We will create a local script for this because I assume you don’t have a GitHub, GitLab or Azure DevOps repository for your game. If you do have one then you should be able to adapt the code used to the pipeline system of your choice.</p>
-<h3 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h3><p>Let’s start by creating a new file called <code>pipeline.sh</code>. This will be a bash script that can be executed on all platforms, even on Windows using Git Bash. The first thing we need is getting the tools. We can download files using programs such as <code>curl</code> or <code>wget</code>:</p>
+<h3 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h3><p>Let’s start by creating a new file called <code>pipeline.sh</code>. This will be a bash script that can be executed on all platforms, even on Windows using Git Bash. I recommend using <a target="_blank" rel="noopener" href="https://code.visualstudio.com/">VS Code</a> to edit the file. The first thing we need is getting the tools. We can download files using programs such as <code>curl</code> or <code>wget</code>:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -L -o butler.zip https://broth.itch.ovh/butler/windows-amd64/LATEST/archive/default</span><br></pre></td></tr></table></figure>
 <p>This would download Butler to <code>butler.zip</code>. I want to make this a bit more generic because the link above would only get us the latest Windows x64 version but you might be on a Mac or on Linux and then you can’t use this so let’s introduce some variables:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#see https://broth.itch.ovh/butler</span></span><br><span class="line">butlerChannel=<span class="string">&quot;windows-amd64&quot;</span> <span class="comment">#darwin-amd64 for Mac and linux-amd64 for Linux</span></span><br><span class="line">butlerVersion=<span class="string">&quot;15.20.0&quot;</span></span><br><span class="line"></span><br><span class="line">curl -L -o butler.zip https://broth.itch.ovh/butler/<span class="variable">$butlerChannel</span>/<span class="variable">$butlerVersion</span>/archive/default</span><br></pre></td></tr></table></figure>
