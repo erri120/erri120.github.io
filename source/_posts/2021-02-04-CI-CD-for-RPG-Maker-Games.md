@@ -44,7 +44,7 @@ This is, as you can see, very simple but will save you tons of time and mental h
 
 ### Setup
 
-Let's start by creating a new file called `pipeline.sh`. This will be a bash script that can be executed on all platforms, even on Windows using Git Bash. The first thing we need is getting the tools. We can download files using programs such as `curl` or `wget`:
+Let's start by creating a new file called `pipeline.sh`. This will be a bash script that can be executed on all platforms, even on Windows using Git Bash. I recommend using [VS Code](https://code.visualstudio.com/) to edit the file. The first thing we need is getting the tools. We can download files using programs such as `curl` or `wget`:
 
 ```bash
 curl -L -o butler.zip https://broth.itch.ovh/butler/windows-amd64/LATEST/archive/default
