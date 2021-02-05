@@ -10,6 +10,7 @@ tags:
   - .NET
   - .NET Core 3.1
   - .NET 5
+  - Continuous Integration
 ---
 
 GitHub Actions Release Workflows can be very tricky to set up and require a lot of experimenting to get right. Your project will also likely have something unique about it which means you need a workflow that is tailored to your project. That being said, the workflow we will set up builds a .NET Core project for multiple runtimes (Linux and Windows for multiple architectures), compresses all of the builds into zip files and then creates a new GitHub Release with a changelog.
