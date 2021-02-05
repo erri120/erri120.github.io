@@ -105,8 +105,8 @@ Getting RPGMPacker is basically the same process except we don't have to extract
 
 ```bash
 #see https://github.com/erri120/rpgmpacker/releases
-rpgmpackerFile="RPGMPacker-Windows.exe" #RPGMPacker-Linux for Linux
-rpgmpackerVersion="1.0.0"
+rpgmpackerFile="RPGMPacker-Windows.exe" #RPGMPacker-Linux for Linux and RPGMPacker-macOS for macOS
+rpgmpackerVersion="1.1.0"
 
 mkdir $tools/RPGMPacker -p
 
@@ -120,7 +120,7 @@ else
 fi
 ```
 
-Notice that we are again declaring the version and what file we want to download (see [RPGMPacker Releases](https://github.com/erri120/rpgmpacker/releases) and use either `rpgmpackerFile="RPMGPacker-Linux"` or `RPMGPacker-Windows.exe`), checking if the directory exists and downloading the file if it doesn't.
+Notice that we are again declaring the version and what file we want to download (see [RPGMPacker Releases](https://github.com/erri120/rpgmpacker/releases), checking if the directory exists and downloading the file if it doesn't.
 
 Now we have the tools we need at the following locations:
 
@@ -139,8 +139,8 @@ butlerChannel="windows-amd64" #darwin-amd64 for Mac and linux-amd64 for Linux
 butlerVersion="15.20.0"
 butlerFile="butler.exe" #butler for Mac or Linux
 #see https://github.com/erri120/rpgmpacker/releases
-rpgmpackerFile="RPGMPacker-Windows.exe" #RPGMPacker-Linux for Linux
-rpgmpackerVersion="1.0.0"
+rpgmpackerFile="RPGMPacker-Windows.exe" #RPGMPacker-Linux for Linux and RPGMPacker-macOS for macOS
+rpgmpackerVersion="1.1.0"
 
 mkdir $tools/downloads -p
 
@@ -308,8 +308,8 @@ butlerChannel="windows-amd64" #darwin-amd64 for Mac and linux-amd64 for Linux
 butlerVersion="15.20.0"
 butlerFile="butler.exe" #butler for Mac or Linux
 #see https://github.com/erri120/rpgmpacker/releases
-rpgmpackerFile="RPGMPacker-Windows.exe" #RPGMPacker-Linux for Linux
-rpgmpackerVersion="1.0.0"
+rpgmpackerFile="RPGMPacker-Windows.exe" #RPGMPacker-Linux for Linux and RPGMPacker-macOS for macOS
+rpgmpackerVersion="1.1.0"
 
 #--RPGMPacker Variables
 #see https://github.com/erri120/rpgmpacker#Usage for all possible arguments
