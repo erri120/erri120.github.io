@@ -151,6 +151,7 @@ theme_config:
   social:
     GitHub: https://github.com/erri120 || fab fa-github
     Twitter: https://twitter.com/erri120 || fab fa-twitter
+    Ko-fi: https://ko-fi.com/erri120 || fas fa-donate
     YouTube: https://www.youtube.com/channel/UCA4feoMa03w1xLYsvyvxcUw || fab fa-youtube
     E-Mail: mailto:erri120@protonmail.com || fa fa-envelope
   social_icons:
