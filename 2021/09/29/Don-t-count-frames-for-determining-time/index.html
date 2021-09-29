@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#222">
+  <meta name="google-site-verification" content="c-L5KbBKeVyZ9YNKiotqlpl7zsiDRiGcWJa4ZxVpzAo">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"erri120.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="What not to doLets say you want to add a “Playtime” field to a save file. In the save menu the player should be able to see how long they have played your game. So how do you implement this? If you ar">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Don&#39;t count frames for determining time">
+<meta property="og:url" content="http://erri120.github.io/2021/09/29/Don-t-count-frames-for-determining-time/index.html">
+<meta property="og:site_name" content="erri120&#39;s Blog">
+<meta property="og:description" content="What not to doLets say you want to add a “Playtime” field to a save file. In the save menu the player should be able to see how long they have played your game. So how do you implement this? If you ar">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-09-29T14:21:15.000Z">
+<meta property="article:modified_time" content="2021-09-29T16:08:35.304Z">
+<meta property="article:author" content="erri120">
+<meta property="article:tag" content="RPG Maker">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://erri120.github.io/2021/09/29/Don-t-count-frames-for-determining-time/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://erri120.github.io/2021/09/29/Don-t-count-frames-for-determining-time/","path":"2021/09/29/Don-t-count-frames-for-determining-time/","title":"Don't count frames for determining time"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Don't count frames for determining time | erri120's Blog</title>
+  
+
+
+
+<meta name="google-site-verification" content="c-L5KbBKeVyZ9YNKiotqlpl7zsiDRiGcWJa4ZxVpzAo" />
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">erri120's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+      <img class="custom-logo-image" src="/images/logo.png" alt="erri120's Blog">
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#What-not-to-do"><span class="nav-number">1.</span> <span class="nav-text">What not to do</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-to-do-instead"><span class="nav-number">2.</span> <span class="nav-text">What to do instead</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Changing-the-implementation-in-RPG-Maker-MV"><span class="nav-number">3.</span> <span class="nav-text">Changing the implementation in RPG Maker MV</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">4.</span> <span class="nav-text">Conclusion</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">erri120</p>
+  <div class="site-description" itemprop="description">Just some random blog of a random person.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/erri120" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;erri120" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/erri120" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;erri120" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://ko-fi.com/erri120" title="Ko-fi → https:&#x2F;&#x2F;ko-fi.com&#x2F;erri120" rel="noopener" target="_blank"><i class="fas fa-donate fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.youtube.com/channel/UCA4feoMa03w1xLYsvyvxcUw" title="YouTube → https:&#x2F;&#x2F;www.youtube.com&#x2F;channel&#x2F;UCA4feoMa03w1xLYsvyvxcUw" rel="noopener" target="_blank"><i class="fab fa-youtube fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:erri120@protonmail.com" title="E-Mail → mailto:erri120@protonmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://erri120.github.io/2021/09/29/Don-t-count-frames-for-determining-time/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="erri120">
+      <meta itemprop="description" content="Just some random blog of a random person.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="erri120's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Don't count frames for determining time
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2021-09-29 16:21:15 / Modified: 18:08:35" itemprop="dateCreated datePublished" datetime="2021-09-29T16:21:15+02:00">2021-09-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Game-Development/" itemprop="url" rel="index"><span itemprop="name">Game Development</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="What-not-to-do"><a href="#What-not-to-do" class="headerlink" title="What not to do"></a>What not to do</h2><p>Lets say you want to add a “Playtime” field to a save file. In the save menu the player should be able to see how long they have played your game. So how do you implement this? If you are one of the RPG Maker MV developers then you will count the number of rendered frames, store them in the save file and divide them by 60 to get the amount of seconds passed.</p>
+<p>A little bit of background: I recently played an RPG Maker MV game for around 21 hours but the save menu said it was over 51 hours, more than double. This made me very curious and I assumed it had something to do with some speed shenanigans when using sprinting instead of walking. Since RPG Maker uses JavaScript for everything you can just open the <code>js</code> folder and look at the code. After a quick search for “Playtime” related terms I found these gems:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Game_System.prototype.onBeforeSave = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">this</span>._framesOnSave = Graphics.frameCount;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Game_System.prototype.onAfterLoad = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    Graphics.frameCount = <span class="built_in">this</span>._framesOnSave;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Game_System.prototype.playtime = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Math</span>.floor(Graphics.frameCount / <span class="number">60</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Game_System.prototype.playtimeText = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> hour = <span class="built_in">Math</span>.floor(<span class="built_in">this</span>.playtime() / <span class="number">60</span> / <span class="number">60</span>);</span><br><span class="line">    <span class="keyword">var</span> min = <span class="built_in">Math</span>.floor(<span class="built_in">this</span>.playtime() / <span class="number">60</span>) % <span class="number">60</span>;</span><br><span class="line">    <span class="keyword">var</span> sec = <span class="built_in">this</span>.playtime() % <span class="number">60</span>;</span><br><span class="line">    <span class="keyword">return</span> hour.padZero(<span class="number">2</span>) + <span class="string">&#x27;:&#x27;</span> + min.padZero(<span class="number">2</span>) + <span class="string">&#x27;:&#x27;</span> + sec.padZero(<span class="number">2</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>Turns out that RPG Maker MV uses <code>Graphics.frameCount</code> for determining the playtime. In case you are wondering: <code>Graphics.frameCount</code> gets updated on every render in the <code>Graphics.render</code> function. The engine developers assumed that you will always be running the game at a stable 60 frames per second. At this rate you <em>can</em> get the number of seconds passed but what if you are not running the game at 60 fps? In my case I am playing the game on a 144hz display with VSync enabled meaning my machine rendered 2.4 times more frames than expected.</p>
+<p>Using some quick maths we can calculate the actual time passed at 144 fps:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">50h = 180000sec</span><br><span class="line">180000sec / 2.4 = 75000sec</span><br><span class="line">75000sec = 20.8h</span><br></pre></td></tr></table></figure>
+
+<p>Criticising people for bad code is always fun but lets rather look at some alternative solutions to this problem.</p>
+<h2 id="What-to-do-instead"><a href="#What-to-do-instead" class="headerlink" title="What to do instead"></a>What to do instead</h2><p>Whenever you deal with anything frame related you must use real time at one point or another. Not only can players run the game at different frames per second, but the time it takes between each frame can also be inconsistent. Bethesda and their Creation Engine is another example of bad frame based behaviour and running games made with it above 60 fps often breaks physics. The game engine Unity solved this issue eons ago by introducing <code>Time.deltaTime</code> which contains the amount of seconds passed between the current and last frame. This delta time is used basically everywhere in functions that get called every frame and deal with timely operations like changing the position of an object over time:</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">object</span>.transform.position += Vector3.forward * <span class="number">5f</span> * Time.deltaTime;</span><br></pre></td></tr></table></figure>
+
+<p>It is possible to use the amount of frames as an indicator for how much time has passed but there are too many problems and pitfalls that it makes no sense to go this route. My guess is that some developer thought too hard about this problem and came up with a solution that worked in the development environment.</p>
+<p>We want to know amount of time passed while playing the game so how about we just use the time given to us by the operating system? Set a start time and calculate the difference between now and the start time on save:</p>
+<ul>
+<li>on load/start: set <code>startTime</code> to the current time</li>
+<li>on save:<ol>
+<li>get the current time and calculate the difference between now and <code>startTime</code></li>
+<li>add the difference to a variable in the save object and serialize to disk</li>
+</ol>
+</li>
+</ul>
+<h2 id="Changing-the-implementation-in-RPG-Maker-MV"><a href="#Changing-the-implementation-in-RPG-Maker-MV" class="headerlink" title="Changing the implementation in RPG Maker MV"></a>Changing the implementation in RPG Maker MV</h2><p>Start by opening <code>js/rpg_objects.js</code> and look for the <code>initialize</code> function. Here we want to add two new properties:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Game_System.prototype.initialize = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">this</span>._startTime = <span class="built_in">Date</span>.now();</span><br><span class="line">  <span class="built_in">this</span>._playtime = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Date.now()</code> returns the current <a target="_blank" rel="noopener" href="https://currentmillis.com/">Unix time</a> as an integer that looks like this: <code>1632928643900</code>.</p>
+<p>We need to set the start time in the <code>initialize</code> function for when the game starts and in the <code>onAfterLoad</code> function for when the player loads a save file:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Game_System.prototype.onAfterLoad = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">this</span>._startTime = <span class="built_in">Date</span>.now();</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The <code>onBeforeSave</code> function gets called before the save is serialized so here we have to calculate the time difference and reset the start time:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Game_System.prototype.onBeforeSave = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">this</span>._playtime += <span class="built_in">Date</span>.now() - <span class="built_in">this</span>._startTime;</span><br><span class="line">  <span class="built_in">this</span>._startTime = <span class="built_in">Date</span>.now();</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Assuming the player started at <code>1632928643900</code> and played for 1 second till <code>1632928644900</code>, <code>this._playtime</code> will now be <code>1000</code>. The only thing remaining is updating the <code>playtime</code> function:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Game_System.prototype.playtime = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">this</span>._playtime / <span class="number">1000</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>Since this function returns the amount of time passed in seconds we have to divide by 1000 to convert from milliseconds to seconds. While we are at it, I also recommend updating <code>playtimeText</code>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Game_System.prototype.playtimeText = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> secondsPassed = <span class="built_in">this</span>.playtime();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> sec = secondsPassed % <span class="number">60</span>;</span><br><span class="line">  <span class="keyword">var</span> min = <span class="built_in">Math</span>.floor(secondsPassed / <span class="number">60</span>) % <span class="number">60</span>;</span><br><span class="line">  <span class="keyword">var</span> hour = <span class="built_in">Math</span>.floor(secondsPassed / <span class="number">60</span> / <span class="number">60</span>) % <span class="number">24</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> hour.padZero(<span class="number">2</span>) + <span class="string">&#x27;:&#x27;</span> + min.padZero(<span class="number">2</span>) + <span class="string">&#x27;:&#x27;</span> + sec.padZero(<span class="number">2</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Don’t count frames for determining real time spans.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/RPG-Maker/" rel="tag"># RPG Maker</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/02/04/CI-CD-for-RPG-Maker-Games/" rel="prev" title="CI/CD for RPG Maker Game Development">
+                  <i class="fa fa-chevron-left"></i> CI/CD for RPG Maker Game Development
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">erri120</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
