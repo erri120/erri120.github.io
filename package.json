@@ -28,6 +28,6 @@
   "devDependencies": {
     "hexo-generator-sitemap": "^2.1.0",
     "hexo-github-include": "zbicin/hexo-github-include",
-    "nodemon": "^2.0.13"
+    "nodemon": "^2.0.14"
   }
 }
