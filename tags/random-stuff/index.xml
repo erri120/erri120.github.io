@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Random Stuff on erri120</title><link>https://erri120.github.io/tags/random-stuff/</link><description>Recent content in Random Stuff on erri120</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 27 Jan 2021 10:08:08 +0100</lastBuildDate><atom:link href="https://erri120.github.io/tags/random-stuff/index.xml" rel="self" type="application/rss+xml"/><item><title>Utilizing Image Steganography in Games</title><link>https://erri120.github.io/posts/2021-01-27/</link><pubDate>Wed, 27 Jan 2021 10:08:08 +0100</pubDate><guid>https://erri120.github.io/posts/2021-01-27/</guid><description>Image Steganography is nothing new or ground-breaking, it existed since 440 BC 1 and digital steganography started appearing once personal computers became a thing. This little post is about the methods used by Illusion for their games &amp;ldquo;Koikatsu!&amp;rdquo; and &amp;ldquo;AI Shoujo&amp;rdquo; and the benefits it provides.
+Character Presets and PNGs Most games by Illusion are sandboxy, they have an active modding community provide an extensive character creation tool that can export your preset.</description><content>&lt;p>Image Steganography is nothing new or ground-breaking, it existed since 440 BC &lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> and digital steganography started appearing once personal computers became a thing. This little post is about the methods used by Illusion for their games &amp;ldquo;Koikatsu!&amp;rdquo; and &amp;ldquo;AI Shoujo&amp;rdquo; and the benefits it provides.&lt;/p>
+&lt;h2 id="character-presets-and-pngs">Character Presets and PNGs&lt;/h2>
+&lt;p>Most games by Illusion are &lt;em>sandboxy&lt;/em>, they have an active modding community provide an extensive character creation tool that can export your preset. I come from Skyrim where exporting a character preset created with &lt;a href="https://www.nexusmods.com/skyrimspecialedition/mods/19080">RaceMenu&lt;/a> results in a JSON file full of instructions for the mod but not for the user. If you were to just give the JSON file to someone they won&amp;rsquo;t know how the character looks until they start the game and load the preset. This means you have to include screenshots and the JSON file but that makes Discord preset sharing channels very cluttered.&lt;/p>
+&lt;p>So what does Illusion do? They just give you a single PNG file:&lt;/p>
+&lt;img src="https://erri120.github.io/img/posts/2021-01-27/Mona.png" alt="Mona Preset" class="left" />
+&lt;p>If you own Koikatsu! then you can just download this image, put it inside your preset folder and it will just work in-game. Of course I immediately opened a my hex editor of choice, &lt;a href="https://mh-nexus.de/en/hxd/">HxD&lt;/a>, and looked through the data to find what was going on:&lt;/p>
+&lt;img src="https://erri120.github.io/img/posts/2021-01-27/preset-in-hxd.png" alt="Mona Preset in HxD" class="left" />
+&lt;p>It turns out that the data for the preset was appended to the end of the PNG. As you can see in the preview above, this does not affect the render in any way because the parser will just stop at the &lt;code>IEND&lt;/code> marker. I found out that FFmpeg does not like this extra data at the end and tries to parse another PNG instead of exiting:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-txt" data-lang="txt">[png @ 000001f2aeb65500] Invalid PNG signature 0x6400000012E38090.
+[png @ 000001f2aec0e2c0] Invalid PNG signature 0xE300000081A76C73.
+[png @ 000001f2aec11500] Invalid PNG signature 0xA946616365556E64.
+[png @ 000001f2aec0fd40] Invalid PNG signature 0xA74579654F766572.
+[png @ 000001f2aec10940] Invalid PNG signature 0xD928636F6D2E6765.
+[png @ 000001f2aec10140] Invalid PNG signature 0xC2A963745F676C6F.
+[png @ 000001f2aec11100] Invalid PNG signature 0xC3AE63745F73686F.
+[png @ 000001f2aec10540] Invalid PNG signature 0xCC6001D023D8950.
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="rewarding-simplicity">Rewarding Simplicity&lt;/h2>
+&lt;p>You might think &amp;ldquo;&lt;em>So what&amp;rsquo;s the deal?&lt;/em>&amp;rdquo; and that is the point: it is simple to implement and a good solution to the problem of sharing presets, however it is not apparent.&lt;/p>
+&lt;p>I hope you found this somewhat interesting, if you work on a game that has presets and you don&amp;rsquo;t know how to export them, maybe this has sparked your interest and provided a solution.&lt;/p>
+&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>The first recorded use can be traced back to 440 BC in Greece, see &lt;a href="(https://en.wikipedia.org/wiki/Steganography#History)">Wikipedia&lt;/a>&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/section></content></item></channel></rss>
