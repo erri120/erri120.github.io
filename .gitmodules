@@ -1,0 +1,4 @@
+[submodule "themes/terminal-fork"]
+	path = themes/terminal-fork
+	url = https://github.com/erri120/hugo-theme-terminal.git
+	branch = update-1

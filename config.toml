@@ -1,0 +1,4 @@
+baseURL = "https://erri120.github.io"
+languageCode = "en-us"
+title = "erri120"
+theme = "terminal-fork"
