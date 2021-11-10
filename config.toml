@@ -1,6 +1,6 @@
 baseURL = "https://erri120.github.io"
 languageCode = "en-us"
-title = "erri120"
+title = "erri120's Blog"
 theme = "terminal-fork"
 paginate = 5
 enableGitInfo = true
@@ -58,3 +58,25 @@ enableRobotsTXT = true
   # do not include @
   creator = "erri120"
   site = "erri120"
+
+[languages]
+  [languages.en]
+    languageName = "English"
+    title = "erri120's Blog"
+    subtitle = "A random blog by a random person."
+    owner = "erri120"
+    copyright = "CC BY 4.0"
+
+    [languages.en.params.logo]
+      logoText = "erri120's Blog"
+      logoHomeLink = "/"
+
+    [languages.en.menu]
+      [[languages.en.menu.main]]
+        identifier = "about"
+        name = "About"
+        url = "/about"
+      # [[languages.en.menu.main]]
+      #   identifier = "showcase"
+      #   name = "Showcase"
+      #   url = "/showcase"
