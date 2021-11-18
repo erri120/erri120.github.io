@@ -105,6 +105,336 @@ Wabbajack and the Bethesda Modding Community Definitely the biggest open-source 
 &lt;p>See &lt;code>Time.deltaTime&lt;/code> in the docs &lt;a href="https://docs.unity3d.com/ScriptReference/Time-deltaTime.html">here&lt;/a>&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
+&lt;/section></content></item><item><title>CI/CD for RPG Maker Game Development</title><link>https://erri120.github.io/posts/2021-02-04/</link><pubDate>Thu, 04 Feb 2021 15:41:07 +0100</pubDate><guid>https://erri120.github.io/posts/2021-02-04/</guid><description>Automation saves time and therefore money. However you have to ask yourself if it&amp;rsquo;s worth spending hours writing a complex and long script. In the worst case you might end up wasting instead of saving time. Thankfully most programming related tasks can be automated very quickly and each language or framework often has documentation on how to get you up and running.
+This is sadly not often the case when it comes to game development.</description><content>&lt;p>Automation saves time and therefore money. However you have to ask yourself if it&amp;rsquo;s worth spending hours writing a complex and long script. In the worst case you might end up wasting instead of saving time. Thankfully most programming related tasks can be automated very quickly and each language or framework often has documentation on how to get you up and running.&lt;/p>
+&lt;p>This is sadly not often the case when it comes to game development. Popular engines like Unreal Engine and Unity have automation tools &lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> and documentation for automating the build process but less popular ones such as RPG Maker don&amp;rsquo;t have those.&lt;/p>
+&lt;p>In this post I will explain what CI/CD means and how to set up a pipeline for RPG Maker MV/MZ with &lt;a href="https://github.com/erri120/rpgmpacker">rpgmpacker&lt;/a>. A big chunk of this post is explaining CI/CD and how RPG Maker MV/MZ works, if you just want to go to the practical part click &lt;a href="#using-rpgmpacker">here&lt;/a>.&lt;/p>
+&lt;h2 id="cicd-for-non-programmers">CI/CD for non-programmers&lt;/h2>
+&lt;p>RPG Maker is very non-programmer friendly and you can easily end up not having to write a single line of code when creating a game with it. For this reason I want to make sure we all have the same base level understanding of CI/CD before continuing. That being said, I expect you to know about version control with git so make sure to watch these two amazing videos by &lt;a href="https://www.youtube.com/channel/UCsBjURrPoezykLs9EqgamOA">Fireship&lt;/a> if you are unfamiliar with it:&lt;/p>
+&lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+&lt;iframe src="https://www.youtube-nocookie.com/embed/hwP7WQkmECE" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video">&lt;/iframe>
+&lt;/div>
+&lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+&lt;iframe src="https://www.youtube-nocookie.com/embed/HkdAHXoRtos" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video">&lt;/iframe>
+&lt;/div>
+&lt;p>Let&amp;rsquo;s get started with &lt;strong>Continuous Integration&lt;/strong> which means running a pipeline on every change you commit to a repository. This pipeline consists of one or multiple jobs where one job could be running some tests or building the project. If you run the tests on every change then you can easily track down the commit where a bug was introduced to the codebase. A common pipeline would look like this:&lt;/p>
+&lt;ol>
+&lt;li>setup (checkout, getting all the tools)&lt;/li>
+&lt;li>running tests&lt;/li>
+&lt;li>building the project&lt;/li>
+&lt;li>packaging&lt;/li>
+&lt;li>uploading an artifact (fancy word for an archive containing the output)&lt;/li>
+&lt;/ol>
+&lt;p>The terminology can be different depending on your provider for example a pipeline on GitHub is called a workflow and each workflow has steps instead of jobs. They often mean the same thing so don&amp;rsquo;t let that confuse you.&lt;/p>
+&lt;p>&lt;strong>Continuous Delivery&lt;/strong> is about &lt;em>delivering&lt;/em> the artifact we produced previously. This artifact can be send to testers, friends, the QA team or your mom. &lt;strong>Continuous Deployment&lt;/strong> is also a thing and means actually deploying the artifact by uploading the next release of a game to itch.io or deploying the software to your servers.&lt;/p>
+&lt;p>Big studios often end up with huge pipelines because they have many employees and teams. They might have a CI pipeline that runs the tests and builds the project. The artifact would then send in a CD pipeline to the testers or QA team and when they approve of the build it gets released into the world. This is probably not the case for you or your team and most of the time you can combine all of this into one pipeline.&lt;/p>
+&lt;p>If you are curious how such a pipeline might look like, here is the GitHub Actions workflow file that builds (CI) and deploys (CD) this site to GitHub Pages on every push to the master branch:&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="142796385" type="checkbox" />
+&lt;label for="142796385">
+&lt;span class="collapsable-code__language">yaml&lt;/span>
+&lt;span class="collapsable-code__title">Example GitHub Actions workflow&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-yaml" >&lt;code>
+name: Deployment
+on:
+push:
+branches: [ master ]
+jobs:
+build:
+runs-on: ubuntu-latest
+steps:
+# setup
+- uses: actions/checkout@v2
+with:
+submodules: true
+fetch-depth: 0
+- name: Setup Hugo
+uses: peaceiris/actions-hugo@v2
+with:
+hugo-version: &amp;#39;latest&amp;#39;
+# building the site (CI)
+- name: Build
+run: hugo --minify
+# deploying the site (CD)
+- name: Deploy
+uses: peaceiris/actions-gh-pages@v3
+with:
+github_token: ${{ secrets.GITHUB_TOKEN }}
+publish_dir: ./public
+publish_branch: gh-pages
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;h2 id="rpg-maker-mvmz-manual-export">RPG Maker MV/MZ manual export&lt;/h2>
+&lt;img src="https://erri120.github.io/img/posts/2021-02-04/RPGMakerMV-Deployment.png" alt="RPG Maker MV Deployment Window" class="left" />
+&lt;p>This is the deployment window of RPG Maker MV which you can access in the editor under &lt;em>File -&amp;gt; Deployment&lt;/em>. The major issue with this is the fact you have to use it at all. Software developers love the tools they can use from the command line because they can be easily accessed using a script.&lt;/p>
+&lt;p>Other engines likes Unreal Engine have to compile code before deployment but RPG Maker is very different: It&amp;rsquo;s only copying files from one place to another.&lt;/p>
+&lt;p>There is no code to compile because all the code is in JavaScript, it doesn&amp;rsquo;t even need to compile an executable because it just uses &lt;a href="https://nwjs.io/">NW.js&lt;/a>. RPG Maker is one of the simplest game engines, not just in terms of usability but how everything is just JSON and JavaScript. You can literally go into the &lt;code>js&lt;/code> folder and look at all the source code of the engine. All the data is saved as JSON so if you want to change the name of an item you can open &lt;code>data/Items.json&lt;/code> and change the values.&lt;/p>
+&lt;p>If you are curious where all those files come from, open your RPG Maker MV/MZ installation folder and look for folders that start with &lt;code>nw-js-&lt;/code>. The files inside those folders are copied over to the output directory. You can also find the default template files in the &lt;code>NewData&lt;/code> folders.&lt;/p>
+&lt;p>Simply copying files from one place to another can be done with a script. This was exactly what rpgmpacker did in my first prototype but I soon realized that there was more going on.&lt;/p>
+&lt;p>First we have file filtering. For audio you can have &lt;code>.ogg&lt;/code> and &lt;code>.m4a&lt;/code> files but exporting for Windows/OSX will only copy the &lt;code>.ogg&lt;/code> files while exporting for Mobile will only copy &lt;code>.m4a&lt;/code> files. Then we have image and audio &amp;ldquo;encryption&amp;rdquo; and the exclude-unused feature which requires parsing of almost all JSON files to figure out which files are actually in use and which are not. There is even more to this which can&amp;rsquo;t be done in a simple script so I decided to build an entire tool which we are going to use in the pipeline.&lt;/p>
+&lt;h2 id="creating-a-release-pipeline-for-rpg-maker">Creating a Release Pipeline for RPG Maker&lt;/h2>
+&lt;p>The pipeline we are going to build will do the following:&lt;/p>
+&lt;ol>
+&lt;li>run rpgmpacker&lt;/li>
+&lt;li>zip the output&lt;/li>
+&lt;li>upload the output to itch.io using &lt;a href="https://itch.io/docs/butler">Butler&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;p>If your game is not on itch.io then you can leave out the last step or replace it with an upload to MEGA, GDrive or your hosting platform of choice.&lt;/p>
+&lt;p>For the pipeline you can write a Bash or PowerShell script, just pick whatever you like more:&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="193246758" type="checkbox" />
+&lt;label for="193246758">
+&lt;span class="collapsable-code__language">bash&lt;/span>
+&lt;span class="collapsable-code__title">Using rpgmpacker in a Bash Script&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-bash" >&lt;code>
+#!/bin/bash
+INPUT=&amp;#34;./MyProject&amp;#34;
+OUTPUT=&amp;#34;./build&amp;#34;
+RPGMAKER=&amp;#34;M:\\SteamLibrary\\steamapps\\common\\RPG Maker MV&amp;#34;
+npx rpgmpacker@latest \
+--input &amp;#34;$INPUT&amp;#34; \
+--output &amp;#34;$OUTPUT&amp;#34; \
+--rpgmaker &amp;#34;$RPGMAKER&amp;#34; \
+--exclude \
+--noempty \
+--debug \
+--platforms &amp;#34;Windows&amp;#34; &amp;#34;OSX&amp;#34; &amp;#34;Linux&amp;#34;
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;div class="collapsable-code">
+&lt;input id="426358971" type="checkbox" />
+&lt;label for="426358971">
+&lt;span class="collapsable-code__language">powershell&lt;/span>
+&lt;span class="collapsable-code__title">Using rpgmpacker in a PowerShell Script&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-powershell" >&lt;code>
+$PROJECT=&amp;#34;./MyProject&amp;#34;
+$OUTPUT=&amp;#34;./build&amp;#34;
+$RPGMAKER=&amp;#34;M:\\SteamLibrary\\steamapps\\common\\RPG Maker MV&amp;#34;
+npx rpgmpacker@latest `
+--input $PROJECT `
+--output $OUTPUT `
+--rpgmaker $RPGMAKER `
+--exclude `
+--noempty `
+--debug `
+--platforms &amp;#34;Windows&amp;#34; &amp;#34;OSX&amp;#34; &amp;#34;Linux&amp;#34;
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>In my case I have the project in a folder called &lt;code>MyProject&lt;/code> next to the script and the output should go into the &lt;code>build&lt;/code> folder. I&amp;rsquo;m using the Steam version of RPG Maker MV for this but any version of MV or MZ can be used.&lt;/p>
+&lt;p>Next up we want to zip the output. rpgmpacker will create an output folder for each platform you specified so for me I will have &lt;code>build/Windows&lt;/code>, &lt;code>build/OSX&lt;/code> and a &lt;code>build/Linux&lt;/code> folder.&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="965872431" type="checkbox" />
+&lt;label for="965872431">
+&lt;span class="collapsable-code__language">bash&lt;/span>
+&lt;span class="collapsable-code__title">Zipping the output in a Bash Script&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-bash" >&lt;code>
+for platform in $OUTPUT/*; do
+7z a -tzip -o$OUTPUT $platform.zip $platform/*
+done
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;div class="collapsable-code">
+&lt;input id="516239478" type="checkbox" />
+&lt;label for="516239478">
+&lt;span class="collapsable-code__language">powershell&lt;/span>
+&lt;span class="collapsable-code__title">Zipping the output in a PowerShell Script&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-powershell" >&lt;code>
+$Platforms = Get-ChildItem -Path $OUTPUT -Directory -Name
+foreach ($platform in $Platforms) {
+7z a -tzip -o$OUTPUT $OUTPUT/$platform.zip $OUTPUT/$platform/*
+}
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>This is where the difference between PowerShell and Bash start to appear. In Bash we use a glob to get all top-level items of the output directory and in PowerShell we use the &lt;code>Get-ChildItem&lt;/code> function. They look different but they do the same thing with the main difference being that &lt;code>platform&lt;/code> in Bash will be &lt;code>./build/Windows&lt;/code> while &lt;code>$platform&lt;/code> in PowerShell will be just &lt;code>Windows&lt;/code>. This is why we need to prefix &lt;code>$platform&lt;/code> with &lt;code>$OUTPUT/&lt;/code> when calling 7z.&lt;/p>
+&lt;p>The pipeline is almost done at this point. Next is publishing the output with &lt;a href="https://itch.io/docs/butler">Butler&lt;/a> to itch.io but if you are not using that platform you are now done.&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="925847163" type="checkbox" />
+&lt;label for="925847163">
+&lt;span class="collapsable-code__language">bash&lt;/span>
+&lt;span class="collapsable-code__title">Downloading Butler in a Bash Script&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-bash" >&lt;code>
+# see https://broth.itch.ovh/butler
+ButlerChannel=&amp;#34;windows-amd64&amp;#34; # darwin-amd64 for Mac and linux-amd64 for Linux
+ButlerVersion=&amp;#34;15.21.0&amp;#34;
+ButlerOutput=&amp;#34;butler-$ButlerVersion-$ButlerChannel&amp;#34;
+if [ ! -d $ButlerOutput ]; then
+curl -L -o butler.zip https://broth.itch.ovh/butler/$butlerChannel/$butlerVersion/archive/default
+unzip -o butler.zip -d $ButlerOutput
+rm butler.zip
+else
+echo &amp;#34;Butler version $ButlerVersion ($ButlerChannel) has already been downloaded&amp;#34;
+fi
+# change butler.exe to just butler if you are on Unix
+butler=&amp;#34;$ButlerOutput/butler.exe&amp;#34;
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;div class="collapsable-code">
+&lt;input id="356189742" type="checkbox" />
+&lt;label for="356189742">
+&lt;span class="collapsable-code__language">powershell&lt;/span>
+&lt;span class="collapsable-code__title">Downloading Buttler in a PowerShell Script&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-powershell" >&lt;code>
+# see https://broth.itch.ovh/butler
+$ButlerChannel=&amp;#34;windows-amd64&amp;#34; # darwin-amd64 for Mac and linux-amd64 for Linux
+$ButlerVersion=&amp;#34;15.21.0&amp;#34;
+$ButlerOutput=&amp;#34;butler-$ButlerVersion-$ButlerChannel&amp;#34;
+if (![System.IO.Directory]::Exists($ButlerOutput)) {
+Invoke-WebRequest -OutFile butler.zip &amp;#34;https://broth.itch.ovh/butler/$butlerChannel/$butlerVersion/archive/default&amp;#34;
+Expand-Archive -Path butler.zip $ButlerOutput
+Remove-Item -Path butler.zip
+} else {
+Write-Output &amp;#34;Butler version $ButlerVersion ($ButlerChannel) has already been downloaded&amp;#34;
+}
+# change butler.exe to just butler if you are on Unix
+$butler=&amp;#34;$ButlerOutput/butler.exe&amp;#34;
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>If you are not on windows you should change the &lt;code>ButlerChannel&lt;/code> variable to &lt;code>darwin-amd64&lt;/code> or &lt;code>linux-amd64&lt;/code> depending on your system. I recommend checking &lt;a href="https://broth.itch.ovh/butler">the channel list&lt;/a> of Butler if you need something different. I&amp;rsquo;ve added a simple check so we don&amp;rsquo;t download Butler whenever we call the script. Before we continue you should get an API key from &lt;a href="https://itch.io/user/settings/api-keys">itch.io&lt;/a>. You should treat API keys like passwords and should never make them public. A good way of storing API keys is with environment variables and Butler expects the API key to be stored in the &lt;code>BUTLER_API_KEY&lt;/code> environment variable.&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="718562493" type="checkbox" />
+&lt;label for="718562493">
+&lt;span class="collapsable-code__language">bash&lt;/span>
+&lt;span class="collapsable-code__title">Using Buttler in a Bash Script&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-bash" >&lt;code>
+export BUTLER_API_KEY=&amp;#34;YOUR_KEY&amp;#34;
+ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
+./$butler login
+./$butler push $OUTPUT/Windows $ButlerProject:windows-beta
+./$butler push $OUTPUT/OSX $ButlerProject:osx-beta
+./$butler push $OUTPUT/Linux $ButlerProject:linux-beta
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;div class="collapsable-code">
+&lt;input id="597213486" type="checkbox" />
+&lt;label for="597213486">
+&lt;span class="collapsable-code__language">powershell&lt;/span>
+&lt;span class="collapsable-code__title">Using Buttler in a PowerShell Script&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-powershell" >&lt;code>
+$env:BUTLER_API_KEY=&amp;#34;YOUR_KEY&amp;#34;
+$ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
+&amp;amp;$butler login
+&amp;amp;$butler push $OUTPUT/Windows.zip &amp;#34;${ButlerProject}:windows-beta&amp;#34;
+&amp;amp;$butler push $OUTPUT/OSX.zip &amp;#34;${ButlerProject}:osx-beta&amp;#34;
+&amp;amp;$butler push $OUTPUT/Linux.zip &amp;#34;${ButlerProject}:linux-beta&amp;#34;
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>I recommend that you look at the &lt;a href="https://itch.io/docs/butler/pushing.html">Butler Docs&lt;/a> for the different channels you can push to. To recap here are both complete scripts:&lt;/p>
+&lt;h3 id="finished-scripts">Finished Scripts&lt;/h3>
+&lt;div class="collapsable-code">
+&lt;input id="734986152" type="checkbox" />
+&lt;label for="734986152">
+&lt;span class="collapsable-code__language">bash&lt;/span>
+&lt;span class="collapsable-code__title">Bash Script&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-bash" >&lt;code>
+#!/bin/bash
+INPUT=&amp;#34;./MyProject&amp;#34;
+OUTPUT=&amp;#34;./build&amp;#34;
+RPGMAKER=&amp;#34;M:\\SteamLibrary\\steamapps\\common\\RPG Maker MV&amp;#34;
+npx rpgmpacker@latest \
+--input &amp;#34;$INPUT&amp;#34; \
+--output &amp;#34;$OUTPUT&amp;#34; \
+--rpgmaker &amp;#34;$RPGMAKER&amp;#34; \
+--exclude \
+--noempty \
+--debug \
+--platforms &amp;#34;Windows&amp;#34; &amp;#34;OSX&amp;#34; &amp;#34;Linux&amp;#34;
+for platform in $OUTPUT/*; do
+7z a -tzip -o$OUTPUT $platform.zip $platform/*
+done
+# see https://broth.itch.ovh/butler
+ButlerChannel=&amp;#34;windows-amd64&amp;#34; # darwin-amd64 for Mac and linux-amd64 for Linux
+ButlerVersion=&amp;#34;15.21.0&amp;#34;
+ButlerOutput=&amp;#34;butler-$ButlerVersion-$ButlerChannel&amp;#34;
+if [ ! -d $ButlerOutput ]; then
+curl -L -o butler.zip https://broth.itch.ovh/butler/$butlerChannel/$butlerVersion/archive/default
+unzip -o butler.zip -d $ButlerOutput
+rm butler.zip
+else
+echo &amp;#34;Butler version $ButlerVersion ($ButlerChannel) has already been downloaded&amp;#34;
+fi
+# change butler.exe to just butler if you are on Unix
+butler=&amp;#34;$ButlerOutput/butler.exe&amp;#34;
+export BUTLER_API_KEY=&amp;#34;YOUR_KEY&amp;#34;
+ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
+./$butler login
+./$butler push $OUTPUT/Windows $ButlerProject:windows-beta
+./$butler push $OUTPUT/OSX $ButlerProject:osx-beta
+./$butler push $OUTPUT/Linux $ButlerProject:linux-beta
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;div class="collapsable-code">
+&lt;input id="274518396" type="checkbox" />
+&lt;label for="274518396">
+&lt;span class="collapsable-code__language">powershell&lt;/span>
+&lt;span class="collapsable-code__title">PowerShell Script&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-powershell" >&lt;code>
+$PROJECT=&amp;#34;./MyProject&amp;#34;
+$OUTPUT=&amp;#34;./build&amp;#34;
+$RPGMAKER=&amp;#34;M:\\SteamLibrary\\steamapps\\common\\RPG Maker MV&amp;#34;
+npx rpgmpacker@latest `
+--input $PROJECT `
+--output $OUTPUT `
+--rpgmaker $RPGMAKER `
+--exclude `
+--noempty `
+--debug `
+--platforms &amp;#34;Windows&amp;#34; &amp;#34;OSX&amp;#34; &amp;#34;Linux&amp;#34;
+$Platforms = Get-ChildItem -Path $OUTPUT -Directory -Name
+foreach ($platform in $Platforms) {
+7z a -tzip -o$OUTPUT $OUTPUT/$platform.zip $OUTPUT/$platform/*
+}
+# see https://broth.itch.ovh/butler
+$ButlerChannel=&amp;#34;windows-amd64&amp;#34; # darwin-amd64 for Mac and linux-amd64 for Linux
+$ButlerVersion=&amp;#34;15.21.0&amp;#34;
+$ButlerOutput=&amp;#34;butler-$ButlerVersion-$ButlerChannel&amp;#34;
+if (![System.IO.Directory]::Exists($ButlerOutput)) {
+Invoke-WebRequest -OutFile butler.zip &amp;#34;https://broth.itch.ovh/butler/$butlerChannel/$butlerVersion/archive/default&amp;#34;
+Expand-Archive -Path butler.zip $ButlerOutput
+Remove-Item -Path butler.zip
+} else {
+Write-Output &amp;#34;Butler version $ButlerVersion ($ButlerChannel) has already been downloaded&amp;#34;
+}
+# change butler.exe to just butler if you are on Unix
+$butler=&amp;#34;$ButlerOutput/butler.exe&amp;#34;
+$env:BUTLER_API_KEY=&amp;#34;YOUR_KEY&amp;#34;
+$ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
+&amp;amp;$butler login
+&amp;amp;$butler push $OUTPUT/Windows.zip &amp;#34;${ButlerProject}:windows-beta&amp;#34;
+&amp;amp;$butler push $OUTPUT/OSX.zip &amp;#34;${ButlerProject}:osx-beta&amp;#34;
+&amp;amp;$butler push $OUTPUT/Linux.zip &amp;#34;${ButlerProject}:linux-beta&amp;#34;
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>I hope this blog post helped you with getting a CI/CD pipeline up and running for your RPG Maker game. Please let me know if you end up using this tool for your next project. The author of &lt;a href="https://aura-dev.itch.io/star-knightess-aura">Star Knightess Aura (NSFW)&lt;/a> was one of the earliest users and you can find their pipeline in this repo on &lt;a href="https://gitgud.io/aura-dev/star_knightess_aura/-/tree/develop">gitgud&lt;/a>.&lt;/p>
+&lt;section class="footnotes" role="doc-endnotes">
+&lt;hr>
+&lt;ol>
+&lt;li id="fn:1" role="doc-endnote">
+&lt;p>Unreal Engine has &lt;a href="https://docs.unrealengine.com/4.27/en-US/ProductionPipelines/BuildTools/AutomationTool/">Automation Tools&lt;/a> and Unity has a &lt;a href="https://docs.unity3d.com/Manual/CommandLineArguments.html">CLI&lt;/a>&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
 &lt;/section></content></item><item><title>Utilizing Image Steganography in Games</title><link>https://erri120.github.io/posts/2021-01-27/</link><pubDate>Wed, 27 Jan 2021 10:08:08 +0100</pubDate><guid>https://erri120.github.io/posts/2021-01-27/</guid><description>Image Steganography is nothing new or ground-breaking, it existed since 440 BC 1 and digital steganography started appearing once personal computers became a thing. This little post is about the methods used by Illusion for their games &amp;ldquo;Koikatsu!&amp;rdquo; and &amp;ldquo;AI Shoujo&amp;rdquo; and the benefits it provides.
 Character Presets and PNGs Most games by Illusion are sandboxy, they have an active modding community provide an extensive character creation tool that can export your preset.</description><content>&lt;p>Image Steganography is nothing new or ground-breaking, it existed since 440 BC &lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> and digital steganography started appearing once personal computers became a thing. This little post is about the methods used by Illusion for their games &amp;ldquo;Koikatsu!&amp;rdquo; and &amp;ldquo;AI Shoujo&amp;rdquo; and the benefits it provides.&lt;/p>
 &lt;h2 id="character-presets-and-pngs">Character Presets and PNGs&lt;/h2>
