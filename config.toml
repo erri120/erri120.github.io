@@ -1,6 +1,6 @@
 baseURL = "https://erri120.github.io"
 languageCode = "en-us"
-title = "erri120's Blog"
+title = "erri120's very random Blog"
 theme = "terminal-fork"
 paginate = 5
 enableGitInfo = true
@@ -62,7 +62,7 @@ enableRobotsTXT = true
 [languages]
   [languages.en]
     languageName = "English"
-    title = "erri120's Blog"
+    title = "erri120's very random Blog"
     subtitle = "A random blog by a random person."
     owner = "erri120"
     copyright = "CC BY 4.0"
