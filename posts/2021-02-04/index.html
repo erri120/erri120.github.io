@@ -92,8 +92,8 @@ erri120's Blog
 <p>Big studios often end up with huge pipelines because they have many employees and teams. They might have a CI pipeline that runs the tests and builds the project. The artifact would then send in a CD pipeline to the testers or QA team and when they approve of the build it gets released into the world. This is probably not the case for you or your team and most of the time you can combine all of this into one pipeline.</p>
 <p>If you are curious how such a pipeline might look like, here is the GitHub Actions workflow file that builds (CI) and deploys (CD) this site to GitHub Pages on every push to the master branch:</p>
 <div class=collapsable-code>
-<input id=874615932 type=checkbox>
-<label for=874615932>
+<input id=961483725 type=checkbox>
+<label for=961483725>
 <span class=collapsable-code__language>yaml</span>
 <span class=collapsable-code__title>Example GitHub Actions workflow</span>
 <span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span>
@@ -153,8 +153,8 @@ jobs:
 <p>If your game is not on itch.io then you can leave out the last step or replace it with an upload to MEGA, GDrive or your hosting platform of choice.</p>
 <p>For the pipeline you can write a Bash or PowerShell script, just pick whatever you like more:</p>
 <div class=collapsable-code>
-<input id=275398461 type=checkbox>
-<label for=275398461>
+<input id=694157823 type=checkbox>
+<label for=694157823>
 <span class=collapsable-code__language>bash</span>
 <span class=collapsable-code__title>Using rpgmpacker in a Bash Script</span>
 <span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span>
@@ -177,8 +177,8 @@ npx rpgmpacker@latest \
 </code></pre>
 </div>
 <div class=collapsable-code>
-<input id=632459871 type=checkbox>
-<label for=632459871>
+<input id=394657812 type=checkbox>
+<label for=394657812>
 <span class=collapsable-code__language>powershell</span>
 <span class=collapsable-code__title>Using rpgmpacker in a PowerShell Script</span>
 <span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span>
@@ -201,8 +201,8 @@ npx rpgmpacker@latest `
 <p>In my case I have the project in a folder called <code>MyProject</code> next to the script and the output should go into the <code>build</code> folder. I&rsquo;m using the Steam version of RPG Maker MV for this but any version of MV or MZ can be used.</p>
 <p>Next up we want to zip the output. rpgmpacker will create an output folder for each platform you specified so for me I will have <code>build/Windows</code>, <code>build/OSX</code> and a <code>build/Linux</code> folder.</p>
 <div class=collapsable-code>
-<input id=916274358 type=checkbox>
-<label for=916274358>
+<input id=958624137 type=checkbox>
+<label for=958624137>
 <span class=collapsable-code__language>bash</span>
 <span class=collapsable-code__title>Zipping the output in a Bash Script</span>
 <span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span>
@@ -214,8 +214,8 @@ done
 </code></pre>
 </div>
 <div class=collapsable-code>
-<input id=538724619 type=checkbox>
-<label for=538724619>
+<input id=367159824 type=checkbox>
+<label for=367159824>
 <span class=collapsable-code__language>powershell</span>
 <span class=collapsable-code__title>Zipping the output in a PowerShell Script</span>
 <span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span>
@@ -230,8 +230,8 @@ foreach ($platform in $Platforms) {
 <p>This is where the difference between PowerShell and Bash start to appear. In Bash we use a glob to get all top-level items of the output directory and in PowerShell we use the <code>Get-ChildItem</code> function. They look different but they do the same thing with the main difference being that <code>platform</code> in Bash will be <code>./build/Windows</code> while <code>$platform</code> in PowerShell will be just <code>Windows</code>. This is why we need to prefix <code>$platform</code> with <code>$OUTPUT/</code> when calling 7z.</p>
 <p>The pipeline is almost done at this point. Next is publishing the output with <a href=https://itch.io/docs/butler>Butler</a> to itch.io but if you are not using that platform you are now done.</p>
 <div class=collapsable-code>
-<input id=381794625 type=checkbox>
-<label for=381794625>
+<input id=143278659 type=checkbox>
+<label for=143278659>
 <span class=collapsable-code__language>bash</span>
 <span class=collapsable-code__title>Downloading Butler in a Bash Script</span>
 <span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span>
@@ -255,8 +255,8 @@ butler=&#34;$ButlerOutput/butler.exe&#34;
 </code></pre>
 </div>
 <div class=collapsable-code>
-<input id=421869735 type=checkbox>
-<label for=421869735>
+<input id=397516284 type=checkbox>
+<label for=397516284>
 <span class=collapsable-code__language>powershell</span>
 <span class=collapsable-code__title>Downloading Buttler in a PowerShell Script</span>
 <span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span>
@@ -281,8 +281,8 @@ $butler=&#34;$ButlerOutput/butler.exe&#34;
 </div>
 <p>If you are not on windows you should change the <code>ButlerChannel</code> variable to <code>darwin-amd64</code> or <code>linux-amd64</code> depending on your system. I recommend checking <a href=https://broth.itch.ovh/butler>the channel list</a> of Butler if you need something different. I&rsquo;ve added a simple check so we don&rsquo;t download Butler whenever we call the script. Before we continue you should get an API key from <a href=https://itch.io/user/settings/api-keys>itch.io</a>. You should treat API keys like passwords and should never make them public. A good way of storing API keys is with environment variables and Butler expects the API key to be stored in the <code>BUTLER_API_KEY</code> environment variable.</p>
 <div class=collapsable-code>
-<input id=986753214 type=checkbox>
-<label for=986753214>
+<input id=815246973 type=checkbox>
+<label for=815246973>
 <span class=collapsable-code__language>bash</span>
 <span class=collapsable-code__title>Using Buttler in a Bash Script</span>
 <span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span>
@@ -298,8 +298,8 @@ ButlerProject=&#34;YOUR_USERNAME/YOUR_PROJECT_NAME&#34;
 </code></pre>
 </div>
 <div class=collapsable-code>
-<input id=623984157 type=checkbox>
-<label for=623984157>
+<input id=712654839 type=checkbox>
+<label for=712654839>
 <span class=collapsable-code__language>powershell</span>
 <span class=collapsable-code__title>Using Buttler in a PowerShell Script</span>
 <span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span>
@@ -317,8 +317,8 @@ $ButlerProject=&#34;YOUR_USERNAME/YOUR_PROJECT_NAME&#34;
 <p>I recommend that you look at the <a href=https://itch.io/docs/butler/pushing.html>Butler Docs</a> for the different channels you can push to. To recap here are both complete scripts:</p>
 <h3 id=finished-scripts>Finished Scripts<a href=#finished-scripts class=hanchor arialabel=Anchor>&#8983;</a> </h3>
 <div class=collapsable-code>
-<input id=682193745 type=checkbox>
-<label for=682193745>
+<input id=972534816 type=checkbox>
+<label for=972534816>
 <span class=collapsable-code__language>bash</span>
 <span class=collapsable-code__title>Bash Script</span>
 <span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span>
@@ -369,8 +369,8 @@ ButlerProject=&#34;YOUR_USERNAME/YOUR_PROJECT_NAME&#34;
 </code></pre>
 </div>
 <div class=collapsable-code>
-<input id=412569837 type=checkbox>
-<label for=412569837>
+<input id=274985631 type=checkbox>
+<label for=274985631>
 <span class=collapsable-code__language>powershell</span>
 <span class=collapsable-code__title>PowerShell Script</span>
 <span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span>
@@ -450,6 +450,10 @@ $ButlerProject=&#34;YOUR_USERNAME/YOUR_PROJECT_NAME&#34;
 </a>
 </span>
 </div>
+</div>
+<hr>
+<div style=margin-top:16px;margin-bottom:8px;display:flex;justify-content:center>
+<script type=text/javascript src=https://storage.ko-fi.com/cdn/widget/Widget_2.js></script><script type=text/javascript>kofiwidget2.init('Support Me on Ko-fi','#29abe0','P5P03UIPI'),kofiwidget2.draw()</script>
 </div>
 <script src=https://utteranc.es/client.js repo=erri120/erri120.github.io issue-term=pathname label=site-comment theme=github-dark-orange crossorigin=anonymous async></script>
 </main>
