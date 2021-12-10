@@ -169,8 +169,8 @@ This is sadly not often the case when it comes to game development.</description
 &lt;p>Big studios often end up with huge pipelines because they have many employees and teams. They might have a CI pipeline that runs the tests and builds the project. The artifact would then send in a CD pipeline to the testers or QA team and when they approve of the build it gets released into the world. This is probably not the case for you or your team and most of the time you can combine all of this into one pipeline.&lt;/p>
 &lt;p>If you are curious how such a pipeline might look like, here is the GitHub Actions workflow file that builds (CI) and deploys (CD) this site to GitHub Pages on every push to the master branch:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="693254781" type="checkbox" />
-&lt;label for="693254781">
+&lt;input id="168342795" type="checkbox" />
+&lt;label for="168342795">
 &lt;span class="collapsable-code__language">yaml&lt;/span>
 &lt;span class="collapsable-code__title">Example GitHub Actions workflow&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -223,8 +223,8 @@ publish_branch: gh-pages
 &lt;p>If your game is not on itch.io then you can leave out the last step or replace it with an upload to MEGA, GDrive or your hosting platform of choice.&lt;/p>
 &lt;p>For the pipeline you can write a Bash or PowerShell script, just pick whatever you like more:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="953612487" type="checkbox" />
-&lt;label for="953612487">
+&lt;input id="176843592" type="checkbox" />
+&lt;label for="176843592">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Using rpgmpacker in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -245,8 +245,8 @@ npx rpgmpacker@latest \
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="547832691" type="checkbox" />
-&lt;label for="547832691">
+&lt;input id="143587269" type="checkbox" />
+&lt;label for="143587269">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Using rpgmpacker in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -268,8 +268,8 @@ npx rpgmpacker@latest `
 &lt;p>In my case I have the project in a folder called &lt;code>MyProject&lt;/code> next to the script and the output should go into the &lt;code>build&lt;/code> folder. I&amp;rsquo;m using the Steam version of RPG Maker MV for this but any version of MV or MZ can be used.&lt;/p>
 &lt;p>Next up we want to zip the output. rpgmpacker will create an output folder for each platform you specified so for me I will have &lt;code>build/Windows&lt;/code>, &lt;code>build/OSX&lt;/code> and a &lt;code>build/Linux&lt;/code> folder.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="365248971" type="checkbox" />
-&lt;label for="365248971">
+&lt;input id="874619325" type="checkbox" />
+&lt;label for="874619325">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Zipping the output in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -281,8 +281,8 @@ done
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="326859174" type="checkbox" />
-&lt;label for="326859174">
+&lt;input id="436127895" type="checkbox" />
+&lt;label for="436127895">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Zipping the output in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -297,8 +297,8 @@ foreach ($platform in $Platforms) {
 &lt;p>This is where the difference between PowerShell and Bash start to appear. In Bash we use a glob to get all top-level items of the output directory and in PowerShell we use the &lt;code>Get-ChildItem&lt;/code> function. They look different but they do the same thing with the main difference being that &lt;code>platform&lt;/code> in Bash will be &lt;code>./build/Windows&lt;/code> while &lt;code>$platform&lt;/code> in PowerShell will be just &lt;code>Windows&lt;/code>. This is why we need to prefix &lt;code>$platform&lt;/code> with &lt;code>$OUTPUT/&lt;/code> when calling 7z.&lt;/p>
 &lt;p>The pipeline is almost done at this point. Next is publishing the output with &lt;a href="https://itch.io/docs/butler">Butler&lt;/a> to itch.io but if you are not using that platform you are now done.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="348192765" type="checkbox" />
-&lt;label for="348192765">
+&lt;input id="874156293" type="checkbox" />
+&lt;label for="874156293">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Downloading Butler in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -320,8 +320,8 @@ butler=&amp;#34;$ButlerOutput/butler.exe&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="657893124" type="checkbox" />
-&lt;label for="657893124">
+&lt;input id="169824753" type="checkbox" />
+&lt;label for="169824753">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Downloading Buttler in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -344,8 +344,8 @@ $butler=&amp;#34;$ButlerOutput/butler.exe&amp;#34;
 &lt;/div>
 &lt;p>If you are not on windows you should change the &lt;code>ButlerChannel&lt;/code> variable to &lt;code>darwin-amd64&lt;/code> or &lt;code>linux-amd64&lt;/code> depending on your system. I recommend checking &lt;a href="https://broth.itch.ovh/butler">the channel list&lt;/a> of Butler if you need something different. I&amp;rsquo;ve added a simple check so we don&amp;rsquo;t download Butler whenever we call the script. Before we continue you should get an API key from &lt;a href="https://itch.io/user/settings/api-keys">itch.io&lt;/a>. You should treat API keys like passwords and should never make them public. A good way of storing API keys is with environment variables and Butler expects the API key to be stored in the &lt;code>BUTLER_API_KEY&lt;/code> environment variable.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="392874516" type="checkbox" />
-&lt;label for="392874516">
+&lt;input id="471368259" type="checkbox" />
+&lt;label for="471368259">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Using Buttler in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -360,8 +360,8 @@ ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="831967425" type="checkbox" />
-&lt;label for="831967425">
+&lt;input id="473289651" type="checkbox" />
+&lt;label for="473289651">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Using Buttler in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -378,8 +378,8 @@ $ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;p>I recommend that you look at the &lt;a href="https://itch.io/docs/butler/pushing.html">Butler Docs&lt;/a> for the different channels you can push to. To recap here are both complete scripts:&lt;/p>
 &lt;h3 id="finished-scripts">Finished Scripts&lt;/h3>
 &lt;div class="collapsable-code">
-&lt;input id="647813295" type="checkbox" />
-&lt;label for="647813295">
+&lt;input id="372864915" type="checkbox" />
+&lt;label for="372864915">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -422,8 +422,8 @@ ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="362845719" type="checkbox" />
-&lt;label for="362845719">
+&lt;input id="816945327" type="checkbox" />
+&lt;label for="816945327">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
