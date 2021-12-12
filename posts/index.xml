@@ -6,6 +6,7 @@
 &lt;p>The login screen. You open a website, click the login button, enter your username + password and log in to your account. But why do you have to log in to your account in Anno 2070? Some time around 2013 Ubisoft had the genius idea of switching up their entire account system. Anno 2070 was caught up in the transition and somehow came out as an abomination where the login is more broken than Fallout 76 on release &lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>. So what username + password do you use in Anno 2070? If you think you have to use your Uplay account then you&amp;rsquo;re wrong. If you choose your Steam credentials then you are also wrong. You have to use the credentials of the account you used to register the game. In my case it&amp;rsquo;s not my main Uplay account because it didn&amp;rsquo;t even existed back then. Now here is the fun part: I still own the game on Uplay. It is in my library but I can&amp;rsquo;t use my account because the &lt;em>key&lt;/em> is not linked to my actual Uplay account. I put emphasis on &lt;em>key&lt;/em> because that is our next hurdle. Even if you manage to log in you will probably be asked about the key however your key might be linked to another account even though that account doesn&amp;rsquo;t have the game in their Uplay library. I don&amp;rsquo;t even know how this exactly works with Steam users but I can imagine it doesn&amp;rsquo;t.&lt;/p>
 &lt;p>I hope you come to understand how utterly broken the start procedure of Anno 2070 is. Back in the day when Ubisoft used something called &lt;em>SolidShield&lt;/em> the process was even more fucked. Your key was not only tied to some random account but also to your hardware directly meaning if you upgraded your GTX 580 to a GTX 590 your key would not work &lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup>. If you somehow think this is just the rabbling of an insane person then you are correct but I would also like you to check out the Steam reviews and this great post on reddit &amp;ldquo;&lt;a href="https://www.reddit.com/r/CrackWatch/comments/7wejnm/ubisofts_anno_2070_unplayable_due_to_drm/">Ubisoft&amp;rsquo;s Anno 2070 Unplayable Due to DRM&lt;/a>&amp;rdquo; for more salt.&lt;/p>
 &lt;h2 id="fixing-the-game">Fixing the game&lt;/h2>
+&lt;p>Edit: Before we dive into this I want to tell you that there are other potential fixes to this problem. Some people messaged me and askes why I didn&amp;rsquo;t do X or Y and my answer was always &amp;ldquo;It didn&amp;rsquo;t worked&amp;rdquo;. If you have a similar problem with Anno 2070 then there are other solutions you can try. The fix I will propose is guaranteed to work but should be a last resort.&lt;/p>
 &lt;p>Now that I cooled off and finished my rant it&amp;rsquo;s time to talk about how we can fix everything. If you want to follow along you need to get the latest version from Uplay or Steam. It has the version number &lt;code>2.0.7792.0&lt;/code> and the SHA256 hash of &lt;code>Anno5.exe&lt;/code> is &lt;code>C76D42E71AF6A7D1786C6846091A5FBDDB13E3A88A72E469F36F9F365645D58A&lt;/code>. If you don&amp;rsquo;t want an explanation of how I got here you can skip to the &lt;a href="#tldr-if-you-dont-want-an-explanation">TL;DR&lt;/a> but if you want to hear the explanation then knowing assembly and basic programming is recommended.&lt;/p>
 &lt;p>The goal is to force the game into offline mode. Simply changing your firewall settings to block all connections from the executable is not the solution because, as explained earlier, we also need to deal with Uplay. There is actually a single function responsible for launching Uplay. The standard solution would be to either replace the function with &lt;code>NOP&lt;/code> instructions or replace the &lt;code>CALL&lt;/code> instruction with &lt;code>NOP&lt;/code>. This would probably work, however I found something better. This &lt;code>InitializeUplay&lt;/code> function gets called only once: during a pre-init function of the game inside a condition. There is actually a &lt;code>JNZ&lt;/code> instruction which will skip the function call entirely.&lt;/p>
 &lt;p>The comparison at &lt;code>004b05bf&lt;/code> (&lt;code>80 7e 50 00 bb 10 00 00 00&lt;/code>) compares whatever is at &lt;code>ESI+50&lt;/code> with &lt;code>0&lt;/code> meaning that the &lt;code>JNZ&lt;/code> jump at &lt;code>004b05c8&lt;/code> will be taken if &lt;code>ESI+50&lt;/code> is not &lt;code>0&lt;/code>. This is never the case and I don&amp;rsquo;t really understand what the condition actually represents but we can exploit this and make sure the jump is always taken. Since &lt;code>ESI+50&lt;/code> is always &lt;code>0&lt;/code> we can just change the comparison to compare &lt;code>ESI+50&lt;/code> with &lt;code>1&lt;/code>: &lt;code>80 7e 50 01&lt;/code>. With this you can launch the game and Uplay will never start.&lt;/p>
@@ -155,8 +156,8 @@ This is sadly not often the case when it comes to game development.</description
 &lt;p>Big studios often end up with huge pipelines because they have many employees and teams. They might have a CI pipeline that runs the tests and builds the project. The artifact would then send in a CD pipeline to the testers or QA team and when they approve of the build it gets released into the world. This is probably not the case for you or your team and most of the time you can combine all of this into one pipeline.&lt;/p>
 &lt;p>If you are curious how such a pipeline might look like, here is the GitHub Actions workflow file that builds (CI) and deploys (CD) this site to GitHub Pages on every push to the master branch:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="316958274" type="checkbox" />
-&lt;label for="316958274">
+&lt;input id="156834297" type="checkbox" />
+&lt;label for="156834297">
 &lt;span class="collapsable-code__language">yaml&lt;/span>
 &lt;span class="collapsable-code__title">Example GitHub Actions workflow&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -209,8 +210,8 @@ publish_branch: gh-pages
 &lt;p>If your game is not on itch.io then you can leave out the last step or replace it with an upload to MEGA, GDrive or your hosting platform of choice.&lt;/p>
 &lt;p>For the pipeline you can write a Bash or PowerShell script, just pick whatever you like more:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="196248357" type="checkbox" />
-&lt;label for="196248357">
+&lt;input id="541286973" type="checkbox" />
+&lt;label for="541286973">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Using rpgmpacker in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -231,8 +232,8 @@ npx rpgmpacker@latest \
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="916275834" type="checkbox" />
-&lt;label for="916275834">
+&lt;input id="937162458" type="checkbox" />
+&lt;label for="937162458">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Using rpgmpacker in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -254,8 +255,8 @@ npx rpgmpacker@latest `
 &lt;p>In my case I have the project in a folder called &lt;code>MyProject&lt;/code> next to the script and the output should go into the &lt;code>build&lt;/code> folder. I&amp;rsquo;m using the Steam version of RPG Maker MV for this but any version of MV or MZ can be used.&lt;/p>
 &lt;p>Next up we want to zip the output. rpgmpacker will create an output folder for each platform you specified so for me I will have &lt;code>build/Windows&lt;/code>, &lt;code>build/OSX&lt;/code> and a &lt;code>build/Linux&lt;/code> folder.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="349718256" type="checkbox" />
-&lt;label for="349718256">
+&lt;input id="716852394" type="checkbox" />
+&lt;label for="716852394">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Zipping the output in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -267,8 +268,8 @@ done
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="712689354" type="checkbox" />
-&lt;label for="712689354">
+&lt;input id="361847925" type="checkbox" />
+&lt;label for="361847925">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Zipping the output in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -283,8 +284,8 @@ foreach ($platform in $Platforms) {
 &lt;p>This is where the difference between PowerShell and Bash start to appear. In Bash we use a glob to get all top-level items of the output directory and in PowerShell we use the &lt;code>Get-ChildItem&lt;/code> function. They look different but they do the same thing with the main difference being that &lt;code>platform&lt;/code> in Bash will be &lt;code>./build/Windows&lt;/code> while &lt;code>$platform&lt;/code> in PowerShell will be just &lt;code>Windows&lt;/code>. This is why we need to prefix &lt;code>$platform&lt;/code> with &lt;code>$OUTPUT/&lt;/code> when calling 7z.&lt;/p>
 &lt;p>The pipeline is almost done at this point. Next is publishing the output with &lt;a href="https://itch.io/docs/butler">Butler&lt;/a> to itch.io but if you are not using that platform you are now done.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="425873619" type="checkbox" />
-&lt;label for="425873619">
+&lt;input id="196754328" type="checkbox" />
+&lt;label for="196754328">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Downloading Butler in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -306,8 +307,8 @@ butler=&amp;#34;$ButlerOutput/butler.exe&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="219354687" type="checkbox" />
-&lt;label for="219354687">
+&lt;input id="286457319" type="checkbox" />
+&lt;label for="286457319">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Downloading Buttler in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -330,8 +331,8 @@ $butler=&amp;#34;$ButlerOutput/butler.exe&amp;#34;
 &lt;/div>
 &lt;p>If you are not on windows you should change the &lt;code>ButlerChannel&lt;/code> variable to &lt;code>darwin-amd64&lt;/code> or &lt;code>linux-amd64&lt;/code> depending on your system. I recommend checking &lt;a href="https://broth.itch.ovh/butler">the channel list&lt;/a> of Butler if you need something different. I&amp;rsquo;ve added a simple check so we don&amp;rsquo;t download Butler whenever we call the script. Before we continue you should get an API key from &lt;a href="https://itch.io/user/settings/api-keys">itch.io&lt;/a>. You should treat API keys like passwords and should never make them public. A good way of storing API keys is with environment variables and Butler expects the API key to be stored in the &lt;code>BUTLER_API_KEY&lt;/code> environment variable.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="298154367" type="checkbox" />
-&lt;label for="298154367">
+&lt;input id="851649372" type="checkbox" />
+&lt;label for="851649372">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Using Buttler in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -346,8 +347,8 @@ ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="139264857" type="checkbox" />
-&lt;label for="139264857">
+&lt;input id="467935128" type="checkbox" />
+&lt;label for="467935128">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Using Buttler in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -364,8 +365,8 @@ $ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;p>I recommend that you look at the &lt;a href="https://itch.io/docs/butler/pushing.html">Butler Docs&lt;/a> for the different channels you can push to. To recap here are both complete scripts:&lt;/p>
 &lt;h3 id="finished-scripts">Finished Scripts&lt;/h3>
 &lt;div class="collapsable-code">
-&lt;input id="732145896" type="checkbox" />
-&lt;label for="732145896">
+&lt;input id="547263198" type="checkbox" />
+&lt;label for="547263198">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -408,8 +409,8 @@ ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="293164785" type="checkbox" />
-&lt;label for="293164785">
+&lt;input id="264573198" type="checkbox" />
+&lt;label for="264573198">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
