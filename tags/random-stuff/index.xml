@@ -7,15 +7,15 @@ Character Presets and PNGs Most games by Illusion are sandboxy, they have an act
 &lt;p>If you own Koikatsu! then you can just download this image, put it inside your preset folder and it will just work in-game. Of course I immediately opened a my hex editor of choice, &lt;a href="https://mh-nexus.de/en/hxd/">HxD&lt;/a>, and looked through the data to find what was going on:&lt;/p>
 &lt;img src="https://erri120.github.io/img/posts/2021-01-27/preset-in-hxd.png" alt="Mona Preset in HxD" class="left" />
 &lt;p>It turns out that the data for the preset was appended to the end of the PNG. As you can see in the preview above, this does not affect the render in any way because the parser will just stop at the &lt;code>IEND&lt;/code> marker. I found out that FFmpeg does not like this extra data at the end and tries to parse another PNG instead of exiting:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-txt" data-lang="txt">[png @ 000001f2aeb65500] Invalid PNG signature 0x6400000012E38090.
-[png @ 000001f2aec0e2c0] Invalid PNG signature 0xE300000081A76C73.
-[png @ 000001f2aec11500] Invalid PNG signature 0xA946616365556E64.
-[png @ 000001f2aec0fd40] Invalid PNG signature 0xA74579654F766572.
-[png @ 000001f2aec10940] Invalid PNG signature 0xD928636F6D2E6765.
-[png @ 000001f2aec10140] Invalid PNG signature 0xC2A963745F676C6F.
-[png @ 000001f2aec11100] Invalid PNG signature 0xC3AE63745F73686F.
-[png @ 000001f2aec10540] Invalid PNG signature 0xCC6001D023D8950.
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="rewarding-simplicity">Rewarding Simplicity&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-txt" data-lang="txt">&lt;span style="display:flex;">&lt;span>[png @ 000001f2aeb65500] Invalid PNG signature 0x6400000012E38090.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[png @ 000001f2aec0e2c0] Invalid PNG signature 0xE300000081A76C73.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[png @ 000001f2aec11500] Invalid PNG signature 0xA946616365556E64.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[png @ 000001f2aec0fd40] Invalid PNG signature 0xA74579654F766572.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[png @ 000001f2aec10940] Invalid PNG signature 0xD928636F6D2E6765.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[png @ 000001f2aec10140] Invalid PNG signature 0xC2A963745F676C6F.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[png @ 000001f2aec11100] Invalid PNG signature 0xC3AE63745F73686F.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[png @ 000001f2aec10540] Invalid PNG signature 0xCC6001D023D8950.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="rewarding-simplicity">Rewarding Simplicity&lt;/h2>
 &lt;p>You might think &amp;ldquo;&lt;em>So what&amp;rsquo;s the deal?&lt;/em>&amp;rdquo; and that is the point: it is simple to implement and a good solution to the problem of sharing presets, however it is not apparent.&lt;/p>
 &lt;p>I hope you found this somewhat interesting, if you work on a game that has presets and you don&amp;rsquo;t know how to export them, maybe this has sparked your interest and provided a solution.&lt;/p>
 &lt;section class="footnotes" role="doc-endnotes">

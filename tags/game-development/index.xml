@@ -16,24 +16,24 @@ With some issues still open I stopped working on this project in April 2021 beca
 &lt;h2 id="looking-at-rpg-maker-mvmz">Looking at RPG Maker MV/MZ&lt;/h2>
 &lt;p>So what issue does RPG Maker have? I have recently played a game for around 21 hours but the save menu displayed over 51 hours, more than double. Actually not just more than double but around 2.4 times more than expected. This quickly made me realize that I had been playing the game on my 144Hz monitor meaning instead of rendering at 60 FPS, the game was rendering at 144 FPS. I hope you notice that &lt;code>60 x 2.4&lt;/code> equals &lt;code>144&lt;/code>.&lt;/p>
 &lt;p>To further investigate the problem I took a peek inside the &lt;code>js&lt;/code> folder, did a quick search for &amp;ldquo;playtime&amp;rdquo; and found the culprits of my frustration:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">onBeforeSave&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
-&lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_framesOnSave&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">Graphics&lt;/span>.&lt;span style="color:#a6e22e">frameCount&lt;/span>;
-&lt;span style="color:#75715e">// ...
-&lt;/span>&lt;span style="color:#75715e">&lt;/span>};
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">onAfterLoad&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
-&lt;span style="color:#a6e22e">Graphics&lt;/span>.&lt;span style="color:#a6e22e">frameCount&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_framesOnSave&lt;/span>;
-&lt;span style="color:#75715e">// ...
-&lt;/span>&lt;span style="color:#75715e">&lt;/span>};
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">playtime&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
-&lt;span style="color:#66d9ef">return&lt;/span> Math.&lt;span style="color:#a6e22e">floor&lt;/span>(&lt;span style="color:#a6e22e">Graphics&lt;/span>.&lt;span style="color:#a6e22e">frameCount&lt;/span> &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>);
-};
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">playtimeText&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
-&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">hour&lt;/span> &lt;span style="color:#f92672">=&lt;/span> Math.&lt;span style="color:#a6e22e">floor&lt;/span>(&lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">playtime&lt;/span>() &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span> &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>);
-&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">min&lt;/span> &lt;span style="color:#f92672">=&lt;/span> Math.&lt;span style="color:#a6e22e">floor&lt;/span>(&lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">playtime&lt;/span>() &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>) &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>;
-&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">sec&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">playtime&lt;/span>() &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>;
-&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">hour&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">min&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">sec&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>);
-};
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>A quick explanation: whenever you save, the game includes the amount of frames it has rendered in the save file because &lt;code>Game_System&lt;/code> is serialized in the save file and &lt;code>_framesOnSave&lt;/code> is a field of that object. Of course when you load the save will get deserialized and &lt;code>Graphics.frameCount&lt;/code> will be set back to that value. In case you are wondering: &lt;code>Graphics.frameCount&lt;/code> gets incremented on each render.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">onBeforeSave&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_framesOnSave&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">Graphics&lt;/span>.&lt;span style="color:#a6e22e">frameCount&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">onAfterLoad&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Graphics&lt;/span>.&lt;span style="color:#a6e22e">frameCount&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_framesOnSave&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">playtime&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> Math.&lt;span style="color:#a6e22e">floor&lt;/span>(&lt;span style="color:#a6e22e">Graphics&lt;/span>.&lt;span style="color:#a6e22e">frameCount&lt;/span> &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">playtimeText&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">hour&lt;/span> &lt;span style="color:#f92672">=&lt;/span> Math.&lt;span style="color:#a6e22e">floor&lt;/span>(&lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">playtime&lt;/span>() &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span> &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">min&lt;/span> &lt;span style="color:#f92672">=&lt;/span> Math.&lt;span style="color:#a6e22e">floor&lt;/span>(&lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">playtime&lt;/span>() &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>) &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">sec&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">playtime&lt;/span>() &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">hour&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">min&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">sec&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>A quick explanation: whenever you save, the game includes the amount of frames it has rendered in the save file because &lt;code>Game_System&lt;/code> is serialized in the save file and &lt;code>_framesOnSave&lt;/code> is a field of that object. Of course when you load the save will get deserialized and &lt;code>Graphics.frameCount&lt;/code> will be set back to that value. In case you are wondering: &lt;code>Graphics.frameCount&lt;/code> gets incremented on each render.&lt;/p>
 &lt;p>This is fine so far but the real problems are found in the &lt;code>playtime&lt;/code> and &lt;code>playtimeText&lt;/code> functions where the game assumes you constantly playing at 60 frames per second. The pure &lt;code>frameCount&lt;/code> gets divided by &lt;code>60&lt;/code> to get the amount of seconds passed and in &lt;code>playtimeText&lt;/code> that result is further processed to the get hours and minutes.&lt;/p>
 &lt;p>Due to the multiple issues outlined at the beginning you can see that this is not a good idea. Having said that: let&amp;rsquo;s look at how to fix this.&lt;/p>
 &lt;h2 id="possible-solution">Possible Solution&lt;/h2>
@@ -50,38 +50,40 @@ With some issues still open I stopped working on this project in April 2021 beca
 &lt;p>No need for frame count calculations or anything complex, just use &lt;code>Date.now()&lt;/code> a few times and get the difference.&lt;/p>
 &lt;h3 id="changing-the-implementation-in-rpg-maker-mv">Changing the implementation in RPG Maker MV&lt;/h3>
 &lt;p>Start by opening &lt;code>js/rpg_objects.js&lt;/code> and look for the &lt;code>initialize&lt;/code> function. Here we want to add two new fields:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">initialize&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
-&lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_startTime&lt;/span> &lt;span style="color:#f92672">=&lt;/span> Date.&lt;span style="color:#a6e22e">now&lt;/span>();
-&lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_playtime&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
-&lt;span style="color:#75715e">// ...
-&lt;/span>&lt;span style="color:#75715e">&lt;/span>}
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>Date.now()&lt;/code> returns the current &lt;a href="https://currentmillis.com/">Unix time&lt;/a> as an integer that looks like this: &lt;code>1632928643900&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">initialize&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_startTime&lt;/span> &lt;span style="color:#f92672">=&lt;/span> Date.&lt;span style="color:#a6e22e">now&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_playtime&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>Date.now()&lt;/code> returns the current &lt;a href="https://currentmillis.com/">Unix time&lt;/a> as an integer that looks like this: &lt;code>1632928643900&lt;/code>.&lt;/p>
 &lt;p>We need to set the start time in the &lt;code>initialize&lt;/code> function for when the game starts and in the &lt;code>onAfterLoad&lt;/code> function for when the player loads a save file:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">onAfterLoad&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
-&lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_startTime&lt;/span> &lt;span style="color:#f92672">=&lt;/span> Date.&lt;span style="color:#a6e22e">now&lt;/span>();
-&lt;span style="color:#75715e">// ...
-&lt;/span>&lt;span style="color:#75715e">&lt;/span>}
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>onBeforeSave&lt;/code> function gets called before the save is serialized so here we have to calculate the time difference and reset the start time:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">onBeforeSave&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
-&lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_playtime&lt;/span> &lt;span style="color:#f92672">+=&lt;/span> Date.&lt;span style="color:#a6e22e">now&lt;/span>() &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_startTime&lt;/span>;
-&lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_startTime&lt;/span> &lt;span style="color:#f92672">=&lt;/span> Date.&lt;span style="color:#a6e22e">now&lt;/span>();
-&lt;span style="color:#75715e">// ...
-&lt;/span>&lt;span style="color:#75715e">&lt;/span>}
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Assuming the player started at &lt;code>1632928643900&lt;/code> and played for 1 second till &lt;code>1632928644900&lt;/code>, &lt;code>this._playtime&lt;/code> will now be &lt;code>1000&lt;/code>. The only thing remaining is updating the &lt;code>playtime&lt;/code> function:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">playtime&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
-&lt;span style="color:#66d9ef">return&lt;/span> Math.&lt;span style="color:#a6e22e">floor&lt;/span>(&lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_playtime&lt;/span> &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">1000&lt;/span>);
-};
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Since this function returns the amount of time passed in seconds we have to divide by 1000 to convert from milliseconds to seconds. While we are at it, I also recommend updating &lt;code>playtimeText&lt;/code>:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">playtimeText&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
-&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">secondsPassed&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">playtime&lt;/span>();
-&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">minutesPassed&lt;/span> &lt;span style="color:#f92672">=&lt;/span> Math.&lt;span style="color:#a6e22e">floor&lt;/span>(&lt;span style="color:#a6e22e">secondsPassed&lt;/span> &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>);
-&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">hoursPassed&lt;/span> &lt;span style="color:#f92672">=&lt;/span> Math.&lt;span style="color:#a6e22e">floor&lt;/span>(&lt;span style="color:#a6e22e">minutesPassed&lt;/span> &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>);
-&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">sec&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">secondsPassed&lt;/span> &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>;
-&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">min&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">minutesPassed&lt;/span> &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>;
-&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">hour&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">hoursPassed&lt;/span> &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#ae81ff">24&lt;/span>;
-&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">hour&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">min&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">sec&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>);
-};
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>The main difference here is that we cache the result from the &lt;code>playtime&lt;/code> function and other operations.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">onAfterLoad&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_startTime&lt;/span> &lt;span style="color:#f92672">=&lt;/span> Date.&lt;span style="color:#a6e22e">now&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>onBeforeSave&lt;/code> function gets called before the save is serialized so here we have to calculate the time difference and reset the start time:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">onBeforeSave&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_playtime&lt;/span> &lt;span style="color:#f92672">+=&lt;/span> Date.&lt;span style="color:#a6e22e">now&lt;/span>() &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_startTime&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_startTime&lt;/span> &lt;span style="color:#f92672">=&lt;/span> Date.&lt;span style="color:#a6e22e">now&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Assuming the player started at &lt;code>1632928643900&lt;/code> and played for 1 second till &lt;code>1632928644900&lt;/code>, &lt;code>this._playtime&lt;/code> will now be &lt;code>1000&lt;/code>. The only thing remaining is updating the &lt;code>playtime&lt;/code> function:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">playtime&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> Math.&lt;span style="color:#a6e22e">floor&lt;/span>(&lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">_playtime&lt;/span> &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">1000&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Since this function returns the amount of time passed in seconds we have to divide by 1000 to convert from milliseconds to seconds. While we are at it, I also recommend updating &lt;code>playtimeText&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">Game_System&lt;/span>.&lt;span style="color:#a6e22e">prototype&lt;/span>.&lt;span style="color:#a6e22e">playtimeText&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">secondsPassed&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">playtime&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">minutesPassed&lt;/span> &lt;span style="color:#f92672">=&lt;/span> Math.&lt;span style="color:#a6e22e">floor&lt;/span>(&lt;span style="color:#a6e22e">secondsPassed&lt;/span> &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">hoursPassed&lt;/span> &lt;span style="color:#f92672">=&lt;/span> Math.&lt;span style="color:#a6e22e">floor&lt;/span>(&lt;span style="color:#a6e22e">minutesPassed&lt;/span> &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">sec&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">secondsPassed&lt;/span> &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">min&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">minutesPassed&lt;/span> &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#ae81ff">60&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">hour&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">hoursPassed&lt;/span> &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#ae81ff">24&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">hour&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">min&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">sec&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The main difference here is that we cache the result from the &lt;code>playtime&lt;/code> function and other operations.&lt;/p>
 &lt;h2 id="afterword">Afterword&lt;/h2>
 &lt;p>This issue has been bugging me a lot during my playthroughs of longer games because you don&amp;rsquo;t really notice it when your playtime goes from 1h to 2 hours but going from 21 hours to 50+ hours was a bit more in my face. RPG Maker MZ also doesn&amp;rsquo;t fix this and I have not seen any discussion about this.&lt;/p>
 &lt;section class="footnotes" role="doc-endnotes">
@@ -116,8 +118,8 @@ This is sadly not often the case when it comes to game development.</description
 &lt;p>Big studios often end up with huge pipelines because they have many employees and teams. They might have a CI pipeline that runs the tests and builds the project. The artifact would then send in a CD pipeline to the testers or QA team and when they approve of the build it gets released into the world. This is probably not the case for you or your team and most of the time you can combine all of this into one pipeline.&lt;/p>
 &lt;p>If you are curious how such a pipeline might look like, here is the GitHub Actions workflow file that builds (CI) and deploys (CD) this site to GitHub Pages on every push to the master branch:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="156834297" type="checkbox" />
-&lt;label for="156834297">
+&lt;input id="938514762" type="checkbox" />
+&lt;label for="938514762">
 &lt;span class="collapsable-code__language">yaml&lt;/span>
 &lt;span class="collapsable-code__title">Example GitHub Actions workflow&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -170,8 +172,8 @@ publish_branch: gh-pages
 &lt;p>If your game is not on itch.io then you can leave out the last step or replace it with an upload to MEGA, GDrive or your hosting platform of choice.&lt;/p>
 &lt;p>For the pipeline you can write a Bash or PowerShell script, just pick whatever you like more:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="541286973" type="checkbox" />
-&lt;label for="541286973">
+&lt;input id="184396725" type="checkbox" />
+&lt;label for="184396725">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Using rpgmpacker in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -192,8 +194,8 @@ npx rpgmpacker@latest \
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="937162458" type="checkbox" />
-&lt;label for="937162458">
+&lt;input id="528437619" type="checkbox" />
+&lt;label for="528437619">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Using rpgmpacker in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -215,8 +217,8 @@ npx rpgmpacker@latest `
 &lt;p>In my case I have the project in a folder called &lt;code>MyProject&lt;/code> next to the script and the output should go into the &lt;code>build&lt;/code> folder. I&amp;rsquo;m using the Steam version of RPG Maker MV for this but any version of MV or MZ can be used.&lt;/p>
 &lt;p>Next up we want to zip the output. rpgmpacker will create an output folder for each platform you specified so for me I will have &lt;code>build/Windows&lt;/code>, &lt;code>build/OSX&lt;/code> and a &lt;code>build/Linux&lt;/code> folder.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="716852394" type="checkbox" />
-&lt;label for="716852394">
+&lt;input id="913672485" type="checkbox" />
+&lt;label for="913672485">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Zipping the output in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -228,8 +230,8 @@ done
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="361847925" type="checkbox" />
-&lt;label for="361847925">
+&lt;input id="617239854" type="checkbox" />
+&lt;label for="617239854">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Zipping the output in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -244,8 +246,8 @@ foreach ($platform in $Platforms) {
 &lt;p>This is where the difference between PowerShell and Bash start to appear. In Bash we use a glob to get all top-level items of the output directory and in PowerShell we use the &lt;code>Get-ChildItem&lt;/code> function. They look different but they do the same thing with the main difference being that &lt;code>platform&lt;/code> in Bash will be &lt;code>./build/Windows&lt;/code> while &lt;code>$platform&lt;/code> in PowerShell will be just &lt;code>Windows&lt;/code>. This is why we need to prefix &lt;code>$platform&lt;/code> with &lt;code>$OUTPUT/&lt;/code> when calling 7z.&lt;/p>
 &lt;p>The pipeline is almost done at this point. Next is publishing the output with &lt;a href="https://itch.io/docs/butler">Butler&lt;/a> to itch.io but if you are not using that platform you are now done.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="196754328" type="checkbox" />
-&lt;label for="196754328">
+&lt;input id="241753689" type="checkbox" />
+&lt;label for="241753689">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Downloading Butler in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -267,8 +269,8 @@ butler=&amp;#34;$ButlerOutput/butler.exe&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="286457319" type="checkbox" />
-&lt;label for="286457319">
+&lt;input id="876439521" type="checkbox" />
+&lt;label for="876439521">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Downloading Buttler in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -291,8 +293,8 @@ $butler=&amp;#34;$ButlerOutput/butler.exe&amp;#34;
 &lt;/div>
 &lt;p>If you are not on windows you should change the &lt;code>ButlerChannel&lt;/code> variable to &lt;code>darwin-amd64&lt;/code> or &lt;code>linux-amd64&lt;/code> depending on your system. I recommend checking &lt;a href="https://broth.itch.ovh/butler">the channel list&lt;/a> of Butler if you need something different. I&amp;rsquo;ve added a simple check so we don&amp;rsquo;t download Butler whenever we call the script. Before we continue you should get an API key from &lt;a href="https://itch.io/user/settings/api-keys">itch.io&lt;/a>. You should treat API keys like passwords and should never make them public. A good way of storing API keys is with environment variables and Butler expects the API key to be stored in the &lt;code>BUTLER_API_KEY&lt;/code> environment variable.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="851649372" type="checkbox" />
-&lt;label for="851649372">
+&lt;input id="659371248" type="checkbox" />
+&lt;label for="659371248">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Using Buttler in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -307,8 +309,8 @@ ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="467935128" type="checkbox" />
-&lt;label for="467935128">
+&lt;input id="984371652" type="checkbox" />
+&lt;label for="984371652">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Using Buttler in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -325,8 +327,8 @@ $ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;p>I recommend that you look at the &lt;a href="https://itch.io/docs/butler/pushing.html">Butler Docs&lt;/a> for the different channels you can push to. To recap here are both complete scripts:&lt;/p>
 &lt;h3 id="finished-scripts">Finished Scripts&lt;/h3>
 &lt;div class="collapsable-code">
-&lt;input id="547263198" type="checkbox" />
-&lt;label for="547263198">
+&lt;input id="231749658" type="checkbox" />
+&lt;label for="231749658">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -369,8 +371,8 @@ ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="264573198" type="checkbox" />
-&lt;label for="264573198">
+&lt;input id="271953648" type="checkbox" />
+&lt;label for="271953648">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -430,15 +432,15 @@ Character Presets and PNGs Most games by Illusion are sandboxy, they have an act
 &lt;p>If you own Koikatsu! then you can just download this image, put it inside your preset folder and it will just work in-game. Of course I immediately opened a my hex editor of choice, &lt;a href="https://mh-nexus.de/en/hxd/">HxD&lt;/a>, and looked through the data to find what was going on:&lt;/p>
 &lt;img src="https://erri120.github.io/img/posts/2021-01-27/preset-in-hxd.png" alt="Mona Preset in HxD" class="left" />
 &lt;p>It turns out that the data for the preset was appended to the end of the PNG. As you can see in the preview above, this does not affect the render in any way because the parser will just stop at the &lt;code>IEND&lt;/code> marker. I found out that FFmpeg does not like this extra data at the end and tries to parse another PNG instead of exiting:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-txt" data-lang="txt">[png @ 000001f2aeb65500] Invalid PNG signature 0x6400000012E38090.
-[png @ 000001f2aec0e2c0] Invalid PNG signature 0xE300000081A76C73.
-[png @ 000001f2aec11500] Invalid PNG signature 0xA946616365556E64.
-[png @ 000001f2aec0fd40] Invalid PNG signature 0xA74579654F766572.
-[png @ 000001f2aec10940] Invalid PNG signature 0xD928636F6D2E6765.
-[png @ 000001f2aec10140] Invalid PNG signature 0xC2A963745F676C6F.
-[png @ 000001f2aec11100] Invalid PNG signature 0xC3AE63745F73686F.
-[png @ 000001f2aec10540] Invalid PNG signature 0xCC6001D023D8950.
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="rewarding-simplicity">Rewarding Simplicity&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-txt" data-lang="txt">&lt;span style="display:flex;">&lt;span>[png @ 000001f2aeb65500] Invalid PNG signature 0x6400000012E38090.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[png @ 000001f2aec0e2c0] Invalid PNG signature 0xE300000081A76C73.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[png @ 000001f2aec11500] Invalid PNG signature 0xA946616365556E64.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[png @ 000001f2aec0fd40] Invalid PNG signature 0xA74579654F766572.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[png @ 000001f2aec10940] Invalid PNG signature 0xD928636F6D2E6765.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[png @ 000001f2aec10140] Invalid PNG signature 0xC2A963745F676C6F.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[png @ 000001f2aec11100] Invalid PNG signature 0xC3AE63745F73686F.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[png @ 000001f2aec10540] Invalid PNG signature 0xCC6001D023D8950.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="rewarding-simplicity">Rewarding Simplicity&lt;/h2>
 &lt;p>You might think &amp;ldquo;&lt;em>So what&amp;rsquo;s the deal?&lt;/em>&amp;rdquo; and that is the point: it is simple to implement and a good solution to the problem of sharing presets, however it is not apparent.&lt;/p>
 &lt;p>I hope you found this somewhat interesting, if you work on a game that has presets and you don&amp;rsquo;t know how to export them, maybe this has sparked your interest and provided a solution.&lt;/p>
 &lt;section class="footnotes" role="doc-endnotes">
