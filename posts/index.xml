@@ -207,7 +207,7 @@ With some issues still open I stopped working on this project in April 2021 beca
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>A quick explanation: whenever you save, the game includes the amount of frames it has rendered in the save file because &lt;code>Game_System&lt;/code> is serialized in the save file and &lt;code>_framesOnSave&lt;/code> is a field of that object. Of course when you load the save will get deserialized and &lt;code>Graphics.frameCount&lt;/code> will be set back to that value. In case you are wondering: &lt;code>Graphics.frameCount&lt;/code> gets incremented on each render.&lt;/p>
 &lt;p>This is fine so far but the real problems are found in the &lt;code>playtime&lt;/code> and &lt;code>playtimeText&lt;/code> functions where the game assumes you constantly playing at 60 frames per second. The pure &lt;code>frameCount&lt;/code> gets divided by &lt;code>60&lt;/code> to get the amount of seconds passed and in &lt;code>playtimeText&lt;/code> that result is further processed to the get hours and minutes.&lt;/p>
 &lt;p>Due to the multiple issues outlined at the beginning you can see that this is not a good idea. Having said that: let&amp;rsquo;s look at how to fix this.&lt;/p>
-&lt;h2 id="possible-solution">Possible Solution&lt;/h2>
+&lt;h3 id="possible-solution">Possible Solution&lt;/h3>
 &lt;p>This solution is probably the easiest and most straightforward one I can think of:&lt;/p>
 &lt;ul>
 &lt;li>on load/start: set &lt;code>startTime&lt;/code> to the current time&lt;/li>
@@ -255,6 +255,8 @@ With some issues still open I stopped working on this project in April 2021 beca
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">hour&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">min&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">sec&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The main difference here is that we cache the result from the &lt;code>playtime&lt;/code> function and other operations.&lt;/p>
+&lt;h3 id="plugin-for-mvmz">Plugin for MV/MZ&lt;/h3>
+&lt;p>If you don&amp;rsquo;t want to mess with the game files directly, which is a good idea, then I suggest taking a look at the &lt;a href="https://github.com/erri120/RPGMakerPlugins#playtimefix">&lt;code>PlaytimeFix&lt;/code> plugin&lt;/a> which I developed that does everything explained in this post.&lt;/p>
 &lt;h2 id="afterword">Afterword&lt;/h2>
 &lt;p>This issue has been bugging me a lot during my playthroughs of longer games because you don&amp;rsquo;t really notice it when your playtime goes from 1h to 2 hours but going from 21 hours to 50+ hours was a bit more in my face. RPG Maker MZ also doesn&amp;rsquo;t fix this and I have not seen any discussion about this.&lt;/p>
 &lt;section class="footnotes" role="doc-endnotes">
@@ -289,8 +291,8 @@ This is sadly not often the case when it comes to game development.</description
 &lt;p>Big studios often end up with huge pipelines because they have many employees and teams. They might have a CI pipeline that runs the tests and builds the project. The artifact would then send in a CD pipeline to the testers or QA team and when they approve of the build it gets released into the world. This is probably not the case for you or your team and most of the time you can combine all of this into one pipeline.&lt;/p>
 &lt;p>If you are curious how such a pipeline might look like, here is the GitHub Actions workflow file that builds (CI) and deploys (CD) this site to GitHub Pages on every push to the master branch:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="269481375" type="checkbox" />
-&lt;label for="269481375">
+&lt;input id="356942871" type="checkbox" />
+&lt;label for="356942871">
 &lt;span class="collapsable-code__language">yaml&lt;/span>
 &lt;span class="collapsable-code__title">Example GitHub Actions workflow&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -343,8 +345,8 @@ publish_branch: gh-pages
 &lt;p>If your game is not on itch.io then you can leave out the last step or replace it with an upload to MEGA, GDrive or your hosting platform of choice.&lt;/p>
 &lt;p>For the pipeline you can write a Bash or PowerShell script, just pick whatever you like more:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="845367219" type="checkbox" />
-&lt;label for="845367219">
+&lt;input id="642537189" type="checkbox" />
+&lt;label for="642537189">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Using rpgmpacker in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -365,8 +367,8 @@ npx rpgmpacker@latest \
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="768125943" type="checkbox" />
-&lt;label for="768125943">
+&lt;input id="853712469" type="checkbox" />
+&lt;label for="853712469">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Using rpgmpacker in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -388,8 +390,8 @@ npx rpgmpacker@latest `
 &lt;p>In my case I have the project in a folder called &lt;code>MyProject&lt;/code> next to the script and the output should go into the &lt;code>build&lt;/code> folder. I&amp;rsquo;m using the Steam version of RPG Maker MV for this but any version of MV or MZ can be used.&lt;/p>
 &lt;p>Next up we want to zip the output. rpgmpacker will create an output folder for each platform you specified so for me I will have &lt;code>build/Windows&lt;/code>, &lt;code>build/OSX&lt;/code> and a &lt;code>build/Linux&lt;/code> folder.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="158269473" type="checkbox" />
-&lt;label for="158269473">
+&lt;input id="758214369" type="checkbox" />
+&lt;label for="758214369">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Zipping the output in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -401,8 +403,8 @@ done
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="836245917" type="checkbox" />
-&lt;label for="836245917">
+&lt;input id="478951263" type="checkbox" />
+&lt;label for="478951263">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Zipping the output in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -417,8 +419,8 @@ foreach ($platform in $Platforms) {
 &lt;p>This is where the difference between PowerShell and Bash start to appear. In Bash we use a glob to get all top-level items of the output directory and in PowerShell we use the &lt;code>Get-ChildItem&lt;/code> function. They look different but they do the same thing with the main difference being that &lt;code>platform&lt;/code> in Bash will be &lt;code>./build/Windows&lt;/code> while &lt;code>$platform&lt;/code> in PowerShell will be just &lt;code>Windows&lt;/code>. This is why we need to prefix &lt;code>$platform&lt;/code> with &lt;code>$OUTPUT/&lt;/code> when calling 7z.&lt;/p>
 &lt;p>The pipeline is almost done at this point. Next is publishing the output with &lt;a href="https://itch.io/docs/butler">Butler&lt;/a> to itch.io but if you are not using that platform you are now done.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="426539187" type="checkbox" />
-&lt;label for="426539187">
+&lt;input id="765192348" type="checkbox" />
+&lt;label for="765192348">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Downloading Butler in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -440,8 +442,8 @@ butler=&amp;#34;$ButlerOutput/butler.exe&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="127854369" type="checkbox" />
-&lt;label for="127854369">
+&lt;input id="481265379" type="checkbox" />
+&lt;label for="481265379">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Downloading Buttler in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -464,8 +466,8 @@ $butler=&amp;#34;$ButlerOutput/butler.exe&amp;#34;
 &lt;/div>
 &lt;p>If you are not on windows you should change the &lt;code>ButlerChannel&lt;/code> variable to &lt;code>darwin-amd64&lt;/code> or &lt;code>linux-amd64&lt;/code> depending on your system. I recommend checking &lt;a href="https://broth.itch.ovh/butler">the channel list&lt;/a> of Butler if you need something different. I&amp;rsquo;ve added a simple check so we don&amp;rsquo;t download Butler whenever we call the script. Before we continue you should get an API key from &lt;a href="https://itch.io/user/settings/api-keys">itch.io&lt;/a>. You should treat API keys like passwords and should never make them public. A good way of storing API keys is with environment variables and Butler expects the API key to be stored in the &lt;code>BUTLER_API_KEY&lt;/code> environment variable.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="578639124" type="checkbox" />
-&lt;label for="578639124">
+&lt;input id="374816259" type="checkbox" />
+&lt;label for="374816259">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Using Buttler in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -480,8 +482,8 @@ ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="183672954" type="checkbox" />
-&lt;label for="183672954">
+&lt;input id="684395271" type="checkbox" />
+&lt;label for="684395271">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Using Buttler in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -498,8 +500,8 @@ $ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;p>I recommend that you look at the &lt;a href="https://itch.io/docs/butler/pushing.html">Butler Docs&lt;/a> for the different channels you can push to. To recap here are both complete scripts:&lt;/p>
 &lt;h3 id="finished-scripts">Finished Scripts&lt;/h3>
 &lt;div class="collapsable-code">
-&lt;input id="293816547" type="checkbox" />
-&lt;label for="293816547">
+&lt;input id="235948761" type="checkbox" />
+&lt;label for="235948761">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -542,8 +544,8 @@ ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="419673528" type="checkbox" />
-&lt;label for="419673528">
+&lt;input id="465391728" type="checkbox" />
+&lt;label for="465391728">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>

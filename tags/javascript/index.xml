@@ -24,7 +24,7 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>A quick explanation: whenever you save, the game includes the amount of frames it has rendered in the save file because &lt;code>Game_System&lt;/code> is serialized in the save file and &lt;code>_framesOnSave&lt;/code> is a field of that object. Of course when you load the save will get deserialized and &lt;code>Graphics.frameCount&lt;/code> will be set back to that value. In case you are wondering: &lt;code>Graphics.frameCount&lt;/code> gets incremented on each render.&lt;/p>
 &lt;p>This is fine so far but the real problems are found in the &lt;code>playtime&lt;/code> and &lt;code>playtimeText&lt;/code> functions where the game assumes you constantly playing at 60 frames per second. The pure &lt;code>frameCount&lt;/code> gets divided by &lt;code>60&lt;/code> to get the amount of seconds passed and in &lt;code>playtimeText&lt;/code> that result is further processed to the get hours and minutes.&lt;/p>
 &lt;p>Due to the multiple issues outlined at the beginning you can see that this is not a good idea. Having said that: let&amp;rsquo;s look at how to fix this.&lt;/p>
-&lt;h2 id="possible-solution">Possible Solution&lt;/h2>
+&lt;h3 id="possible-solution">Possible Solution&lt;/h3>
 &lt;p>This solution is probably the easiest and most straightforward one I can think of:&lt;/p>
 &lt;ul>
 &lt;li>on load/start: set &lt;code>startTime&lt;/code> to the current time&lt;/li>
@@ -72,6 +72,8 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">hour&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">min&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">sec&lt;/span>.&lt;span style="color:#a6e22e">padZero&lt;/span>(&lt;span style="color:#ae81ff">2&lt;/span>);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The main difference here is that we cache the result from the &lt;code>playtime&lt;/code> function and other operations.&lt;/p>
+&lt;h3 id="plugin-for-mvmz">Plugin for MV/MZ&lt;/h3>
+&lt;p>If you don&amp;rsquo;t want to mess with the game files directly, which is a good idea, then I suggest taking a look at the &lt;a href="https://github.com/erri120/RPGMakerPlugins#playtimefix">&lt;code>PlaytimeFix&lt;/code> plugin&lt;/a> which I developed that does everything explained in this post.&lt;/p>
 &lt;h2 id="afterword">Afterword&lt;/h2>
 &lt;p>This issue has been bugging me a lot during my playthroughs of longer games because you don&amp;rsquo;t really notice it when your playtime goes from 1h to 2 hours but going from 21 hours to 50+ hours was a bit more in my face. RPG Maker MZ also doesn&amp;rsquo;t fix this and I have not seen any discussion about this.&lt;/p>
 &lt;section class="footnotes" role="doc-endnotes">
