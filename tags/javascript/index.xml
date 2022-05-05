@@ -76,11 +76,11 @@
 &lt;p>If you don&amp;rsquo;t want to mess with the game files directly, which is a good idea, then I suggest taking a look at the &lt;a href="https://github.com/erri120/RPGMakerPlugins#playtimefix">&lt;code>PlaytimeFix&lt;/code> plugin&lt;/a> which I developed that does everything explained in this post.&lt;/p>
 &lt;h2 id="afterword">Afterword&lt;/h2>
 &lt;p>This issue has been bugging me a lot during my playthroughs of longer games because you don&amp;rsquo;t really notice it when your playtime goes from 1h to 2 hours but going from 21 hours to 50+ hours was a bit more in my face. RPG Maker MZ also doesn&amp;rsquo;t fix this and I have not seen any discussion about this.&lt;/p>
-&lt;section class="footnotes" role="doc-endnotes">
+&lt;div class="footnotes" role="doc-endnotes">
 &lt;hr>
 &lt;ol>
-&lt;li id="fn:1" role="doc-endnote">
+&lt;li id="fn:1">
 &lt;p>See &lt;code>Time.deltaTime&lt;/code> in the docs &lt;a href="https://docs.unity3d.com/ScriptReference/Time-deltaTime.html">here&lt;/a>&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;/section></content></item></channel></rss>
+&lt;/div></content></item></channel></rss>

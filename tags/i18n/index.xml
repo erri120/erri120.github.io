@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>i18n on erri120's very random Blog</title><link>https://erri120.github.io/tags/i18n/</link><description>Recent content in i18n on erri120's very random Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>CC BY 4.0</copyright><lastBuildDate>Thu, 05 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/tags/i18n/index.xml" rel="self" type="application/rss+xml"/><item><title>Getting started with GNU gettext for C++</title><link>https://erri120.github.io/posts/2022-05-05/</link><pubDate>Thu, 05 May 2022 00:00:00 +0000</pubDate><guid>https://erri120.github.io/posts/2022-05-05/</guid><description>Following my post on Encodings and Unicode it is now time to talk about i18n with GNU gettext. We will look at i18 and l10n in general and then talk about how gettext can make our live as programmers very easy.
+i18n and l10n - Internationalization and Localization Due to the length of Internationalization and Localization you can just write i18n and l10n which are &amp;ldquo;numeronyms&amp;rdquo;, number based words that are formed by taking the first and last character of the words and putting the amount of letters between these two characters in the middle, so for Internationalization it starts with an i and ends with an n and has 18 letters in-between so the result is i18n.</description><content>&lt;p>Following my post on &lt;a href="https://erri120.github.io/posts/2022-04-15/">Encodings and Unicode&lt;/a> it is now time to talk about i18n with &lt;a href="https://www.gnu.org/software/gettext/">GNU gettext&lt;/a>. We will look at i18 and l10n in general and then talk about how &lt;code>gettext&lt;/code> can make our live as programmers very easy.&lt;/p>
+&lt;h2 id="i18n-and-l10n---internationalization-and-localization">i18n and l10n - Internationalization and Localization&lt;/h2>
+&lt;p>Due to the length of &lt;em>Internationalization and Localization&lt;/em> you can just write i18n and l10n which are &amp;ldquo;numeronyms&amp;rdquo;, number based words that are formed by taking the first and last character of the words and putting the amount of letters between these two characters in the middle, so for &lt;em>Internationalization&lt;/em> it starts with an &lt;code>i&lt;/code> and ends with an &lt;code>n&lt;/code> and has 18 letters in-between so the result is &lt;code>i18n&lt;/code>.&lt;/p>
+&lt;p>For us software developers these terms mean adapting our code to be locale agnostic. If you create a UI and hardcode all strings then the users won&amp;rsquo;t be able to change the language. Aside from normal translations i18n and l10n also encompasses formatting rules for numbers, date and time, currency and things like text layout. Some languages read left to right but others right to left. Instead of reading horizontally there are also cultures where you read vertically.&lt;/p>
+&lt;p>All of this might seem overwhelming and in reality you will likely never have to deal with this. For Open-Source projects it&amp;rsquo;s often enough to just have everything in English and maybe provide a way to load translations.&lt;/p>
+&lt;h2 id="gnu-gettext-and-libintl">GNU gettext and libintl&lt;/h2>
+&lt;p>i18n and l10n is all nice and good but how should we programmers design our software to support these concepts? This is where &lt;code>gettext&lt;/code> and &lt;code>libintl&lt;/code> come into play.&lt;/p>
+&lt;p>In 1995 the GNU projects released GNU gettext into the world. The package offers an integrated set of tools as well as the &lt;code>libintl&lt;/code> runtime library for dealing with translations. We will take a look at the tools &lt;code>xgettext&lt;/code>, &lt;code>msginit&lt;/code>, &lt;code>msgmerge&lt;/code> and &lt;code>msgfmt&lt;/code>, how to use the &lt;code>gettext&lt;/code> library in our code and what the process of creating translations is.&lt;/p>
+&lt;h3 id="cmake-setup">CMake Setup&lt;/h3>
+&lt;p>In order for us to use &lt;code>libintl&lt;/code> in our code we need to get it from somewhere. In this example we will use &lt;a href="https://cmake.org">CMake&lt;/a> and &lt;a href="https://github.com/microsoft/vcpkg">vcpkg&lt;/a>.&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="456972183" type="checkbox" />
+&lt;label for="456972183">
+&lt;span class="collapsable-code__language">cmake&lt;/span>
+&lt;span class="collapsable-code__title">CMakeLists.txt&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-cmake" >&lt;code>
+cmake_minimum_required(VERSION 3.8)
+project (
+&amp;#34;CppInternationalization&amp;#34;
+VERSION 1.0.0
+LANGUAGES CXX
+)
+# Using C&amp;#43;&amp;#43;20
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+add_executable(${PROJECT_NAME} &amp;#34;main.cpp&amp;#34;)
+# add libintl
+find_package(Intl REQUIRED)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${Intl_LIBRARY})
+target_include_directories(${PROJECT_NAME} PUBLIC ${Intl_INCLUDE_DIRS})
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>This is a very basic &lt;code>CMakeLists.txt&lt;/code> file containing one dependency which we will get with vcpkg using &lt;code>vcpkg install gettext[tools]&lt;/code>. The &lt;code>tools&lt;/code> feature is very important so we can get the programs required for our setup.&lt;/p>
+&lt;h3 id="code-setup">Code Setup&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;cstdlib&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>cout &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Hello World!&amp;#34;&lt;/span> &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>endl;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> EXIT_SUCCESS;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This is the most basic C++ program possible. In the code we hardcoded the string &lt;code>Hello World!&lt;/code> and now we want to provide translations. The &lt;code>libintl&lt;/code> runtime library is exactly what we need:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;cstdlib&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;libintl.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>cout &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> gettext(&lt;span style="color:#e6db74">&amp;#34;Hello World!&amp;#34;&lt;/span>) &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>endl;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> EXIT_SUCCESS;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>gettext&lt;/code> from the &lt;code>libintl.h&lt;/code> header will now look for a translation of the string &lt;code>Hello World!&lt;/code> for the current locale at runtime. If it does not find a translation it will just use &lt;code>Hello World!&lt;/code> which is very nice since we only have to wrap all of the strings in &lt;code>gettext()&lt;/code>. If &lt;code>gettext&lt;/code> is too long you can create a macro:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;cstdlib&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;libintl.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define _(String) gettext(String)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>cout &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> _(&lt;span style="color:#e6db74">&amp;#34;Hello World!&amp;#34;&lt;/span>) &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>endl;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> EXIT_SUCCESS;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This macro is very commonly used in projects that use GNU gettext and even included in frameworks like GTK.&lt;/p>
+&lt;p>So where does &lt;code>gettext()&lt;/code> look for my translations? You will have to specify that with &lt;code>bindtextdomain&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;cstdlib&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;libintl.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define _(String) gettext(String)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> bindtextdomain(&lt;span style="color:#e6db74">&amp;#34;my-domain&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;locales&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> textdomain(&lt;span style="color:#e6db74">&amp;#34;my-domain&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>cout &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> _(&lt;span style="color:#e6db74">&amp;#34;Hello World!&amp;#34;&lt;/span>) &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>endl;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> EXIT_SUCCESS;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now at runtime if the user has the &lt;code>de&lt;/code> locale set, &lt;code>gettext()&lt;/code> will look at &lt;code>locales/de/LC_MESSAGES/my-domain.mo&lt;/code> for a translation. Let&amp;rsquo;s break this path down:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>locales&lt;/code>: this is the folder specified in &lt;code>bindtextdomain&lt;/code>&lt;/li>
+&lt;li>&lt;code>de&lt;/code>: this the current locale&lt;/li>
+&lt;li>&lt;code>LC_MESSAGES&lt;/code>: this is the category name of the translation&lt;/li>
+&lt;li>&lt;code>my-domain.mo&lt;/code>: the binary message catalog containing all translations. The file name is what you specified in &lt;code>bindtextdomain&lt;/code> as well as &lt;code>textdomain&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>There are few things that need explaining. The library will first try and find an exact match of the current locale but if that is not possible it will look for similar locales. As an example if the user has &lt;code>de_DE&lt;/code> but you only provided &lt;code>de&lt;/code> then the library will first look for &lt;code>de_DE&lt;/code> and when it doesn&amp;rsquo;t find it, it will look for an expanded locale like &lt;code>de&lt;/code>.&lt;/p>
+&lt;p>The &lt;code>LC_MESSAGES&lt;/code> part of the path is the category name of the translation we are looking for. &lt;code>LC&lt;/code> stands for locale category and there are various others like &lt;code>LC_CTYPE&lt;/code>, &lt;code>LC_NUMERIC&lt;/code>, &lt;code>LC_TIME&lt;/code>, &lt;code>LC_MONETARY&lt;/code> which all specify how to handle various things like numbers, dates and currency. For our purposes we only focus on messages, raw strings or texts we want to translate. &lt;code>gettext&lt;/code> will always use &lt;code>LC_MESSAGES&lt;/code> as it&amp;rsquo;s category. There are other functions that will let you specify which category you want to look for like &lt;code>dcgettext&lt;/code> but for this post we won&amp;rsquo;t look at those.&lt;/p>
+&lt;p>The &lt;code>.mo&lt;/code> file is the message catalog which has to be generated. So let&amp;rsquo;s look at how that works next.&lt;/p>
+&lt;h3 id="initial-project-setup">Initial Project Setup&lt;/h3>
+&lt;p>In our very complex example we have marked the &lt;code>Hello World!&lt;/code> string as a translatable string. We can now use &lt;code>xgettext&lt;/code> to extract these marked strings:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>xgettext main.cpp --keyword&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;_&amp;#34;&lt;/span> --output&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;locales/my-domain.pot&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This &lt;code>.pot&lt;/code> file is a &lt;em>Portable Object Template&lt;/em> file. This file can look something like this:&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-pot" data-lang="pot"># SOME DESCRIPTIVE TITLE.
+# FIRST AUTHOR &amp;lt;EMAIL@ADDRESS&amp;gt;, YEAR.
+#
+#, fuzzy
+msgid &amp;#34;&amp;#34;
+msgstr &amp;#34;&amp;#34;
+&amp;#34;POT-Creation-Date: 2022-05-05 14:47+0200\n&amp;#34;
+&amp;#34;PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n&amp;#34;
+&amp;#34;Last-Translator: FULL NAME &amp;lt;EMAIL@ADDRESS&amp;gt;\n&amp;#34;
+&amp;#34;Language-Team: LANGUAGE &amp;lt;LL@li.org&amp;gt;\n&amp;#34;
+&amp;#34;Language: \n&amp;#34;
+&amp;#34;MIME-Version: 1.0\n&amp;#34;
+&amp;#34;Content-Type: text/plain; charset=CHARSET\n&amp;#34;
+&amp;#34;Content-Transfer-Encoding: 8bit\n&amp;#34;
+#: main.cpp:10
+msgid &amp;#34;Hello World!&amp;#34;
+msgstr &amp;#34;&amp;#34;
+&lt;/code>&lt;/pre>&lt;p>At the bottom you can find our &lt;code>Hello World!&lt;/code> string which comes from &lt;code>main.cpp&lt;/code> at line &lt;code>9&lt;/code>. This file can now be used to create &lt;code>.po&lt;/code>, &lt;em>Portable Object&lt;/em> files using &lt;code>msginit&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>msginit --input&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;locales/my-domain.pot&amp;#34;&lt;/span> --output-file&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;locales/de/my-domain.po&amp;#34;&lt;/span> --locale&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;de&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Every language you want to support gets its own &lt;code>.po&lt;/code> file. The &lt;code>.pot&lt;/code> is just a &lt;em>template&lt;/em> used to create the &lt;code>.po&lt;/code> files with. The &lt;code>.po&lt;/code> file looks almost the same:&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-po" data-lang="po">msgid &amp;#34;&amp;#34;
+msgstr &amp;#34;&amp;#34;
+&amp;#34;POT-Creation-Date: 2022-05-05 14:47+0200\n&amp;#34;
+&amp;#34;PO-Revision-Date: 2022-05-04 18:41+0200\n&amp;#34;
+&amp;#34;Last-Translator: &amp;lt;EMAIL@ADDRESS&amp;gt;\n&amp;#34;
+&amp;#34;Language-Team: German\n&amp;#34;
+&amp;#34;Language: de\n&amp;#34;
+&amp;#34;MIME-Version: 1.0\n&amp;#34;
+&amp;#34;Content-Type: text/plain; charset=CP1252\n&amp;#34;
+&amp;#34;Content-Transfer-Encoding: 8bit\n&amp;#34;
+&amp;#34;Plural-Forms: nplurals=2; plural=(n != 1);\n&amp;#34;
+&amp;#34;X-Generator: Poedit 3.0.1\n&amp;#34;
+#: main.cpp:10
+msgid &amp;#34;Hello World!&amp;#34;
+msgstr &amp;#34;Hallo Welt!&amp;#34;
+&lt;/code>&lt;/pre>&lt;p>I already went ahead and translated &lt;code>Hello World!&lt;/code> to &lt;code>Hallo Welt!&lt;/code> using &lt;a href="https://poedit.net/">Poedit&lt;/a> but there are other tools like &lt;em>KBabel&lt;/em>, &lt;em>Gtranslator&lt;/em>, &lt;em>PO Mode&lt;/em> and more which you can use to edit the &lt;code>.po&lt;/code> files. The ecosystem is very mature and platforms like &lt;a href="https://docs.transifex.com/formats/gettext">transifex&lt;/a> also support it.&lt;/p>
+&lt;p>Now with your fully or partially translated &lt;code>.po&lt;/code> file in hand we will use &lt;code>msgfmt&lt;/code> to create our final output file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>msgfmt &lt;span style="color:#e6db74">&amp;#34;locales/de/my-domain.po&amp;#34;&lt;/span> --output-file&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;locales/de/my-domain.mo&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You now have a &lt;code>.mo&lt;/code> file that can be loaded at runtime. But what happens when you change your code? How do you update your &lt;code>.pot&lt;/code>, &lt;code>.po&lt;/code> and &lt;code>.mo&lt;/code> files when there are new, removed or changed strings in your code?&lt;/p>
+&lt;h3 id="source-changed-what-to-do">Source changed, what to do?&lt;/h3>
+&lt;p>What we looked at so far is the initial setup phase. This is what you do when you have no previous &lt;code>.pot&lt;/code> or &lt;code>.po&lt;/code> files and generate them for the first time. If you already have them and the code changed you need to run &lt;code>xgettext&lt;/code> again:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>xgettext main.cpp --keyword&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;_&amp;#34;&lt;/span> --output&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;locales/my-domain.pot&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>.pot&lt;/code> file can be overwritten as you please since it only holds generated content. The &lt;code>.po&lt;/code> files are more important since you don&amp;rsquo;t want to re-do all translations. For this reason we use &lt;code>msgmerge&lt;/code> to update the &lt;code>.po&lt;/code> files with the new template:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>msgmerge &lt;span style="color:#e6db74">&amp;#34;locales/de/my-domain.po&amp;#34;&lt;/span> &lt;span style="color:#e6db74">&amp;#34;locales/my-domain.pot&amp;#34;&lt;/span> --output-file&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;locales/de/my-domain.po&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The tool takes the current &lt;code>.po&lt;/code> file and the new &lt;code>.pot&lt;/code> file as input and spits out an updated &lt;code>.po&lt;/code> file that keeps your existing translations as long as they are still used.&lt;/p>
+&lt;h3 id="automating-and-integrating-with-cmake">Automating and integrating with CMake&lt;/h3>
+&lt;p>If you found all of this extremely tedious to do by hand then you are not alone. Of course we can automate the generating and updating for all the required files as well as copying the &lt;code>.mo&lt;/code> files to our output at build time using a CMake script.&lt;/p>
+&lt;p>To get started, grab a copy &lt;a href="https://github.com/erri120/Gettext-CMake/blob/master/Gettext_helpers.cmake">this script&lt;/a> or add the repository as a submodule. In your &lt;code>CMakeLists.txt&lt;/code> file we need to add some lines:&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="324176598" type="checkbox" />
+&lt;label for="324176598">
+&lt;span class="collapsable-code__language">cmake&lt;/span>
+&lt;span class="collapsable-code__title">CMakeLists.txt&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-cmake" >&lt;code>
+# setup gettext
+set(GETTEXT_DOMAIN &amp;#34;my-domain&amp;#34;)
+set(GETTEXT_TARGET &amp;#34;gettext-target&amp;#34;)
+set(GETTEXT_OUTPUT_DIR &amp;#34;locales&amp;#34;)
+set(GETTEXT_LANGUAGES &amp;#34;en&amp;#34; &amp;#34;de&amp;#34;)
+target_compile_definitions(${PROJECT_NAME} PUBLIC &amp;#34;GETTEXT_DOMAIN=\&amp;#34;${GETTEXT_DOMAIN}\&amp;#34;&amp;#34;)
+target_compile_definitions(${PROJECT_NAME} PUBLIC &amp;#34;GETTEXT_OUTPUT_DIR=\&amp;#34;${GETTEXT_OUTPUT_DIR}\&amp;#34;&amp;#34;)
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>First we specify some variables and add &lt;code>GETTEXT_DOMAIN&lt;/code> and &lt;code>GETTEXT_OUTPUT_DIR&lt;/code> as a predefined macro so we can use it in our code. I suggest you change the domain name and the list of languages you want to use.&lt;/p>
+&lt;p>Next we want to add the previously downloaded script:&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="954172638" type="checkbox" />
+&lt;label for="954172638">
+&lt;span class="collapsable-code__language">cmake&lt;/span>
+&lt;span class="collapsable-code__title">CMakeLists.txt&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-cmake" >&lt;code>
+include(&amp;#34;extern/gettext-cmake/Gettext_helpers.cmake&amp;#34;)
+CONFIGURE_GETTEXT(
+DOMAIN ${GETTEXT_DOMAIN}
+TARGET_NAME ${GETTEXT_TARGET}
+SOURCES &amp;#34;main.cpp&amp;#34;
+POTFILE_DESTINATION ${GETTEXT_OUTPUT_DIR}
+XGETTEXT_ARGS
+&amp;#34;--keyword=_&amp;#34;
+&amp;#34;--add-comments=TRANSLATORS:&amp;#34;
+&amp;#34;--package-name=${PROJECT_NAME}&amp;#34;
+&amp;#34;--package-version=${PROJECT_VERSION}&amp;#34;
+&amp;#34;--msgid-bugs-address=&amp;lt;https://github.com/erri120/${PROJECT_NAME}/issues&amp;gt;&amp;#34;
+&amp;#34;--copyright-holder=erri120&amp;#34;
+LANGUAGES ${GETTEXT_LANGUAGES}
+BUILD_DESTINATION $&amp;lt;TARGET_FILE_DIR:${PROJECT_NAME}&amp;gt;/${GETTEXT_OUTPUT_DIR}
+ALL
+)
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>There is lots to configure so let&amp;rsquo;s go through it all:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>DOMAIN&lt;/code> set the domain name&lt;/li>
+&lt;li>&lt;code>TARGET_NAME&lt;/code>: set the CMake target name&lt;/li>
+&lt;li>&lt;code>SOURCES&lt;/code>: set a list of all source files that &lt;code>xgettext&lt;/code> should look through, I suggest creating some variable that holds all your sources&lt;/li>
+&lt;li>&lt;code>POTFILE_DESTINATION&lt;/code>: this is the directory where the &lt;code>.pot&lt;/code> file goes&lt;/li>
+&lt;li>&lt;code>XGETTEXT_ARGS&lt;/code>: most of the extra arguments supplied are just for flavour like specifying the package name, version as well as the address where you can report bugs and the copyright holder&lt;/li>
+&lt;li>&lt;code>LANGAUGES&lt;/code>: set the list of languages we want to support&lt;/li>
+&lt;li>&lt;code>BUILD_DESTINATION&lt;/code>: the top-level output folder for the generated &lt;code>.mo&lt;/code> files&lt;/li>
+&lt;li>&lt;code>ALL&lt;/code>: adds the custom CMake target to the default build target so that it will be run every time&lt;/li>
+&lt;/ul>
+&lt;p>And that&amp;rsquo;s it. Doing a CMake configure will generate the &lt;code>.pot&lt;/code> and &lt;code>.po&lt;/code> files and you now have some new targets that will generate the &lt;code>.mo&lt;/code> files.&lt;/p>
+&lt;h3 id="complete-code-example">Complete Code Example&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;cstdlib&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;libintl.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#if WIN32
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define WIN32_LEAN_AND_MEAN
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;Windows.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#endif
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define _(STRING) gettext(STRING)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">setup_i18n&lt;/span>(&lt;span style="color:#66d9ef">const&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>string_view locale) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#if WIN32
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// LocaleNameToLCID requires a LPCWSTR so we need to convert from char to wchar_t
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">auto&lt;/span> wStringSize &lt;span style="color:#f92672">=&lt;/span> MultiByteToWideChar(CP_UTF8, &lt;span style="color:#ae81ff">0&lt;/span>, locale.data(), &lt;span style="color:#66d9ef">static_cast&lt;/span>&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>(locale.length()), &lt;span style="color:#66d9ef">nullptr&lt;/span>, &lt;span style="color:#ae81ff">0&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>wstring localeName;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> localeName.reserve(wStringSize);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MultiByteToWideChar(CP_UTF8, &lt;span style="color:#ae81ff">0&lt;/span>, locale.data(), &lt;span style="color:#66d9ef">static_cast&lt;/span>&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>(locale.length()), localeName.data(), wStringSize);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> _configthreadlocale(_DISABLE_PER_THREAD_LOCALE);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">auto&lt;/span> localeId &lt;span style="color:#f92672">=&lt;/span> LocaleNameToLCID(localeName.c_str(), LOCALE_ALLOW_NEUTRAL_NAMES);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> SetThreadLocale(localeId);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#else
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> setlocale(LC_MESSAGES, locale.data());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#endif
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> bindtextdomain(GETTEXT_DOMAIN, GETTEXT_OUTPUT_DIR);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> bind_textdomain_codeset(GETTEXT_DOMAIN, &lt;span style="color:#e6db74">&amp;#34;UTF-8&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> textdomain(GETTEXT_DOMAIN);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> setup_i18n(&lt;span style="color:#e6db74">&amp;#34;de&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>cout &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> _(&lt;span style="color:#e6db74">&amp;#34;Hello World!&amp;#34;&lt;/span>) &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>endl;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> EXIT_SUCCESS;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Woah, what happened with our 12 lines of code? Things are sadly not as easy as you want them to be. The main function is still the same, we have our marked string &lt;code>Hello World!&lt;/code> but now there is the new function &lt;code>setup_i18n&lt;/code>.&lt;/p>
+&lt;p>This new function takes a &lt;a href="https://en.cppreference.com/w/cpp/string/basic_string_view">&lt;code>std::string_view&lt;/code>&lt;/a> as an argument and sets the current locale to something new. In this case I want to change the locale to &lt;code>de&lt;/code> so my German translation for &lt;code>Hello World!&lt;/code> can be loaded. In your actual code you&amp;rsquo;d want to have some language option the user can change which would call this function with the new locale.&lt;/p>
+&lt;p>The thing that makes this messy is of course the difference between systems. On a POSIX compliant system you can just call &lt;code>setlocale(LC_MESSAGES, &amp;quot;de&amp;quot;)&lt;/code> but this doesn&amp;rsquo;t work at all for Windows.&lt;/p>
+&lt;p>On Windows you need to use &lt;code>SetThreadLocale&lt;/code> which requires a locale id that you can get from a name like &lt;code>de&lt;/code> using &lt;code>LocaleNameToLCID&lt;/code>. The &lt;code>_configthreadlocale(_DISABLE_PER_THREAD_LOCALE)&lt;/code> call is important because &lt;code>SetThreadLocale&lt;/code> only affects the current thread, who would have thought, so we want to disable this behaviour and change the locale of this and all future threads.&lt;/p>
+&lt;p>The code after that uses the new predefined macros we added in our CMake file and I also added a call to the very useful &lt;code>bind_textdomain_codeset&lt;/code> function. I suggest reading my &lt;a href="https://erri120.github.io/posts/2022-04-15/">Encodings and Unicode&lt;/a> where I explain the mess that is Code Pages and Unicode. With this function call &lt;code>gettext&lt;/code> will always return an UTF-8 string. If you don&amp;rsquo;t want that or don&amp;rsquo;t need that you can remove this call but for frameworks like GTK it is required as they require UTF-8 only.&lt;/p>
+&lt;h3 id="alternatives">Alternatives&lt;/h3>
+&lt;p>GNU gettext has been around for over 30 years, it is battletested, has great support and a matured ecosystem. However if this is not for you or if you can&amp;rsquo;t use it there are a few alternatives available:&lt;/p>
+&lt;ul>
+&lt;li>DIY: always possible but highly discouraged&lt;/li>
+&lt;li>&lt;a href="https://doc.qt.io/qt-5/linguist-overview.html">Qt&lt;/a>: of course the Qt-ecosystem has a different way of doing translations&lt;/li>
+&lt;li>&lt;a href="https://icu.unicode.org/">ICU&lt;/a>: International Components for Unicode have ICU4C however it is not easy to use at all&lt;/li>
+&lt;li>&lt;a href="https://www.boost.org/doc/libs/1_70_0/libs/locale/doc/html/index.html">Boost.Locale&lt;/a> they use ICU as a backend&lt;/li>
+&lt;li>&lt;a href="https://www.man7.org/linux/man-pages/man3/catgets.3.html">POSIX: catgets&lt;/a> this was created back in 1987 before GNU gettext&lt;/li>
+&lt;li>&lt;a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringa">Win32: LoadString&lt;/a> with this you can load string resources by id&lt;/li>
+&lt;/ul></content></item></channel></rss>

@@ -1,4 +1,257 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on erri120's very random Blog</title><link>https://erri120.github.io/posts/</link><description>Recent content in Posts on erri120's very random Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>CC BY 4.0</copyright><lastBuildDate>Fri, 15 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Everything about Unicode, Code Pages and Character Encoding</title><link>https://erri120.github.io/posts/2022-04-15/</link><pubDate>Fri, 15 Apr 2022 00:00:00 +0000</pubDate><guid>https://erri120.github.io/posts/2022-04-15/</guid><description>Time and Encodings are the two things a programmer never wants to touch. Thankfully dealing with time has been made very easy, we developed ISO Standards, created standard libraries with good time functions and don&amp;rsquo;t have to worry until 2038 when a signed 32-bit integer is unable to hold the number of seconds elapsed since the Unix epoch.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on erri120's very random Blog</title><link>https://erri120.github.io/posts/</link><description>Recent content in Posts on erri120's very random Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>CC BY 4.0</copyright><lastBuildDate>Thu, 05 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Getting started with GNU gettext for C++</title><link>https://erri120.github.io/posts/2022-05-05/</link><pubDate>Thu, 05 May 2022 00:00:00 +0000</pubDate><guid>https://erri120.github.io/posts/2022-05-05/</guid><description>Following my post on Encodings and Unicode it is now time to talk about i18n with GNU gettext. We will look at i18 and l10n in general and then talk about how gettext can make our live as programmers very easy.
+i18n and l10n - Internationalization and Localization Due to the length of Internationalization and Localization you can just write i18n and l10n which are &amp;ldquo;numeronyms&amp;rdquo;, number based words that are formed by taking the first and last character of the words and putting the amount of letters between these two characters in the middle, so for Internationalization it starts with an i and ends with an n and has 18 letters in-between so the result is i18n.</description><content>&lt;p>Following my post on &lt;a href="https://erri120.github.io/posts/2022-04-15/">Encodings and Unicode&lt;/a> it is now time to talk about i18n with &lt;a href="https://www.gnu.org/software/gettext/">GNU gettext&lt;/a>. We will look at i18 and l10n in general and then talk about how &lt;code>gettext&lt;/code> can make our live as programmers very easy.&lt;/p>
+&lt;h2 id="i18n-and-l10n---internationalization-and-localization">i18n and l10n - Internationalization and Localization&lt;/h2>
+&lt;p>Due to the length of &lt;em>Internationalization and Localization&lt;/em> you can just write i18n and l10n which are &amp;ldquo;numeronyms&amp;rdquo;, number based words that are formed by taking the first and last character of the words and putting the amount of letters between these two characters in the middle, so for &lt;em>Internationalization&lt;/em> it starts with an &lt;code>i&lt;/code> and ends with an &lt;code>n&lt;/code> and has 18 letters in-between so the result is &lt;code>i18n&lt;/code>.&lt;/p>
+&lt;p>For us software developers these terms mean adapting our code to be locale agnostic. If you create a UI and hardcode all strings then the users won&amp;rsquo;t be able to change the language. Aside from normal translations i18n and l10n also encompasses formatting rules for numbers, date and time, currency and things like text layout. Some languages read left to right but others right to left. Instead of reading horizontally there are also cultures where you read vertically.&lt;/p>
+&lt;p>All of this might seem overwhelming and in reality you will likely never have to deal with this. For Open-Source projects it&amp;rsquo;s often enough to just have everything in English and maybe provide a way to load translations.&lt;/p>
+&lt;h2 id="gnu-gettext-and-libintl">GNU gettext and libintl&lt;/h2>
+&lt;p>i18n and l10n is all nice and good but how should we programmers design our software to support these concepts? This is where &lt;code>gettext&lt;/code> and &lt;code>libintl&lt;/code> come into play.&lt;/p>
+&lt;p>In 1995 the GNU projects released GNU gettext into the world. The package offers an integrated set of tools as well as the &lt;code>libintl&lt;/code> runtime library for dealing with translations. We will take a look at the tools &lt;code>xgettext&lt;/code>, &lt;code>msginit&lt;/code>, &lt;code>msgmerge&lt;/code> and &lt;code>msgfmt&lt;/code>, how to use the &lt;code>gettext&lt;/code> library in our code and what the process of creating translations is.&lt;/p>
+&lt;h3 id="cmake-setup">CMake Setup&lt;/h3>
+&lt;p>In order for us to use &lt;code>libintl&lt;/code> in our code we need to get it from somewhere. In this example we will use &lt;a href="https://cmake.org">CMake&lt;/a> and &lt;a href="https://github.com/microsoft/vcpkg">vcpkg&lt;/a>.&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="456972183" type="checkbox" />
+&lt;label for="456972183">
+&lt;span class="collapsable-code__language">cmake&lt;/span>
+&lt;span class="collapsable-code__title">CMakeLists.txt&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-cmake" >&lt;code>
+cmake_minimum_required(VERSION 3.8)
+project (
+&amp;#34;CppInternationalization&amp;#34;
+VERSION 1.0.0
+LANGUAGES CXX
+)
+# Using C&amp;#43;&amp;#43;20
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+add_executable(${PROJECT_NAME} &amp;#34;main.cpp&amp;#34;)
+# add libintl
+find_package(Intl REQUIRED)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${Intl_LIBRARY})
+target_include_directories(${PROJECT_NAME} PUBLIC ${Intl_INCLUDE_DIRS})
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>This is a very basic &lt;code>CMakeLists.txt&lt;/code> file containing one dependency which we will get with vcpkg using &lt;code>vcpkg install gettext[tools]&lt;/code>. The &lt;code>tools&lt;/code> feature is very important so we can get the programs required for our setup.&lt;/p>
+&lt;h3 id="code-setup">Code Setup&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;cstdlib&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>cout &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Hello World!&amp;#34;&lt;/span> &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>endl;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> EXIT_SUCCESS;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This is the most basic C++ program possible. In the code we hardcoded the string &lt;code>Hello World!&lt;/code> and now we want to provide translations. The &lt;code>libintl&lt;/code> runtime library is exactly what we need:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;cstdlib&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;libintl.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>cout &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> gettext(&lt;span style="color:#e6db74">&amp;#34;Hello World!&amp;#34;&lt;/span>) &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>endl;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> EXIT_SUCCESS;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>gettext&lt;/code> from the &lt;code>libintl.h&lt;/code> header will now look for a translation of the string &lt;code>Hello World!&lt;/code> for the current locale at runtime. If it does not find a translation it will just use &lt;code>Hello World!&lt;/code> which is very nice since we only have to wrap all of the strings in &lt;code>gettext()&lt;/code>. If &lt;code>gettext&lt;/code> is too long you can create a macro:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;cstdlib&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;libintl.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define _(String) gettext(String)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>cout &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> _(&lt;span style="color:#e6db74">&amp;#34;Hello World!&amp;#34;&lt;/span>) &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>endl;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> EXIT_SUCCESS;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This macro is very commonly used in projects that use GNU gettext and even included in frameworks like GTK.&lt;/p>
+&lt;p>So where does &lt;code>gettext()&lt;/code> look for my translations? You will have to specify that with &lt;code>bindtextdomain&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;cstdlib&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;libintl.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define _(String) gettext(String)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> bindtextdomain(&lt;span style="color:#e6db74">&amp;#34;my-domain&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;locales&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> textdomain(&lt;span style="color:#e6db74">&amp;#34;my-domain&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>cout &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> _(&lt;span style="color:#e6db74">&amp;#34;Hello World!&amp;#34;&lt;/span>) &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>endl;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> EXIT_SUCCESS;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now at runtime if the user has the &lt;code>de&lt;/code> locale set, &lt;code>gettext()&lt;/code> will look at &lt;code>locales/de/LC_MESSAGES/my-domain.mo&lt;/code> for a translation. Let&amp;rsquo;s break this path down:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>locales&lt;/code>: this is the folder specified in &lt;code>bindtextdomain&lt;/code>&lt;/li>
+&lt;li>&lt;code>de&lt;/code>: this the current locale&lt;/li>
+&lt;li>&lt;code>LC_MESSAGES&lt;/code>: this is the category name of the translation&lt;/li>
+&lt;li>&lt;code>my-domain.mo&lt;/code>: the binary message catalog containing all translations. The file name is what you specified in &lt;code>bindtextdomain&lt;/code> as well as &lt;code>textdomain&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>There are few things that need explaining. The library will first try and find an exact match of the current locale but if that is not possible it will look for similar locales. As an example if the user has &lt;code>de_DE&lt;/code> but you only provided &lt;code>de&lt;/code> then the library will first look for &lt;code>de_DE&lt;/code> and when it doesn&amp;rsquo;t find it, it will look for an expanded locale like &lt;code>de&lt;/code>.&lt;/p>
+&lt;p>The &lt;code>LC_MESSAGES&lt;/code> part of the path is the category name of the translation we are looking for. &lt;code>LC&lt;/code> stands for locale category and there are various others like &lt;code>LC_CTYPE&lt;/code>, &lt;code>LC_NUMERIC&lt;/code>, &lt;code>LC_TIME&lt;/code>, &lt;code>LC_MONETARY&lt;/code> which all specify how to handle various things like numbers, dates and currency. For our purposes we only focus on messages, raw strings or texts we want to translate. &lt;code>gettext&lt;/code> will always use &lt;code>LC_MESSAGES&lt;/code> as it&amp;rsquo;s category. There are other functions that will let you specify which category you want to look for like &lt;code>dcgettext&lt;/code> but for this post we won&amp;rsquo;t look at those.&lt;/p>
+&lt;p>The &lt;code>.mo&lt;/code> file is the message catalog which has to be generated. So let&amp;rsquo;s look at how that works next.&lt;/p>
+&lt;h3 id="initial-project-setup">Initial Project Setup&lt;/h3>
+&lt;p>In our very complex example we have marked the &lt;code>Hello World!&lt;/code> string as a translatable string. We can now use &lt;code>xgettext&lt;/code> to extract these marked strings:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>xgettext main.cpp --keyword&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;_&amp;#34;&lt;/span> --output&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;locales/my-domain.pot&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This &lt;code>.pot&lt;/code> file is a &lt;em>Portable Object Template&lt;/em> file. This file can look something like this:&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-pot" data-lang="pot"># SOME DESCRIPTIVE TITLE.
+# FIRST AUTHOR &amp;lt;EMAIL@ADDRESS&amp;gt;, YEAR.
+#
+#, fuzzy
+msgid &amp;#34;&amp;#34;
+msgstr &amp;#34;&amp;#34;
+&amp;#34;POT-Creation-Date: 2022-05-05 14:47+0200\n&amp;#34;
+&amp;#34;PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n&amp;#34;
+&amp;#34;Last-Translator: FULL NAME &amp;lt;EMAIL@ADDRESS&amp;gt;\n&amp;#34;
+&amp;#34;Language-Team: LANGUAGE &amp;lt;LL@li.org&amp;gt;\n&amp;#34;
+&amp;#34;Language: \n&amp;#34;
+&amp;#34;MIME-Version: 1.0\n&amp;#34;
+&amp;#34;Content-Type: text/plain; charset=CHARSET\n&amp;#34;
+&amp;#34;Content-Transfer-Encoding: 8bit\n&amp;#34;
+#: main.cpp:10
+msgid &amp;#34;Hello World!&amp;#34;
+msgstr &amp;#34;&amp;#34;
+&lt;/code>&lt;/pre>&lt;p>At the bottom you can find our &lt;code>Hello World!&lt;/code> string which comes from &lt;code>main.cpp&lt;/code> at line &lt;code>9&lt;/code>. This file can now be used to create &lt;code>.po&lt;/code>, &lt;em>Portable Object&lt;/em> files using &lt;code>msginit&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>msginit --input&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;locales/my-domain.pot&amp;#34;&lt;/span> --output-file&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;locales/de/my-domain.po&amp;#34;&lt;/span> --locale&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;de&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Every language you want to support gets its own &lt;code>.po&lt;/code> file. The &lt;code>.pot&lt;/code> is just a &lt;em>template&lt;/em> used to create the &lt;code>.po&lt;/code> files with. The &lt;code>.po&lt;/code> file looks almost the same:&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-po" data-lang="po">msgid &amp;#34;&amp;#34;
+msgstr &amp;#34;&amp;#34;
+&amp;#34;POT-Creation-Date: 2022-05-05 14:47+0200\n&amp;#34;
+&amp;#34;PO-Revision-Date: 2022-05-04 18:41+0200\n&amp;#34;
+&amp;#34;Last-Translator: &amp;lt;EMAIL@ADDRESS&amp;gt;\n&amp;#34;
+&amp;#34;Language-Team: German\n&amp;#34;
+&amp;#34;Language: de\n&amp;#34;
+&amp;#34;MIME-Version: 1.0\n&amp;#34;
+&amp;#34;Content-Type: text/plain; charset=CP1252\n&amp;#34;
+&amp;#34;Content-Transfer-Encoding: 8bit\n&amp;#34;
+&amp;#34;Plural-Forms: nplurals=2; plural=(n != 1);\n&amp;#34;
+&amp;#34;X-Generator: Poedit 3.0.1\n&amp;#34;
+#: main.cpp:10
+msgid &amp;#34;Hello World!&amp;#34;
+msgstr &amp;#34;Hallo Welt!&amp;#34;
+&lt;/code>&lt;/pre>&lt;p>I already went ahead and translated &lt;code>Hello World!&lt;/code> to &lt;code>Hallo Welt!&lt;/code> using &lt;a href="https://poedit.net/">Poedit&lt;/a> but there are other tools like &lt;em>KBabel&lt;/em>, &lt;em>Gtranslator&lt;/em>, &lt;em>PO Mode&lt;/em> and more which you can use to edit the &lt;code>.po&lt;/code> files. The ecosystem is very mature and platforms like &lt;a href="https://docs.transifex.com/formats/gettext">transifex&lt;/a> also support it.&lt;/p>
+&lt;p>Now with your fully or partially translated &lt;code>.po&lt;/code> file in hand we will use &lt;code>msgfmt&lt;/code> to create our final output file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>msgfmt &lt;span style="color:#e6db74">&amp;#34;locales/de/my-domain.po&amp;#34;&lt;/span> --output-file&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;locales/de/my-domain.mo&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You now have a &lt;code>.mo&lt;/code> file that can be loaded at runtime. But what happens when you change your code? How do you update your &lt;code>.pot&lt;/code>, &lt;code>.po&lt;/code> and &lt;code>.mo&lt;/code> files when there are new, removed or changed strings in your code?&lt;/p>
+&lt;h3 id="source-changed-what-to-do">Source changed, what to do?&lt;/h3>
+&lt;p>What we looked at so far is the initial setup phase. This is what you do when you have no previous &lt;code>.pot&lt;/code> or &lt;code>.po&lt;/code> files and generate them for the first time. If you already have them and the code changed you need to run &lt;code>xgettext&lt;/code> again:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>xgettext main.cpp --keyword&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;_&amp;#34;&lt;/span> --output&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;locales/my-domain.pot&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>.pot&lt;/code> file can be overwritten as you please since it only holds generated content. The &lt;code>.po&lt;/code> files are more important since you don&amp;rsquo;t want to re-do all translations. For this reason we use &lt;code>msgmerge&lt;/code> to update the &lt;code>.po&lt;/code> files with the new template:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>msgmerge &lt;span style="color:#e6db74">&amp;#34;locales/de/my-domain.po&amp;#34;&lt;/span> &lt;span style="color:#e6db74">&amp;#34;locales/my-domain.pot&amp;#34;&lt;/span> --output-file&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;locales/de/my-domain.po&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The tool takes the current &lt;code>.po&lt;/code> file and the new &lt;code>.pot&lt;/code> file as input and spits out an updated &lt;code>.po&lt;/code> file that keeps your existing translations as long as they are still used.&lt;/p>
+&lt;h3 id="automating-and-integrating-with-cmake">Automating and integrating with CMake&lt;/h3>
+&lt;p>If you found all of this extremely tedious to do by hand then you are not alone. Of course we can automate the generating and updating for all the required files as well as copying the &lt;code>.mo&lt;/code> files to our output at build time using a CMake script.&lt;/p>
+&lt;p>To get started, grab a copy &lt;a href="https://github.com/erri120/Gettext-CMake/blob/master/Gettext_helpers.cmake">this script&lt;/a> or add the repository as a submodule. In your &lt;code>CMakeLists.txt&lt;/code> file we need to add some lines:&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="324176598" type="checkbox" />
+&lt;label for="324176598">
+&lt;span class="collapsable-code__language">cmake&lt;/span>
+&lt;span class="collapsable-code__title">CMakeLists.txt&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-cmake" >&lt;code>
+# setup gettext
+set(GETTEXT_DOMAIN &amp;#34;my-domain&amp;#34;)
+set(GETTEXT_TARGET &amp;#34;gettext-target&amp;#34;)
+set(GETTEXT_OUTPUT_DIR &amp;#34;locales&amp;#34;)
+set(GETTEXT_LANGUAGES &amp;#34;en&amp;#34; &amp;#34;de&amp;#34;)
+target_compile_definitions(${PROJECT_NAME} PUBLIC &amp;#34;GETTEXT_DOMAIN=\&amp;#34;${GETTEXT_DOMAIN}\&amp;#34;&amp;#34;)
+target_compile_definitions(${PROJECT_NAME} PUBLIC &amp;#34;GETTEXT_OUTPUT_DIR=\&amp;#34;${GETTEXT_OUTPUT_DIR}\&amp;#34;&amp;#34;)
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>First we specify some variables and add &lt;code>GETTEXT_DOMAIN&lt;/code> and &lt;code>GETTEXT_OUTPUT_DIR&lt;/code> as a predefined macro so we can use it in our code. I suggest you change the domain name and the list of languages you want to use.&lt;/p>
+&lt;p>Next we want to add the previously downloaded script:&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="954172638" type="checkbox" />
+&lt;label for="954172638">
+&lt;span class="collapsable-code__language">cmake&lt;/span>
+&lt;span class="collapsable-code__title">CMakeLists.txt&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-cmake" >&lt;code>
+include(&amp;#34;extern/gettext-cmake/Gettext_helpers.cmake&amp;#34;)
+CONFIGURE_GETTEXT(
+DOMAIN ${GETTEXT_DOMAIN}
+TARGET_NAME ${GETTEXT_TARGET}
+SOURCES &amp;#34;main.cpp&amp;#34;
+POTFILE_DESTINATION ${GETTEXT_OUTPUT_DIR}
+XGETTEXT_ARGS
+&amp;#34;--keyword=_&amp;#34;
+&amp;#34;--add-comments=TRANSLATORS:&amp;#34;
+&amp;#34;--package-name=${PROJECT_NAME}&amp;#34;
+&amp;#34;--package-version=${PROJECT_VERSION}&amp;#34;
+&amp;#34;--msgid-bugs-address=&amp;lt;https://github.com/erri120/${PROJECT_NAME}/issues&amp;gt;&amp;#34;
+&amp;#34;--copyright-holder=erri120&amp;#34;
+LANGUAGES ${GETTEXT_LANGUAGES}
+BUILD_DESTINATION $&amp;lt;TARGET_FILE_DIR:${PROJECT_NAME}&amp;gt;/${GETTEXT_OUTPUT_DIR}
+ALL
+)
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>There is lots to configure so let&amp;rsquo;s go through it all:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>DOMAIN&lt;/code> set the domain name&lt;/li>
+&lt;li>&lt;code>TARGET_NAME&lt;/code>: set the CMake target name&lt;/li>
+&lt;li>&lt;code>SOURCES&lt;/code>: set a list of all source files that &lt;code>xgettext&lt;/code> should look through, I suggest creating some variable that holds all your sources&lt;/li>
+&lt;li>&lt;code>POTFILE_DESTINATION&lt;/code>: this is the directory where the &lt;code>.pot&lt;/code> file goes&lt;/li>
+&lt;li>&lt;code>XGETTEXT_ARGS&lt;/code>: most of the extra arguments supplied are just for flavour like specifying the package name, version as well as the address where you can report bugs and the copyright holder&lt;/li>
+&lt;li>&lt;code>LANGAUGES&lt;/code>: set the list of languages we want to support&lt;/li>
+&lt;li>&lt;code>BUILD_DESTINATION&lt;/code>: the top-level output folder for the generated &lt;code>.mo&lt;/code> files&lt;/li>
+&lt;li>&lt;code>ALL&lt;/code>: adds the custom CMake target to the default build target so that it will be run every time&lt;/li>
+&lt;/ul>
+&lt;p>And that&amp;rsquo;s it. Doing a CMake configure will generate the &lt;code>.pot&lt;/code> and &lt;code>.po&lt;/code> files and you now have some new targets that will generate the &lt;code>.mo&lt;/code> files.&lt;/p>
+&lt;h3 id="complete-code-example">Complete Code Example&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;cstdlib&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;libintl.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#if WIN32
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define WIN32_LEAN_AND_MEAN
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;Windows.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#endif
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define _(STRING) gettext(STRING)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">setup_i18n&lt;/span>(&lt;span style="color:#66d9ef">const&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>string_view locale) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#if WIN32
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// LocaleNameToLCID requires a LPCWSTR so we need to convert from char to wchar_t
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">auto&lt;/span> wStringSize &lt;span style="color:#f92672">=&lt;/span> MultiByteToWideChar(CP_UTF8, &lt;span style="color:#ae81ff">0&lt;/span>, locale.data(), &lt;span style="color:#66d9ef">static_cast&lt;/span>&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>(locale.length()), &lt;span style="color:#66d9ef">nullptr&lt;/span>, &lt;span style="color:#ae81ff">0&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>wstring localeName;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> localeName.reserve(wStringSize);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MultiByteToWideChar(CP_UTF8, &lt;span style="color:#ae81ff">0&lt;/span>, locale.data(), &lt;span style="color:#66d9ef">static_cast&lt;/span>&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>(locale.length()), localeName.data(), wStringSize);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> _configthreadlocale(_DISABLE_PER_THREAD_LOCALE);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">auto&lt;/span> localeId &lt;span style="color:#f92672">=&lt;/span> LocaleNameToLCID(localeName.c_str(), LOCALE_ALLOW_NEUTRAL_NAMES);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> SetThreadLocale(localeId);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#else
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> setlocale(LC_MESSAGES, locale.data());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#endif
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> bindtextdomain(GETTEXT_DOMAIN, GETTEXT_OUTPUT_DIR);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> bind_textdomain_codeset(GETTEXT_DOMAIN, &lt;span style="color:#e6db74">&amp;#34;UTF-8&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> textdomain(GETTEXT_DOMAIN);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> setup_i18n(&lt;span style="color:#e6db74">&amp;#34;de&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>cout &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> _(&lt;span style="color:#e6db74">&amp;#34;Hello World!&amp;#34;&lt;/span>) &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>endl;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> EXIT_SUCCESS;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Woah, what happened with our 12 lines of code? Things are sadly not as easy as you want them to be. The main function is still the same, we have our marked string &lt;code>Hello World!&lt;/code> but now there is the new function &lt;code>setup_i18n&lt;/code>.&lt;/p>
+&lt;p>This new function takes a &lt;a href="https://en.cppreference.com/w/cpp/string/basic_string_view">&lt;code>std::string_view&lt;/code>&lt;/a> as an argument and sets the current locale to something new. In this case I want to change the locale to &lt;code>de&lt;/code> so my German translation for &lt;code>Hello World!&lt;/code> can be loaded. In your actual code you&amp;rsquo;d want to have some language option the user can change which would call this function with the new locale.&lt;/p>
+&lt;p>The thing that makes this messy is of course the difference between systems. On a POSIX compliant system you can just call &lt;code>setlocale(LC_MESSAGES, &amp;quot;de&amp;quot;)&lt;/code> but this doesn&amp;rsquo;t work at all for Windows.&lt;/p>
+&lt;p>On Windows you need to use &lt;code>SetThreadLocale&lt;/code> which requires a locale id that you can get from a name like &lt;code>de&lt;/code> using &lt;code>LocaleNameToLCID&lt;/code>. The &lt;code>_configthreadlocale(_DISABLE_PER_THREAD_LOCALE)&lt;/code> call is important because &lt;code>SetThreadLocale&lt;/code> only affects the current thread, who would have thought, so we want to disable this behaviour and change the locale of this and all future threads.&lt;/p>
+&lt;p>The code after that uses the new predefined macros we added in our CMake file and I also added a call to the very useful &lt;code>bind_textdomain_codeset&lt;/code> function. I suggest reading my &lt;a href="https://erri120.github.io/posts/2022-04-15/">Encodings and Unicode&lt;/a> where I explain the mess that is Code Pages and Unicode. With this function call &lt;code>gettext&lt;/code> will always return an UTF-8 string. If you don&amp;rsquo;t want that or don&amp;rsquo;t need that you can remove this call but for frameworks like GTK it is required as they require UTF-8 only.&lt;/p>
+&lt;h3 id="alternatives">Alternatives&lt;/h3>
+&lt;p>GNU gettext has been around for over 30 years, it is battletested, has great support and a matured ecosystem. However if this is not for you or if you can&amp;rsquo;t use it there are a few alternatives available:&lt;/p>
+&lt;ul>
+&lt;li>DIY: always possible but highly discouraged&lt;/li>
+&lt;li>&lt;a href="https://doc.qt.io/qt-5/linguist-overview.html">Qt&lt;/a>: of course the Qt-ecosystem has a different way of doing translations&lt;/li>
+&lt;li>&lt;a href="https://icu.unicode.org/">ICU&lt;/a>: International Components for Unicode have ICU4C however it is not easy to use at all&lt;/li>
+&lt;li>&lt;a href="https://www.boost.org/doc/libs/1_70_0/libs/locale/doc/html/index.html">Boost.Locale&lt;/a> they use ICU as a backend&lt;/li>
+&lt;li>&lt;a href="https://www.man7.org/linux/man-pages/man3/catgets.3.html">POSIX: catgets&lt;/a> this was created back in 1987 before GNU gettext&lt;/li>
+&lt;li>&lt;a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringa">Win32: LoadString&lt;/a> with this you can load string resources by id&lt;/li>
+&lt;/ul></content></item><item><title>Everything about Unicode, Code Pages and Character Encoding</title><link>https://erri120.github.io/posts/2022-04-15/</link><pubDate>Fri, 15 Apr 2022 00:00:00 +0000</pubDate><guid>https://erri120.github.io/posts/2022-04-15/</guid><description>Time and Encodings are the two things a programmer never wants to touch. Thankfully dealing with time has been made very easy, we developed ISO Standards, created standard libraries with good time functions and don&amp;rsquo;t have to worry until 2038 when a signed 32-bit integer is unable to hold the number of seconds elapsed since the Unix epoch.
 Encodings did not receive this kind of treatment until the emergence of Unicode but even then we still have massive issues when dealing with them.</description><content>&lt;p>Time and Encodings are the two things a programmer never wants to touch. Thankfully dealing with time has been made very easy, we developed ISO Standards, created standard libraries with good time functions and don&amp;rsquo;t have to worry until 2038 when a signed 32-bit integer is unable to hold the number of seconds elapsed since the Unix epoch.&lt;/p>
 &lt;p>Encodings did not receive this kind of treatment until the emergence of Unicode but even then we still have massive issues when dealing with them.&lt;/p>
 &lt;h2 id="history">History&lt;/h2>
@@ -113,23 +366,23 @@ Encodings did not receive this kind of treatment until the emergence of Unicode 
 &lt;h2 id="closing-words">Closing Words&lt;/h2>
 &lt;p>Props to you if you read this entire thing. I personally had to deal a lot with encoding issues as a lot of games I play come from Japan and don&amp;rsquo;t work on my machine without a locale emulator.&lt;/p>
 &lt;p>I hope this answered some questions you might had around this topic. It is very complex and has a very long history but this should give you a peak into the issues we still have.&lt;/p>
-&lt;section class="footnotes" role="doc-endnotes">
+&lt;div class="footnotes" role="doc-endnotes">
 &lt;hr>
 &lt;ol>
-&lt;li id="fn:1" role="doc-endnote">
+&lt;li id="fn:1">
 &lt;p>&lt;a href="https://web.archive.org/web/20181208141313/https://msdn.microsoft.com/en-us/goglobal/bb964658.aspx#a">https://web.archive.org/web/20181208141313/https://msdn.microsoft.com/en-us/goglobal/bb964658.aspx#a&lt;/a>&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
-&lt;li id="fn:2" role="doc-endnote">
+&lt;li id="fn:2">
 &lt;p>&lt;a href="https://w3techs.com/technologies/cross/character_encoding/ranking">https://w3techs.com/technologies/cross/character_encoding/ranking&lt;/a>&amp;#160;&lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
-&lt;li id="fn:3" role="doc-endnote">
+&lt;li id="fn:3">
 &lt;p>&lt;a href="https://www.winhelponline.com/blog/set-default-encoding-notepad-ansi-utf-8/">https://www.winhelponline.com/blog/set-default-encoding-notepad-ansi-utf-8/&lt;/a>&amp;#160;&lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
-&lt;li id="fn:4" role="doc-endnote">
+&lt;li id="fn:4">
 &lt;p>&lt;a href="https://docs.microsoft.com/en-us/windows/apps/design/globalizing/use-utf8-code-page">https://docs.microsoft.com/en-us/windows/apps/design/globalizing/use-utf8-code-page&lt;/a>&amp;#160;&lt;a href="#fnref:4" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;/section></content></item><item><title>Fixing Anno 2070 by changing three bytes</title><link>https://erri120.github.io/posts/2021-12-10/</link><pubDate>Fri, 10 Dec 2021 10:00:00 +0100</pubDate><guid>https://erri120.github.io/posts/2021-12-10/</guid><description>I love Anno 2070. The game released in 2011 and I bought the Königsedition, a special deluxe edition containing the base game, the Deep Ocean DLC, a poster and the entire soundtrack on 3 CDs, back in 2013. I played this game to death, it is my most played strategy game and I have often look back at the fun I had while playing. If you never played the game and went on Steam you might notice it has a Mixed rating.</description><content>&lt;p>I love Anno 2070. The game released in 2011 and I bought the &lt;em>Königsedition&lt;/em>, a special deluxe edition containing the base game, the &lt;em>Deep Ocean&lt;/em> DLC, a poster and the entire soundtrack on 3 CDs, back in 2013. I played this game to death, it is my most played strategy game and I have often look back at the fun I had while playing. If you never played the game and went on Steam you might notice it has a &lt;em>Mixed&lt;/em> rating. This might seem weird considering I just told you how awesome this game is. But the ratings reflect the current state very well: you can&amp;rsquo;t fucking play the game.&lt;/p>
+&lt;/div></content></item><item><title>Fixing Anno 2070 by changing three bytes</title><link>https://erri120.github.io/posts/2021-12-10/</link><pubDate>Fri, 10 Dec 2021 10:00:00 +0100</pubDate><guid>https://erri120.github.io/posts/2021-12-10/</guid><description>I love Anno 2070. The game released in 2011 and I bought the Königsedition, a special deluxe edition containing the base game, the Deep Ocean DLC, a poster and the entire soundtrack on 3 CDs, back in 2013. I played this game to death, it is my most played strategy game and I have often look back at the fun I had while playing. If you never played the game and went on Steam you might notice it has a Mixed rating.</description><content>&lt;p>I love Anno 2070. The game released in 2011 and I bought the &lt;em>Königsedition&lt;/em>, a special deluxe edition containing the base game, the &lt;em>Deep Ocean&lt;/em> DLC, a poster and the entire soundtrack on 3 CDs, back in 2013. I played this game to death, it is my most played strategy game and I have often look back at the fun I had while playing. If you never played the game and went on Steam you might notice it has a &lt;em>Mixed&lt;/em> rating. This might seem weird considering I just told you how awesome this game is. But the ratings reflect the current state very well: you can&amp;rsquo;t fucking play the game.&lt;/p>
 &lt;h2 id="why-the-game-is-unplayable">Why the game is unplayable&lt;/h2>
 &lt;p>Did you think Cyberpunk 2077 at launch was bad with all the glitches and bugs? At least you could play that game and somewhat enjoy it. Now look at this 10 year old game that you can&amp;rsquo;t even fucking play and Ubisoft completely abandoned it. A studio abandoning their games is nothing new and often not a problem. It might suck that the multipler servers of your favourite game go offline but you could at least continue playing the campaign or the community might start hosting servers.&lt;/p>
 &lt;p>So what do I mean with &amp;ldquo;you can&amp;rsquo;t fucking play the game&amp;rdquo;? Let&amp;rsquo;s imagine an obstacle course where the finish is the main menu of the game. To get to the main menu you first have to start the game either through Uplay, Steam or by starting the &lt;code>Anno5.exe&lt;/code> directly. The first obstacle is Uplay itself. I can not count the number of times Uplay had some error or bug that lead to me not playing a game. Back when Assassins Creed Unity came out, Uplay thought my saves were ephemeral and I had to replay the first 5 hours of the game more than 13 times. The launcher is a complete dumpster fire and worse than the League of Legends client.&lt;/p>
@@ -159,17 +412,17 @@ Encodings did not receive this kind of treatment until the emergence of Unicode 
 &lt;h2 id="afterword">Afterword&lt;/h2>
 &lt;p>This project has been a lot of fun and ended rather suddenly. I initially allotted 3 full days to this endeavour but I kept finding new leads and getting new ideas so I ended up only spending around 12.5 hours (I love how x32dbg will tell you how much time you have wasted debugging). The solution is also very simple and I made it the title of this post. Just 3 bytes to fix the entire start of the game. I thought I would have to modify a lot functions or write some DLL I&amp;rsquo;d have to inject but no, you just change 3 bytes and be happy :)&lt;/p>
 &lt;p>I hope you found this post somewhat interesting and maybe you can finally play Anno 2070. If this works for you please do tell me below.&lt;/p>
-&lt;section class="footnotes" role="doc-endnotes">
+&lt;div class="footnotes" role="doc-endnotes">
 &lt;hr>
 &lt;ol>
-&lt;li id="fn:1" role="doc-endnote">
+&lt;li id="fn:1">
 &lt;p>&lt;a href="https://www.youtube.com/watch?v=T6HdBplLmuU">https://www.youtube.com/watch?v=T6HdBplLmuU&lt;/a>&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
-&lt;li id="fn:2" role="doc-endnote">
+&lt;li id="fn:2">
 &lt;p>&lt;a href="https://www.guru3d.com/news-story/why-guru3d-probably-never-will-review-ubisoft-titles-anymore-anno-2070.html">https://www.guru3d.com/news-story/why-guru3d-probably-never-will-review-ubisoft-titles-anymore-anno-2070.html&lt;/a>&amp;#160;&lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;/section></content></item><item><title>Reworking rpgmpacker: Moving from C++ to TypeScript</title><link>https://erri120.github.io/posts/2021-11-18/</link><pubDate>Thu, 18 Nov 2021 12:18:00 +0100</pubDate><guid>https://erri120.github.io/posts/2021-11-18/</guid><description>rpgmpacker has been one of my biggest non-modding related projects on GitHub and the only reason people visit my blog:
+&lt;/div></content></item><item><title>Reworking rpgmpacker: Moving from C++ to TypeScript</title><link>https://erri120.github.io/posts/2021-11-18/</link><pubDate>Thu, 18 Nov 2021 12:18:00 +0100</pubDate><guid>https://erri120.github.io/posts/2021-11-18/</guid><description>rpgmpacker has been one of my biggest non-modding related projects on GitHub and the only reason people visit my blog:
 The developer of the game Star Knightess Aura (NSFW) is the first actual user of this tool and contributed a good amount of issues on GitHub driving the development of this project forward.
 With some issues still open I stopped working on this project in April 2021 because I knew I had to rework this tool at some point and didn&amp;rsquo;t had the motivation to do so at that time.</description><content>&lt;p>&lt;a href="https://github.com/erri120/rpgmpacker">rpgmpacker&lt;/a> has been one of my biggest non-modding related projects on GitHub and the only reason people visit my blog:&lt;/p>
 &lt;img src="https://erri120.github.io/img/posts/2021-11-18/Blog-Performance.png" alt="Top queries of my blog" class="left" />
@@ -259,14 +512,14 @@ With some issues still open I stopped working on this project in April 2021 beca
 &lt;p>If you don&amp;rsquo;t want to mess with the game files directly, which is a good idea, then I suggest taking a look at the &lt;a href="https://github.com/erri120/RPGMakerPlugins#playtimefix">&lt;code>PlaytimeFix&lt;/code> plugin&lt;/a> which I developed that does everything explained in this post.&lt;/p>
 &lt;h2 id="afterword">Afterword&lt;/h2>
 &lt;p>This issue has been bugging me a lot during my playthroughs of longer games because you don&amp;rsquo;t really notice it when your playtime goes from 1h to 2 hours but going from 21 hours to 50+ hours was a bit more in my face. RPG Maker MZ also doesn&amp;rsquo;t fix this and I have not seen any discussion about this.&lt;/p>
-&lt;section class="footnotes" role="doc-endnotes">
+&lt;div class="footnotes" role="doc-endnotes">
 &lt;hr>
 &lt;ol>
-&lt;li id="fn:1" role="doc-endnote">
+&lt;li id="fn:1">
 &lt;p>See &lt;code>Time.deltaTime&lt;/code> in the docs &lt;a href="https://docs.unity3d.com/ScriptReference/Time-deltaTime.html">here&lt;/a>&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;/section></content></item><item><title>CI/CD for RPG Maker Game Development</title><link>https://erri120.github.io/posts/2021-02-04/</link><pubDate>Thu, 04 Feb 2021 15:41:07 +0100</pubDate><guid>https://erri120.github.io/posts/2021-02-04/</guid><description>Automation saves time and therefore money. However you have to ask yourself if it&amp;rsquo;s worth spending hours writing a complex and long script. In the worst case you might end up wasting instead of saving time. Thankfully most programming related tasks can be automated very quickly and each language or framework often has documentation on how to get you up and running.
+&lt;/div></content></item><item><title>CI/CD for RPG Maker Game Development</title><link>https://erri120.github.io/posts/2021-02-04/</link><pubDate>Thu, 04 Feb 2021 15:41:07 +0100</pubDate><guid>https://erri120.github.io/posts/2021-02-04/</guid><description>Automation saves time and therefore money. However you have to ask yourself if it&amp;rsquo;s worth spending hours writing a complex and long script. In the worst case you might end up wasting instead of saving time. Thankfully most programming related tasks can be automated very quickly and each language or framework often has documentation on how to get you up and running.
 This is sadly not often the case when it comes to game development.</description><content>&lt;p>Automation saves time and therefore money. However you have to ask yourself if it&amp;rsquo;s worth spending hours writing a complex and long script. In the worst case you might end up wasting instead of saving time. Thankfully most programming related tasks can be automated very quickly and each language or framework often has documentation on how to get you up and running.&lt;/p>
 &lt;p>This is sadly not often the case when it comes to game development. Popular engines like Unreal Engine and Unity have automation tools &lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> and documentation for automating the build process but less popular ones such as RPG Maker don&amp;rsquo;t have those.&lt;/p>
 &lt;p>In this post I will explain what CI/CD means and how to set up a pipeline for RPG Maker MV/MZ with &lt;a href="https://github.com/erri120/rpgmpacker">rpgmpacker&lt;/a>. A big chunk of this post is explaining CI/CD and how RPG Maker MV/MZ works, if you just want to go to the practical part click &lt;a href="#using-rpgmpacker">here&lt;/a>.&lt;/p>
@@ -291,8 +544,8 @@ This is sadly not often the case when it comes to game development.</description
 &lt;p>Big studios often end up with huge pipelines because they have many employees and teams. They might have a CI pipeline that runs the tests and builds the project. The artifact would then send in a CD pipeline to the testers or QA team and when they approve of the build it gets released into the world. This is probably not the case for you or your team and most of the time you can combine all of this into one pipeline.&lt;/p>
 &lt;p>If you are curious how such a pipeline might look like, here is the GitHub Actions workflow file that builds (CI) and deploys (CD) this site to GitHub Pages on every push to the master branch:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="356942871" type="checkbox" />
-&lt;label for="356942871">
+&lt;input id="756283491" type="checkbox" />
+&lt;label for="756283491">
 &lt;span class="collapsable-code__language">yaml&lt;/span>
 &lt;span class="collapsable-code__title">Example GitHub Actions workflow&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -345,8 +598,8 @@ publish_branch: gh-pages
 &lt;p>If your game is not on itch.io then you can leave out the last step or replace it with an upload to MEGA, GDrive or your hosting platform of choice.&lt;/p>
 &lt;p>For the pipeline you can write a Bash or PowerShell script, just pick whatever you like more:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="642537189" type="checkbox" />
-&lt;label for="642537189">
+&lt;input id="469831725" type="checkbox" />
+&lt;label for="469831725">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Using rpgmpacker in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -367,8 +620,8 @@ npx rpgmpacker@latest \
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="853712469" type="checkbox" />
-&lt;label for="853712469">
+&lt;input id="263841957" type="checkbox" />
+&lt;label for="263841957">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Using rpgmpacker in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -390,8 +643,8 @@ npx rpgmpacker@latest `
 &lt;p>In my case I have the project in a folder called &lt;code>MyProject&lt;/code> next to the script and the output should go into the &lt;code>build&lt;/code> folder. I&amp;rsquo;m using the Steam version of RPG Maker MV for this but any version of MV or MZ can be used.&lt;/p>
 &lt;p>Next up we want to zip the output. rpgmpacker will create an output folder for each platform you specified so for me I will have &lt;code>build/Windows&lt;/code>, &lt;code>build/OSX&lt;/code> and a &lt;code>build/Linux&lt;/code> folder.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="758214369" type="checkbox" />
-&lt;label for="758214369">
+&lt;input id="128435967" type="checkbox" />
+&lt;label for="128435967">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Zipping the output in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -403,8 +656,8 @@ done
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="478951263" type="checkbox" />
-&lt;label for="478951263">
+&lt;input id="198637452" type="checkbox" />
+&lt;label for="198637452">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Zipping the output in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -419,8 +672,8 @@ foreach ($platform in $Platforms) {
 &lt;p>This is where the difference between PowerShell and Bash start to appear. In Bash we use a glob to get all top-level items of the output directory and in PowerShell we use the &lt;code>Get-ChildItem&lt;/code> function. They look different but they do the same thing with the main difference being that &lt;code>platform&lt;/code> in Bash will be &lt;code>./build/Windows&lt;/code> while &lt;code>$platform&lt;/code> in PowerShell will be just &lt;code>Windows&lt;/code>. This is why we need to prefix &lt;code>$platform&lt;/code> with &lt;code>$OUTPUT/&lt;/code> when calling 7z.&lt;/p>
 &lt;p>The pipeline is almost done at this point. Next is publishing the output with &lt;a href="https://itch.io/docs/butler">Butler&lt;/a> to itch.io but if you are not using that platform you are now done.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="765192348" type="checkbox" />
-&lt;label for="765192348">
+&lt;input id="891246753" type="checkbox" />
+&lt;label for="891246753">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Downloading Butler in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -442,8 +695,8 @@ butler=&amp;#34;$ButlerOutput/butler.exe&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="481265379" type="checkbox" />
-&lt;label for="481265379">
+&lt;input id="125473986" type="checkbox" />
+&lt;label for="125473986">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Downloading Buttler in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -466,8 +719,8 @@ $butler=&amp;#34;$ButlerOutput/butler.exe&amp;#34;
 &lt;/div>
 &lt;p>If you are not on windows you should change the &lt;code>ButlerChannel&lt;/code> variable to &lt;code>darwin-amd64&lt;/code> or &lt;code>linux-amd64&lt;/code> depending on your system. I recommend checking &lt;a href="https://broth.itch.ovh/butler">the channel list&lt;/a> of Butler if you need something different. I&amp;rsquo;ve added a simple check so we don&amp;rsquo;t download Butler whenever we call the script. Before we continue you should get an API key from &lt;a href="https://itch.io/user/settings/api-keys">itch.io&lt;/a>. You should treat API keys like passwords and should never make them public. A good way of storing API keys is with environment variables and Butler expects the API key to be stored in the &lt;code>BUTLER_API_KEY&lt;/code> environment variable.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="374816259" type="checkbox" />
-&lt;label for="374816259">
+&lt;input id="291786534" type="checkbox" />
+&lt;label for="291786534">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Using Buttler in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -482,8 +735,8 @@ ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="684395271" type="checkbox" />
-&lt;label for="684395271">
+&lt;input id="754632981" type="checkbox" />
+&lt;label for="754632981">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Using Buttler in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -500,8 +753,8 @@ $ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;p>I recommend that you look at the &lt;a href="https://itch.io/docs/butler/pushing.html">Butler Docs&lt;/a> for the different channels you can push to. To recap here are both complete scripts:&lt;/p>
 &lt;h3 id="finished-scripts">Finished Scripts&lt;/h3>
 &lt;div class="collapsable-code">
-&lt;input id="235948761" type="checkbox" />
-&lt;label for="235948761">
+&lt;input id="471236859" type="checkbox" />
+&lt;label for="471236859">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -544,8 +797,8 @@ ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="465391728" type="checkbox" />
-&lt;label for="465391728">
+&lt;input id="815372469" type="checkbox" />
+&lt;label for="815372469">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -589,14 +842,14 @@ $ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;/div>
 &lt;h2 id="conclusion">Conclusion&lt;/h2>
 &lt;p>I hope this blog post helped you with getting a CI/CD pipeline up and running for your RPG Maker game. Please let me know if you end up using this tool for your next project. The author of &lt;a href="https://aura-dev.itch.io/star-knightess-aura">Star Knightess Aura (NSFW)&lt;/a> was one of the earliest users and you can find their pipeline in this repo on &lt;a href="https://gitgud.io/aura-dev/star_knightess_aura/-/tree/develop">gitgud&lt;/a>.&lt;/p>
-&lt;section class="footnotes" role="doc-endnotes">
+&lt;div class="footnotes" role="doc-endnotes">
 &lt;hr>
 &lt;ol>
-&lt;li id="fn:1" role="doc-endnote">
+&lt;li id="fn:1">
 &lt;p>Unreal Engine has &lt;a href="https://docs.unrealengine.com/4.27/en-US/ProductionPipelines/BuildTools/AutomationTool/">Automation Tools&lt;/a> and Unity has a &lt;a href="https://docs.unity3d.com/Manual/CommandLineArguments.html">CLI&lt;/a>&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;/section></content></item><item><title>Utilizing Image Steganography in Games</title><link>https://erri120.github.io/posts/2021-01-27/</link><pubDate>Wed, 27 Jan 2021 10:08:08 +0100</pubDate><guid>https://erri120.github.io/posts/2021-01-27/</guid><description>Image Steganography is nothing new or ground-breaking, it existed since 440 BC 1 and digital steganography started appearing once personal computers became a thing. This little post is about the methods used by Illusion for their games &amp;ldquo;Koikatsu!&amp;rdquo; and &amp;ldquo;AI Shoujo&amp;rdquo; and the benefits it provides.
+&lt;/div></content></item><item><title>Utilizing Image Steganography in Games</title><link>https://erri120.github.io/posts/2021-01-27/</link><pubDate>Wed, 27 Jan 2021 10:08:08 +0100</pubDate><guid>https://erri120.github.io/posts/2021-01-27/</guid><description>Image Steganography is nothing new or ground-breaking, it existed since 440 BC 1 and digital steganography started appearing once personal computers became a thing. This little post is about the methods used by Illusion for their games &amp;ldquo;Koikatsu!&amp;rdquo; and &amp;ldquo;AI Shoujo&amp;rdquo; and the benefits it provides.
 Character Presets and PNGs Most games by Illusion are sandboxy, they have an active modding community provide an extensive character creation tool that can export your preset.</description><content>&lt;p>Image Steganography is nothing new or ground-breaking, it existed since 440 BC &lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> and digital steganography started appearing once personal computers became a thing. This little post is about the methods used by Illusion for their games &amp;ldquo;Koikatsu!&amp;rdquo; and &amp;ldquo;AI Shoujo&amp;rdquo; and the benefits it provides.&lt;/p>
 &lt;h2 id="character-presets-and-pngs">Character Presets and PNGs&lt;/h2>
 &lt;p>Most games by Illusion are &lt;em>sandboxy&lt;/em>, they have an active modding community provide an extensive character creation tool that can export your preset. I come from Skyrim where exporting a character preset created with &lt;a href="https://www.nexusmods.com/skyrimspecialedition/mods/19080">RaceMenu&lt;/a> results in a JSON file full of instructions for the mod but not for the user. If you were to just give the JSON file to someone they won&amp;rsquo;t know how the character looks until they start the game and load the preset. This means you have to include screenshots and the JSON file but that makes Discord preset sharing channels very cluttered.&lt;/p>
@@ -616,11 +869,11 @@ Character Presets and PNGs Most games by Illusion are sandboxy, they have an act
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="rewarding-simplicity">Rewarding Simplicity&lt;/h2>
 &lt;p>You might think &amp;ldquo;&lt;em>So what&amp;rsquo;s the deal?&lt;/em>&amp;rdquo; and that is the point: it is simple to implement and a good solution to the problem of sharing presets, however it is not apparent.&lt;/p>
 &lt;p>I hope you found this somewhat interesting, if you work on a game that has presets and you don&amp;rsquo;t know how to export them, maybe this has sparked your interest and provided a solution.&lt;/p>
-&lt;section class="footnotes" role="doc-endnotes">
+&lt;div class="footnotes" role="doc-endnotes">
 &lt;hr>
 &lt;ol>
-&lt;li id="fn:1" role="doc-endnote">
+&lt;li id="fn:1">
 &lt;p>The first recorded use can be traced back to 440 BC in Greece, see &lt;a href="https://en.wikipedia.org/wiki/Steganography#History">Wikipedia&lt;/a>&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;/section></content></item></channel></rss>
+&lt;/div></content></item></channel></rss>

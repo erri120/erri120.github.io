@@ -113,23 +113,23 @@ Encodings did not receive this kind of treatment until the emergence of Unicode 
 &lt;h2 id="closing-words">Closing Words&lt;/h2>
 &lt;p>Props to you if you read this entire thing. I personally had to deal a lot with encoding issues as a lot of games I play come from Japan and don&amp;rsquo;t work on my machine without a locale emulator.&lt;/p>
 &lt;p>I hope this answered some questions you might had around this topic. It is very complex and has a very long history but this should give you a peak into the issues we still have.&lt;/p>
-&lt;section class="footnotes" role="doc-endnotes">
+&lt;div class="footnotes" role="doc-endnotes">
 &lt;hr>
 &lt;ol>
-&lt;li id="fn:1" role="doc-endnote">
+&lt;li id="fn:1">
 &lt;p>&lt;a href="https://web.archive.org/web/20181208141313/https://msdn.microsoft.com/en-us/goglobal/bb964658.aspx#a">https://web.archive.org/web/20181208141313/https://msdn.microsoft.com/en-us/goglobal/bb964658.aspx#a&lt;/a>&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
-&lt;li id="fn:2" role="doc-endnote">
+&lt;li id="fn:2">
 &lt;p>&lt;a href="https://w3techs.com/technologies/cross/character_encoding/ranking">https://w3techs.com/technologies/cross/character_encoding/ranking&lt;/a>&amp;#160;&lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
-&lt;li id="fn:3" role="doc-endnote">
+&lt;li id="fn:3">
 &lt;p>&lt;a href="https://www.winhelponline.com/blog/set-default-encoding-notepad-ansi-utf-8/">https://www.winhelponline.com/blog/set-default-encoding-notepad-ansi-utf-8/&lt;/a>&amp;#160;&lt;a href="#fnref:3" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
-&lt;li id="fn:4" role="doc-endnote">
+&lt;li id="fn:4">
 &lt;p>&lt;a href="https://docs.microsoft.com/en-us/windows/apps/design/globalizing/use-utf8-code-page">https://docs.microsoft.com/en-us/windows/apps/design/globalizing/use-utf8-code-page&lt;/a>&amp;#160;&lt;a href="#fnref:4" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;/section></content></item><item><title>Fixing Anno 2070 by changing three bytes</title><link>https://erri120.github.io/posts/2021-12-10/</link><pubDate>Fri, 10 Dec 2021 10:00:00 +0100</pubDate><guid>https://erri120.github.io/posts/2021-12-10/</guid><description>I love Anno 2070. The game released in 2011 and I bought the Königsedition, a special deluxe edition containing the base game, the Deep Ocean DLC, a poster and the entire soundtrack on 3 CDs, back in 2013. I played this game to death, it is my most played strategy game and I have often look back at the fun I had while playing. If you never played the game and went on Steam you might notice it has a Mixed rating.</description><content>&lt;p>I love Anno 2070. The game released in 2011 and I bought the &lt;em>Königsedition&lt;/em>, a special deluxe edition containing the base game, the &lt;em>Deep Ocean&lt;/em> DLC, a poster and the entire soundtrack on 3 CDs, back in 2013. I played this game to death, it is my most played strategy game and I have often look back at the fun I had while playing. If you never played the game and went on Steam you might notice it has a &lt;em>Mixed&lt;/em> rating. This might seem weird considering I just told you how awesome this game is. But the ratings reflect the current state very well: you can&amp;rsquo;t fucking play the game.&lt;/p>
+&lt;/div></content></item><item><title>Fixing Anno 2070 by changing three bytes</title><link>https://erri120.github.io/posts/2021-12-10/</link><pubDate>Fri, 10 Dec 2021 10:00:00 +0100</pubDate><guid>https://erri120.github.io/posts/2021-12-10/</guid><description>I love Anno 2070. The game released in 2011 and I bought the Königsedition, a special deluxe edition containing the base game, the Deep Ocean DLC, a poster and the entire soundtrack on 3 CDs, back in 2013. I played this game to death, it is my most played strategy game and I have often look back at the fun I had while playing. If you never played the game and went on Steam you might notice it has a Mixed rating.</description><content>&lt;p>I love Anno 2070. The game released in 2011 and I bought the &lt;em>Königsedition&lt;/em>, a special deluxe edition containing the base game, the &lt;em>Deep Ocean&lt;/em> DLC, a poster and the entire soundtrack on 3 CDs, back in 2013. I played this game to death, it is my most played strategy game and I have often look back at the fun I had while playing. If you never played the game and went on Steam you might notice it has a &lt;em>Mixed&lt;/em> rating. This might seem weird considering I just told you how awesome this game is. But the ratings reflect the current state very well: you can&amp;rsquo;t fucking play the game.&lt;/p>
 &lt;h2 id="why-the-game-is-unplayable">Why the game is unplayable&lt;/h2>
 &lt;p>Did you think Cyberpunk 2077 at launch was bad with all the glitches and bugs? At least you could play that game and somewhat enjoy it. Now look at this 10 year old game that you can&amp;rsquo;t even fucking play and Ubisoft completely abandoned it. A studio abandoning their games is nothing new and often not a problem. It might suck that the multipler servers of your favourite game go offline but you could at least continue playing the campaign or the community might start hosting servers.&lt;/p>
 &lt;p>So what do I mean with &amp;ldquo;you can&amp;rsquo;t fucking play the game&amp;rdquo;? Let&amp;rsquo;s imagine an obstacle course where the finish is the main menu of the game. To get to the main menu you first have to start the game either through Uplay, Steam or by starting the &lt;code>Anno5.exe&lt;/code> directly. The first obstacle is Uplay itself. I can not count the number of times Uplay had some error or bug that lead to me not playing a game. Back when Assassins Creed Unity came out, Uplay thought my saves were ephemeral and I had to replay the first 5 hours of the game more than 13 times. The launcher is a complete dumpster fire and worse than the League of Legends client.&lt;/p>
@@ -159,14 +159,14 @@ Encodings did not receive this kind of treatment until the emergence of Unicode 
 &lt;h2 id="afterword">Afterword&lt;/h2>
 &lt;p>This project has been a lot of fun and ended rather suddenly. I initially allotted 3 full days to this endeavour but I kept finding new leads and getting new ideas so I ended up only spending around 12.5 hours (I love how x32dbg will tell you how much time you have wasted debugging). The solution is also very simple and I made it the title of this post. Just 3 bytes to fix the entire start of the game. I thought I would have to modify a lot functions or write some DLL I&amp;rsquo;d have to inject but no, you just change 3 bytes and be happy :)&lt;/p>
 &lt;p>I hope you found this post somewhat interesting and maybe you can finally play Anno 2070. If this works for you please do tell me below.&lt;/p>
-&lt;section class="footnotes" role="doc-endnotes">
+&lt;div class="footnotes" role="doc-endnotes">
 &lt;hr>
 &lt;ol>
-&lt;li id="fn:1" role="doc-endnote">
+&lt;li id="fn:1">
 &lt;p>&lt;a href="https://www.youtube.com/watch?v=T6HdBplLmuU">https://www.youtube.com/watch?v=T6HdBplLmuU&lt;/a>&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
-&lt;li id="fn:2" role="doc-endnote">
+&lt;li id="fn:2">
 &lt;p>&lt;a href="https://www.guru3d.com/news-story/why-guru3d-probably-never-will-review-ubisoft-titles-anymore-anno-2070.html">https://www.guru3d.com/news-story/why-guru3d-probably-never-will-review-ubisoft-titles-anymore-anno-2070.html&lt;/a>&amp;#160;&lt;a href="#fnref:2" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;/section></content></item></channel></rss>
+&lt;/div></content></item></channel></rss>
