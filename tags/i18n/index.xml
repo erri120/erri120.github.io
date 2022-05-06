@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>i18n on erri120's very random Blog</title><link>https://erri120.github.io/tags/i18n/</link><description>Recent content in i18n on erri120's very random Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>CC BY 4.0</copyright><lastBuildDate>Thu, 05 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/tags/i18n/index.xml" rel="self" type="application/rss+xml"/><item><title>Getting started with GNU gettext for C++</title><link>https://erri120.github.io/posts/2022-05-05/</link><pubDate>Thu, 05 May 2022 00:00:00 +0000</pubDate><guid>https://erri120.github.io/posts/2022-05-05/</guid><description>Following my post on Encodings and Unicode it is now time to talk about i18n with GNU gettext. We will look at i18 and l10n in general and then talk about how gettext can make our live as programmers very easy.
-i18n and l10n - Internationalization and Localization Due to the length of Internationalization and Localization you can just write i18n and l10n which are &amp;ldquo;numeronyms&amp;rdquo;, number based words that are formed by taking the first and last character of the words and putting the amount of letters between these two characters in the middle, so for Internationalization it starts with an i and ends with an n and has 18 letters in-between so the result is i18n.</description><content>&lt;p>Following my post on &lt;a href="https://erri120.github.io/posts/2022-04-15/">Encodings and Unicode&lt;/a> it is now time to talk about i18n with &lt;a href="https://www.gnu.org/software/gettext/">GNU gettext&lt;/a>. We will look at i18 and l10n in general and then talk about how &lt;code>gettext&lt;/code> can make our live as programmers very easy.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>i18n on erri120's very random Blog</title><link>https://erri120.github.io/tags/i18n/</link><description>Recent content in i18n on erri120's very random Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>CC BY 4.0</copyright><lastBuildDate>Thu, 05 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/tags/i18n/index.xml" rel="self" type="application/rss+xml"/><item><title>Getting started with GNU gettext for C++</title><link>https://erri120.github.io/posts/2022-05-05/</link><pubDate>Thu, 05 May 2022 00:00:00 +0000</pubDate><guid>https://erri120.github.io/posts/2022-05-05/</guid><description>Following my post on Encodings and Unicode it is now time to talk about i18n with GNU gettext. We will look at i18n and l10n in general and then talk about how gettext can make our live as programmers very easy.
+i18n and l10n - Internationalization and Localization Due to the length of Internationalization and Localization you can just write i18n and l10n which are &amp;ldquo;numeronyms&amp;rdquo;, number based words that are formed by taking the first and last character of the words and putting the amount of letters between these two characters in the middle, so for Internationalization it starts with an i and ends with an n and has 18 letters in-between so the result is i18n.</description><content>&lt;p>Following my post on &lt;a href="https://erri120.github.io/posts/2022-04-15/">Encodings and Unicode&lt;/a> it is now time to talk about i18n with &lt;a href="https://www.gnu.org/software/gettext/">GNU gettext&lt;/a>. We will look at i18n and l10n in general and then talk about how &lt;code>gettext&lt;/code> can make our live as programmers very easy.&lt;/p>
 &lt;h2 id="i18n-and-l10n---internationalization-and-localization">i18n and l10n - Internationalization and Localization&lt;/h2>
 &lt;p>Due to the length of &lt;em>Internationalization and Localization&lt;/em> you can just write i18n and l10n which are &amp;ldquo;numeronyms&amp;rdquo;, number based words that are formed by taking the first and last character of the words and putting the amount of letters between these two characters in the middle, so for &lt;em>Internationalization&lt;/em> it starts with an &lt;code>i&lt;/code> and ends with an &lt;code>n&lt;/code> and has 18 letters in-between so the result is &lt;code>i18n&lt;/code>.&lt;/p>
 &lt;p>For us software developers these terms mean adapting our code to be locale agnostic. If you create a UI and hardcode all strings then the users won&amp;rsquo;t be able to change the language. Aside from normal translations i18n and l10n also encompasses formatting rules for numbers, date and time, currency and things like text layout. Some languages read left to right but others right to left. Instead of reading horizontally there are also cultures where you read vertically.&lt;/p>
@@ -10,8 +10,8 @@ i18n and l10n - Internationalization and Localization Due to the length of Inter
 &lt;h3 id="cmake-setup">CMake Setup&lt;/h3>
 &lt;p>In order for us to use &lt;code>libintl&lt;/code> in our code we need to get it from somewhere. In this example we will use &lt;a href="https://cmake.org">CMake&lt;/a> and &lt;a href="https://github.com/microsoft/vcpkg">vcpkg&lt;/a>.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="456972183" type="checkbox" />
-&lt;label for="456972183">
+&lt;input id="534612879" type="checkbox" />
+&lt;label for="534612879">
 &lt;span class="collapsable-code__language">cmake&lt;/span>
 &lt;span class="collapsable-code__title">CMakeLists.txt&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -141,8 +141,8 @@ msgstr &amp;#34;Hallo Welt!&amp;#34;
 &lt;p>If you found all of this extremely tedious to do by hand then you are not alone. Of course we can automate the generating and updating for all the required files as well as copying the &lt;code>.mo&lt;/code> files to our output at build time using a CMake script.&lt;/p>
 &lt;p>To get started, grab a copy &lt;a href="https://github.com/erri120/Gettext-CMake/blob/master/Gettext_helpers.cmake">this script&lt;/a> or add the repository as a submodule. In your &lt;code>CMakeLists.txt&lt;/code> file we need to add some lines:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="324176598" type="checkbox" />
-&lt;label for="324176598">
+&lt;input id="537641829" type="checkbox" />
+&lt;label for="537641829">
 &lt;span class="collapsable-code__language">cmake&lt;/span>
 &lt;span class="collapsable-code__title">CMakeLists.txt&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -160,8 +160,8 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC &amp;#34;GETTEXT_OUTPUT_DIR=\&
 &lt;p>First we specify some variables and add &lt;code>GETTEXT_DOMAIN&lt;/code> and &lt;code>GETTEXT_OUTPUT_DIR&lt;/code> as a predefined macro so we can use it in our code. I suggest you change the domain name and the list of languages you want to use.&lt;/p>
 &lt;p>Next we want to add the previously downloaded script:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="954172638" type="checkbox" />
-&lt;label for="954172638">
+&lt;input id="829731654" type="checkbox" />
+&lt;label for="829731654">
 &lt;span class="collapsable-code__language">cmake&lt;/span>
 &lt;span class="collapsable-code__title">CMakeLists.txt&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>

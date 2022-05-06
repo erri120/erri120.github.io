@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>erri120's very random Blog</title><link>https://erri120.github.io/</link><description>Recent content on erri120's very random Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>CC BY 4.0</copyright><lastBuildDate>Thu, 05 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Getting started with GNU gettext for C++</title><link>https://erri120.github.io/posts/2022-05-05/</link><pubDate>Thu, 05 May 2022 00:00:00 +0000</pubDate><guid>https://erri120.github.io/posts/2022-05-05/</guid><description>Following my post on Encodings and Unicode it is now time to talk about i18n with GNU gettext. We will look at i18 and l10n in general and then talk about how gettext can make our live as programmers very easy.
-i18n and l10n - Internationalization and Localization Due to the length of Internationalization and Localization you can just write i18n and l10n which are &amp;ldquo;numeronyms&amp;rdquo;, number based words that are formed by taking the first and last character of the words and putting the amount of letters between these two characters in the middle, so for Internationalization it starts with an i and ends with an n and has 18 letters in-between so the result is i18n.</description><content>&lt;p>Following my post on &lt;a href="https://erri120.github.io/posts/2022-04-15/">Encodings and Unicode&lt;/a> it is now time to talk about i18n with &lt;a href="https://www.gnu.org/software/gettext/">GNU gettext&lt;/a>. We will look at i18 and l10n in general and then talk about how &lt;code>gettext&lt;/code> can make our live as programmers very easy.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>erri120's very random Blog</title><link>https://erri120.github.io/</link><description>Recent content on erri120's very random Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>CC BY 4.0</copyright><lastBuildDate>Thu, 05 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Getting started with GNU gettext for C++</title><link>https://erri120.github.io/posts/2022-05-05/</link><pubDate>Thu, 05 May 2022 00:00:00 +0000</pubDate><guid>https://erri120.github.io/posts/2022-05-05/</guid><description>Following my post on Encodings and Unicode it is now time to talk about i18n with GNU gettext. We will look at i18n and l10n in general and then talk about how gettext can make our live as programmers very easy.
+i18n and l10n - Internationalization and Localization Due to the length of Internationalization and Localization you can just write i18n and l10n which are &amp;ldquo;numeronyms&amp;rdquo;, number based words that are formed by taking the first and last character of the words and putting the amount of letters between these two characters in the middle, so for Internationalization it starts with an i and ends with an n and has 18 letters in-between so the result is i18n.</description><content>&lt;p>Following my post on &lt;a href="https://erri120.github.io/posts/2022-04-15/">Encodings and Unicode&lt;/a> it is now time to talk about i18n with &lt;a href="https://www.gnu.org/software/gettext/">GNU gettext&lt;/a>. We will look at i18n and l10n in general and then talk about how &lt;code>gettext&lt;/code> can make our live as programmers very easy.&lt;/p>
 &lt;h2 id="i18n-and-l10n---internationalization-and-localization">i18n and l10n - Internationalization and Localization&lt;/h2>
 &lt;p>Due to the length of &lt;em>Internationalization and Localization&lt;/em> you can just write i18n and l10n which are &amp;ldquo;numeronyms&amp;rdquo;, number based words that are formed by taking the first and last character of the words and putting the amount of letters between these two characters in the middle, so for &lt;em>Internationalization&lt;/em> it starts with an &lt;code>i&lt;/code> and ends with an &lt;code>n&lt;/code> and has 18 letters in-between so the result is &lt;code>i18n&lt;/code>.&lt;/p>
 &lt;p>For us software developers these terms mean adapting our code to be locale agnostic. If you create a UI and hardcode all strings then the users won&amp;rsquo;t be able to change the language. Aside from normal translations i18n and l10n also encompasses formatting rules for numbers, date and time, currency and things like text layout. Some languages read left to right but others right to left. Instead of reading horizontally there are also cultures where you read vertically.&lt;/p>
@@ -10,8 +10,8 @@ i18n and l10n - Internationalization and Localization Due to the length of Inter
 &lt;h3 id="cmake-setup">CMake Setup&lt;/h3>
 &lt;p>In order for us to use &lt;code>libintl&lt;/code> in our code we need to get it from somewhere. In this example we will use &lt;a href="https://cmake.org">CMake&lt;/a> and &lt;a href="https://github.com/microsoft/vcpkg">vcpkg&lt;/a>.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="456972183" type="checkbox" />
-&lt;label for="456972183">
+&lt;input id="534612879" type="checkbox" />
+&lt;label for="534612879">
 &lt;span class="collapsable-code__language">cmake&lt;/span>
 &lt;span class="collapsable-code__title">CMakeLists.txt&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -141,8 +141,8 @@ msgstr &amp;#34;Hallo Welt!&amp;#34;
 &lt;p>If you found all of this extremely tedious to do by hand then you are not alone. Of course we can automate the generating and updating for all the required files as well as copying the &lt;code>.mo&lt;/code> files to our output at build time using a CMake script.&lt;/p>
 &lt;p>To get started, grab a copy &lt;a href="https://github.com/erri120/Gettext-CMake/blob/master/Gettext_helpers.cmake">this script&lt;/a> or add the repository as a submodule. In your &lt;code>CMakeLists.txt&lt;/code> file we need to add some lines:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="324176598" type="checkbox" />
-&lt;label for="324176598">
+&lt;input id="537641829" type="checkbox" />
+&lt;label for="537641829">
 &lt;span class="collapsable-code__language">cmake&lt;/span>
 &lt;span class="collapsable-code__title">CMakeLists.txt&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -160,8 +160,8 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC &amp;#34;GETTEXT_OUTPUT_DIR=\&
 &lt;p>First we specify some variables and add &lt;code>GETTEXT_DOMAIN&lt;/code> and &lt;code>GETTEXT_OUTPUT_DIR&lt;/code> as a predefined macro so we can use it in our code. I suggest you change the domain name and the list of languages you want to use.&lt;/p>
 &lt;p>Next we want to add the previously downloaded script:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="954172638" type="checkbox" />
-&lt;label for="954172638">
+&lt;input id="829731654" type="checkbox" />
+&lt;label for="829731654">
 &lt;span class="collapsable-code__language">cmake&lt;/span>
 &lt;span class="collapsable-code__title">CMakeLists.txt&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -558,8 +558,8 @@ This is sadly not often the case when it comes to game development.</description
 &lt;p>Big studios often end up with huge pipelines because they have many employees and teams. They might have a CI pipeline that runs the tests and builds the project. The artifact would then send in a CD pipeline to the testers or QA team and when they approve of the build it gets released into the world. This is probably not the case for you or your team and most of the time you can combine all of this into one pipeline.&lt;/p>
 &lt;p>If you are curious how such a pipeline might look like, here is the GitHub Actions workflow file that builds (CI) and deploys (CD) this site to GitHub Pages on every push to the master branch:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="756283491" type="checkbox" />
-&lt;label for="756283491">
+&lt;input id="329416587" type="checkbox" />
+&lt;label for="329416587">
 &lt;span class="collapsable-code__language">yaml&lt;/span>
 &lt;span class="collapsable-code__title">Example GitHub Actions workflow&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -612,8 +612,8 @@ publish_branch: gh-pages
 &lt;p>If your game is not on itch.io then you can leave out the last step or replace it with an upload to MEGA, GDrive or your hosting platform of choice.&lt;/p>
 &lt;p>For the pipeline you can write a Bash or PowerShell script, just pick whatever you like more:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="469831725" type="checkbox" />
-&lt;label for="469831725">
+&lt;input id="712438569" type="checkbox" />
+&lt;label for="712438569">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Using rpgmpacker in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -634,8 +634,8 @@ npx rpgmpacker@latest \
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="263841957" type="checkbox" />
-&lt;label for="263841957">
+&lt;input id="628931745" type="checkbox" />
+&lt;label for="628931745">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Using rpgmpacker in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -657,8 +657,8 @@ npx rpgmpacker@latest `
 &lt;p>In my case I have the project in a folder called &lt;code>MyProject&lt;/code> next to the script and the output should go into the &lt;code>build&lt;/code> folder. I&amp;rsquo;m using the Steam version of RPG Maker MV for this but any version of MV or MZ can be used.&lt;/p>
 &lt;p>Next up we want to zip the output. rpgmpacker will create an output folder for each platform you specified so for me I will have &lt;code>build/Windows&lt;/code>, &lt;code>build/OSX&lt;/code> and a &lt;code>build/Linux&lt;/code> folder.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="128435967" type="checkbox" />
-&lt;label for="128435967">
+&lt;input id="681532749" type="checkbox" />
+&lt;label for="681532749">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Zipping the output in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -670,8 +670,8 @@ done
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="198637452" type="checkbox" />
-&lt;label for="198637452">
+&lt;input id="493576218" type="checkbox" />
+&lt;label for="493576218">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Zipping the output in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -686,8 +686,8 @@ foreach ($platform in $Platforms) {
 &lt;p>This is where the difference between PowerShell and Bash start to appear. In Bash we use a glob to get all top-level items of the output directory and in PowerShell we use the &lt;code>Get-ChildItem&lt;/code> function. They look different but they do the same thing with the main difference being that &lt;code>platform&lt;/code> in Bash will be &lt;code>./build/Windows&lt;/code> while &lt;code>$platform&lt;/code> in PowerShell will be just &lt;code>Windows&lt;/code>. This is why we need to prefix &lt;code>$platform&lt;/code> with &lt;code>$OUTPUT/&lt;/code> when calling 7z.&lt;/p>
 &lt;p>The pipeline is almost done at this point. Next is publishing the output with &lt;a href="https://itch.io/docs/butler">Butler&lt;/a> to itch.io but if you are not using that platform you are now done.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="891246753" type="checkbox" />
-&lt;label for="891246753">
+&lt;input id="658421739" type="checkbox" />
+&lt;label for="658421739">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Downloading Butler in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -709,8 +709,8 @@ butler=&amp;#34;$ButlerOutput/butler.exe&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="125473986" type="checkbox" />
-&lt;label for="125473986">
+&lt;input id="892314765" type="checkbox" />
+&lt;label for="892314765">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Downloading Buttler in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -733,8 +733,8 @@ $butler=&amp;#34;$ButlerOutput/butler.exe&amp;#34;
 &lt;/div>
 &lt;p>If you are not on windows you should change the &lt;code>ButlerChannel&lt;/code> variable to &lt;code>darwin-amd64&lt;/code> or &lt;code>linux-amd64&lt;/code> depending on your system. I recommend checking &lt;a href="https://broth.itch.ovh/butler">the channel list&lt;/a> of Butler if you need something different. I&amp;rsquo;ve added a simple check so we don&amp;rsquo;t download Butler whenever we call the script. Before we continue you should get an API key from &lt;a href="https://itch.io/user/settings/api-keys">itch.io&lt;/a>. You should treat API keys like passwords and should never make them public. A good way of storing API keys is with environment variables and Butler expects the API key to be stored in the &lt;code>BUTLER_API_KEY&lt;/code> environment variable.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="291786534" type="checkbox" />
-&lt;label for="291786534">
+&lt;input id="456718392" type="checkbox" />
+&lt;label for="456718392">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Using Buttler in a Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -749,8 +749,8 @@ ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="754632981" type="checkbox" />
-&lt;label for="754632981">
+&lt;input id="976815234" type="checkbox" />
+&lt;label for="976815234">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">Using Buttler in a PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -767,8 +767,8 @@ $ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;p>I recommend that you look at the &lt;a href="https://itch.io/docs/butler/pushing.html">Butler Docs&lt;/a> for the different channels you can push to. To recap here are both complete scripts:&lt;/p>
 &lt;h3 id="finished-scripts">Finished Scripts&lt;/h3>
 &lt;div class="collapsable-code">
-&lt;input id="471236859" type="checkbox" />
-&lt;label for="471236859">
+&lt;input id="782931654" type="checkbox" />
+&lt;label for="782931654">
 &lt;span class="collapsable-code__language">bash&lt;/span>
 &lt;span class="collapsable-code__title">Bash Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -811,8 +811,8 @@ ButlerProject=&amp;#34;YOUR_USERNAME/YOUR_PROJECT_NAME&amp;#34;
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;div class="collapsable-code">
-&lt;input id="815372469" type="checkbox" />
-&lt;label for="815372469">
+&lt;input id="354781269" type="checkbox" />
+&lt;label for="354781269">
 &lt;span class="collapsable-code__language">powershell&lt;/span>
 &lt;span class="collapsable-code__title">PowerShell Script&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
