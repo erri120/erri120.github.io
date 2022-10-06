@@ -10,8 +10,8 @@ i18n and l10n - Internationalization and Localization Due to the length of Inter
 &lt;h3 id="cmake-setup">CMake Setup&lt;/h3>
 &lt;p>In order for us to use &lt;code>libintl&lt;/code> in our code we need to get it from somewhere. In this example we will use &lt;a href="https://cmake.org">CMake&lt;/a> and &lt;a href="https://github.com/microsoft/vcpkg">vcpkg&lt;/a>.&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="534612879" type="checkbox" />
-&lt;label for="534612879">
+&lt;input id="863925714" type="checkbox" />
+&lt;label for="863925714">
 &lt;span class="collapsable-code__language">cmake&lt;/span>
 &lt;span class="collapsable-code__title">CMakeLists.txt&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -141,8 +141,8 @@ msgstr &amp;#34;Hallo Welt!&amp;#34;
 &lt;p>If you found all of this extremely tedious to do by hand then you are not alone. Of course we can automate the generating and updating for all the required files as well as copying the &lt;code>.mo&lt;/code> files to our output at build time using a CMake script.&lt;/p>
 &lt;p>To get started, grab a copy &lt;a href="https://github.com/erri120/Gettext-CMake/blob/master/Gettext_helpers.cmake">this script&lt;/a> or add the repository as a submodule. In your &lt;code>CMakeLists.txt&lt;/code> file we need to add some lines:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="537641829" type="checkbox" />
-&lt;label for="537641829">
+&lt;input id="217648359" type="checkbox" />
+&lt;label for="217648359">
 &lt;span class="collapsable-code__language">cmake&lt;/span>
 &lt;span class="collapsable-code__title">CMakeLists.txt&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
@@ -160,8 +160,8 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC &amp;#34;GETTEXT_OUTPUT_DIR=\&
 &lt;p>First we specify some variables and add &lt;code>GETTEXT_DOMAIN&lt;/code> and &lt;code>GETTEXT_OUTPUT_DIR&lt;/code> as a predefined macro so we can use it in our code. I suggest you change the domain name and the list of languages you want to use.&lt;/p>
 &lt;p>Next we want to add the previously downloaded script:&lt;/p>
 &lt;div class="collapsable-code">
-&lt;input id="829731654" type="checkbox" />
-&lt;label for="829731654">
+&lt;input id="571829643" type="checkbox" />
+&lt;label for="571829643">
 &lt;span class="collapsable-code__language">cmake&lt;/span>
 &lt;span class="collapsable-code__title">CMakeLists.txt&lt;/span>
 &lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
