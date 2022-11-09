@@ -1,0 +1,184 @@
+# https://gohugo.io/getting-started/configuration/
+
+# Hostname (and path) to the root, e.g. https://bep.is/
+baseURL: "https://erri120.github.io"
+# A language tag as defined by RFC 5646.
+languageCode: "en-US"
+# Site title.
+title: "erri120's random Blog"
+# https://github.com/adityatelange/hugo-PaperMod/wiki/Installation#sample-configyml
+theme: "PaperMod"
+
+# Include drafts when building.
+buildDrafts: false
+# Include content with publishdate in the future.
+buildFuture: false
+# Include content already expired.
+buildExpired: true
+
+# Enable .GitInfo object for each page (if the Hugo site is versioned by Git). This will then update the Lastmod parameter for each page using the last git commit date for that content file.
+enableGitInfo: true
+# Enable generation of robots.txt file.
+enableRobotsTXT: true
+
+# https://gohugo.io/content-management/image-processing/#imaging-configuration
+imaging:
+    # https://gohugo.io/content-management/image-processing/#quality
+    quality: 80
+    # https://gohugo.io/content-management/image-processing/#resampling-filter
+    resampleFilter: Lanczos
+    exif:
+        # Hugo extracts the image creation date/time into .Date. Set this to true to disable. Default is false.
+        disableDate: true
+        # Hugo extracts the GPS latitude and longitude into .Lat and .Long. Set this to true to disable. Default is false.
+        disableLatLong: true
+
+# https://gohugo.io/getting-started/configuration/#configure-minify
+minify:
+    disableXML: true # don't minify XML
+    minifyOutput: true
+
+outputs:
+    home:
+        - HTML
+        - RSS
+        - JSON # https://github.com/adityatelange/hugo-PaperMod/wiki/Features#search-page
+
+params:
+    env: production
+    title: "erri120's random Blog"
+    description: "My personal Blog."
+    author: "erri120"
+    keywords: [Blog, Portfolio]
+    DateFormat: "2006-01-02" # YYYY-MM-DD
+
+    # https://github.com/adityatelange/hugo-PaperMod/wiki/Features#default-theme-lightdarkauto
+    defaultTheme: light # dark, light
+    disableThemeToggle: true
+
+    # https://github.com/adityatelange/hugo-PaperMod/wiki/Icons#share-icons
+    ShowShareButtons: true
+    ShareButtons: ["twitter", "reddit"]
+
+    ShowReadingTime: true
+    ShowPostNavLinks: true
+    ShowBreadCrumbs: true
+    ShowCodeCopyButtons: true
+    ShowWordCount: true
+    ShowRssButtonInSectionTermList: true
+    UseHugoToc: true
+    disableSpecial1stPost: false
+    disableScrollToTop: false
+    # https://github.com/adityatelange/hugo-PaperMod/wiki/Features#comments
+    comments: true
+    hidemeta: false
+    hideSummary: false
+    showtoc: true
+    tocopen: false
+
+    assets:
+        disableHLJS: true # highlight.js
+        disableFingerprinting: true
+        # favicon: "<link / abs url>"
+        # favicon16x16: "<link / abs url>"
+        # favicon32x32: "<link / abs url>"
+        # apple_touch_icon: "<link / abs url>"
+        # safari_pinned_tab: "<link / abs url>"
+
+    label:
+        text: "Home"
+
+    profileMode:
+        enabled: false
+        subtitle: "This is a very random Blog by a very random person containing very random posts."
+        buttons:
+            - name: Posts
+              url: posts
+            - name: Categories
+              url: categories
+            - name: Tags
+              url: tags
+
+    # https://github.com/adityatelange/hugo-PaperMod/wiki/Features#home-info-mode
+    homeInfoParams:
+        Title: "erri120's random Blog"
+        Content: "This is a very random Blog by a very random person containing very random posts."
+
+    # https://github.com/adityatelange/hugo-PaperMod/wiki/Icons#social-icons
+    socialIcons:
+        - name: GitHub
+          url: "https://github.com/erri120"
+        - name: Kofi
+          url: "https://ko-fi.com/erri120"
+        - name: Twitter
+          url: "https://twitter.com/erri120"
+        - name: RSS
+          url: "index.xml"
+
+    editPost:
+        URL: "https://github.com/erri120/erri120.github.io/edit/master/content"
+        Text: "Suggest Changes"
+        appendFilePath: true
+
+    # https://fusejs.io/api/options.html
+    # https://github.com/adityatelange/hugo-PaperMod/wiki/Features#search-page
+    fuseOpts:
+        isCaseSensitive: false
+        shouldSort: true
+        location: 0
+        distance: 1000
+        threshold: 0.4
+        minMatchCharLength: 0
+        keys: ["title", "permalink", "summary", "content"]
+
+menu:
+    main:
+        - identifier: search
+          name: Search
+          url: /search/
+          weight: 10
+        - identifier: tags
+          name: Tags
+          url: /tags/
+          weight: 20
+        - identifier: archive
+          name: Archive
+          url: /archives/
+          weight: 30
+
+# https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma
+pygmentsUseClasses: true
+
+# https://gohugo.io/getting-started/configuration-markup#highlight
+markup:
+    highlight:
+        noClasses: false
+        anchorLineNos: false
+        codeFences: true
+        guessSyntax: false
+        lineNos: true
+        style: monokai
+
+# https://gohugo.io/about/hugo-and-gdpr/#all-privacy-settings
+privacy:
+    disqus:
+        disable: true
+
+    googleAnalytics:
+        disable: true
+
+    instagram:
+        disable: true
+
+    twitter:
+        disable: true
+
+    vimeo:
+        disable: true
+
+    youtube:
+        disabled: false
+        privacyEnhanced: true
+
+taxonomies:
+    tag: tags

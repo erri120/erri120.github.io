@@ -1,4 +1,3 @@
-[submodule "themes/terminal-fork"]
-	path = themes/terminal-fork
-	url = https://github.com/erri120/hugo-theme-terminal.git
-	branch = update-1
+[submodule "themes/PaperMod"]
+	path = themes/PaperMod
+	url = https://github.com/adityatelange/hugo-PaperMod.git
