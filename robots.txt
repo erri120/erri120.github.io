@@ -1,2 +1,3 @@
 User-agent: *
+Disallow:
 Sitemap: https://erri120.github.io/sitemap.xml
