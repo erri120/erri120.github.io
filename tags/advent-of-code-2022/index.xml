@@ -6,7 +6,16 @@
     <description>Recent content in Advent of Code 2022 on erri120&#39;s random Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Fri, 02 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/tags/advent-of-code-2022/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 03 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/tags/advent-of-code-2022/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Advent of Code 2022: Day 3</title>
+      <link>https://erri120.github.io/posts/2022-12-03/</link>
+      <pubDate>Sat, 03 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://erri120.github.io/posts/2022-12-03/</guid>
+      <description>Day 3: Rucksack Reorganization</description>
+    </item>
+    
     <item>
       <title>Advent of Code 2022: Day 2</title>
       <link>https://erri120.github.io/posts/2022-12-02/</link>
