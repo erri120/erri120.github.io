@@ -2,7 +2,7 @@
 *          text=auto
 
 # Documents
-*.md       text diff=markdown
+*.md linguist-detectable
 
 # Graphics
 *.png      binary
