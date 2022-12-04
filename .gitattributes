@@ -1,0 +1,33 @@
+# Auto detect text files and perform LF normalization
+*          text=auto
+
+# Documents
+*.md       text diff=markdown
+
+# Graphics
+*.png      binary
+*.jpg      binary
+*.jpeg     binary
+*.gif      binary
+*.ico      binary
+*.svg      binary
+
+# Serialisation
+*.json     text
+*.toml     text
+*.xml      text
+*.yaml     text
+*.yml      text
+
+# Source code
+*.css             text diff=css
+*.htm             text diff=html
+*.html            text diff=html
+
+# Text files where line endings should be preserved
+*.patch    -text
+
+# Exclude files from exporting
+.gitattributes export-ignore
+.gitignore     export-ignore
+.gitkeep       export-ignore
