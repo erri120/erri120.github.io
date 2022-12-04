@@ -1,0 +1,11 @@
+<figure{{ with .Get "class" }} class="{{ . }}"{{ end }}>
+    <video loop controls>
+        <source src="{{ (.Get "src") }}">
+    </video>
+
+    {{- if (.Get "caption") -}}
+        <figcaption>
+            <p>{{- .Get "caption" | markdownify -}}</p>
+        </figcaption>
+    {{- end }}
+</figure>
