@@ -1,0 +1,349 @@
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Advent of Code 2022: Day 5 | erri120's random Blog</title><meta name=keywords content="Advent of Code 2022,C#"><meta name=description content="Day 5: Supply Stacks"><meta name=author content="erri120"><link rel=canonical href=https://erri120.github.io/posts/2022-12-05/><link crossorigin=anonymous href=/assets/css/stylesheet.css rel="preload stylesheet" as=style><link rel=icon href=https://erri120.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://erri120.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://erri120.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://erri120.github.io/apple-touch-icon.png><link rel=mask-icon href=https://erri120.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style></noscript><meta name=google-site-verification content="c-L5KbBKeVyZ9YNKiotqlpl7zsiDRiGcWJa4ZxVpzAo"><meta name=msvalidate.01 content="0E353603CBFC6B4F85D605C4E9F27290"><script data-goatcounter=https://erri120.goatcounter.com/count async src=//gc.zgo.at/count.js></script>
+<link rel=stylesheet href=/syntax.css><meta property="og:title" content="Advent of Code 2022: Day 5"><meta property="og:description" content="Day 5: Supply Stacks"><meta property="og:type" content="article"><meta property="og:url" content="https://erri120.github.io/posts/2022-12-05/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-12-05T00:00:00+00:00"><meta property="article:modified_time" content="2022-12-05T14:38:26+01:00"><meta property="og:site_name" content="erri120's random Blog"><meta name=twitter:card content="summary"><meta name=twitter:title content="Advent of Code 2022: Day 5"><meta name=twitter:description content="Day 5: Supply Stacks"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":2,"name":"Posts","item":"https://erri120.github.io/posts/"},{"@type":"ListItem","position":3,"name":"Advent of Code 2022: Day 5","item":"https://erri120.github.io/posts/2022-12-05/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Advent of Code 2022: Day 5","name":"Advent of Code 2022: Day 5","description":"Day 5: Supply Stacks","keywords":["Advent of Code 2022","C#"],"articleBody":"Day 5 of the Advent of Code. If you have no idea what this is, check my post of the first day.\nDay 5: Supply Stacks Links: Puzzle Page, My Code\nPart One Description The expedition can depart as soon as the final supplies have been unloaded from the ships. Supplies are stored in stacks of marked crates, but because the needed supplies are buried under many other crates, the crates need to be rearranged.\nThe ship has a giant cargo crane capable of moving crates between stacks. To ensure none of the crates get crushed or fall over, the crane operator will rearrange them in a series of carefully-planned steps. After the crates are rearranged, the desired crates will be at the top of each stack.\nThe Elves don’t want to interrupt the crane operator during this delicate procedure, but they forgot to ask her which crate will end up where, and they want to be ready to unload them as soon as possible so they can embark.\nThey do, however, have a drawing of the starting stacks of crates and the rearrangement procedure (your puzzle input). For example:\n1 2 3 4 5 6 7 8 9 [D] [N] [C] [Z] [M] [P] 1 2 3 move 1 from 2 to 1 move 3 from 1 to 3 move 2 from 2 to 1 move 1 from 1 to 2 In this example, there are three stacks of crates. Stack 1 contains two crates: crate Z is on the bottom, and crate N is on top. Stack 2 contains three crates; from bottom to top, they are crates M, C, and D. Finally, stack 3 contains a single crate, P.\nThen, the rearrangement procedure is given. In each step of the procedure, a quantity of crates is moved from one stack to a different stack. In the first step of the above rearrangement procedure, one crate is moved from stack 2 to stack 1, resulting in this configuration:\n1 2 3 4 [D] [N] [C] [Z] [M] [P] 1 2 3 In the second step, three crates are moved from stack 1 to stack 3. Crates are moved one at a time, so the first crate to be moved (D) ends up below the second and third crates:\n1 2 3 4 5 [Z] [N] [C] [D] [M] [P] 1 2 3 Then, both crates are moved from stack 2 to stack 1. Again, because crates are moved one at a time, crate C ends up below crate M:\n1 2 3 4 5 [Z] [N] [M] [D] [C] [P] 1 2 3 Finally, one crate is moved from stack 1 to stack 2:\n1 2 3 4 5 [Z] [N] [D] [C] [M] [P] 1 2 3 The Elves just need to know which crate will end up on top of each stack; in this example, the top crates are C in stack 1, M in stack 2, and Z in stack 3, so you should combine these together and give the Elves the message CMZ.\nAfter the rearrangement procedure completes, what crate ends up on top of each stack?\nThe hardest part about this puzzle is parsing the input file.\n1 2 3 4 5 6 7 8 9 [D] [N] [C] [Z] [M] [P] 1 2 3 move 1 from 2 to 1 move 3 from 1 to 3 move 2 from 2 to 1 move 1 from 1 to 2 The file has two regions, 1) the starting state of the stacks and 2) rearrangement procedures. Let’s start by reading the file and separating those two regions.\n1 2 3 4 5 6 var input = await File.ReadAllTextAsync(\"input.txt\", Encoding.UTF8); var split = input.Split(\"\\n\\n\", StringSplitOptions.RemoveEmptyEntries); var stackDefinitions = split[0]; var procedures = split[1]; Similar to the Day 1 puzzle we use String.Split to separate the input at the empty line. Parsing the stack definitions seems scary, so let’s parse the procedures first. Like in the previous day I decided to use a readonly struct that stores the procedures:\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 public readonly struct RearrangementProcedure { public readonly int Count; public readonly int From; public readonly int To; public RearrangementProcedure(int count, int from, int to) { Count = count; From = from; To = to; } public override string ToString() { return $\"move {Count} from {From} to {To}\"; } } Parsing move i from a to b is pretty straight forward, and you can use a multitude of solutions. I decided to use a simple regex pattern to match a line.\n1 2 3 4 private static readonly Regex ParseRegex = new( @\"move (?\\d+) from (?\\d+) to (?\\d+)\", RegexOptions.Compiled, TimeSpan.FromMilliseconds(500)); The Regex implementation in .NET has quite a lot of nuances and options you can tweak to make it go faster. For one, we can use RegexOptions.Compiled to create a compiled regex. Such a regex is compiled to MSIL code instead of being interpreted, maximizing run-time performance at the expense of some initialization time. This is great since we will be parsing a lot of lines with this. The last parameter of the Regex Constructor is a TimeSpan that specifies a time-out interval. This isn’t required but considered good practice when using regex to prevent a denial of service attack.\n1 2 3 4 5 6 7 8 9 10 11 public static RearrangementProcedure FromString(string line) { var match = ParseRegex.Match(line); if (!match.Success) throw new ArgumentException($\"Invalid argument: {line}\", nameof(line)); var sCount = match.Groups[\"count\"].Value; var sFrom = match.Groups[\"from\"].Value; var sTo = match.Groups[\"to\"].Value; return new RearrangementProcedure(int.Parse(sCount), int.Parse(sFrom), int.Parse(sTo)); } With our regex in hand, parsing a line is very straight forward. Since the regex includes named groups, we can access them very easily.\nNow it’s time to deal with the stacks:\n1 2 3 4 [D] [N] [C] [Z] [M] [P] 1 2 3 Before parsing the input, we need to think about how we are going to represent these stacks. Each stack has a unique identifier and a collection of crates. The crates are just single characters, so we can use char for those. Since each stack has a unique identifier, a Dictionary with an int as the key type allows for easy access. The question is which collection type should we just for the crates. Thankfully .NET already comes with a built-in Stack class. Putting this all together our parsing function will have the following signature:\n1 private static Dictionary\u003cint, Stack\u003cchar\u003e\u003e CreateStacks(string input); The beauty of advent of code is how much freedom you have in dealing with problems. Since you need to produce the correct result only once, your code doesn’t have to work with every input. We can abuse this fact and create a very simple parser. Let’s start by parsing all stack identifiers:\n1 2 3 4 5 6 7 var lines = input.Split('\\n', StringSplitOptions.RemoveEmptyEntries); var stackIDLine = lines.Last(); var stackIDs = stackIDLine .Where(char.IsAsciiDigit) .Select(c =\u003e int.Parse($\"{c}\")) .ToArray(); Since a C# string also implements IEnumerable we can use LINQ extension methods with it. This code only works if there are less than 10 stacks. My input only had stacks 1 to 9.\n1 2 3 var stacks = stackIDs.ToDictionary( stackID =\u003e stackID, _ =\u003e new Stack\u003cchar\u003e(lines.Length - 1)); We want a Dictionary","wordCount":"2099","inLanguage":"en","datePublished":"2022-12-05T00:00:00Z","dateModified":"2022-12-05T14:38:26+01:00","author":{"@type":"Person","name":"erri120"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://erri120.github.io/posts/2022-12-05/"},"publisher":{"@type":"Organization","name":"erri120's random Blog","logo":{"@type":"ImageObject","url":"https://erri120.github.io/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=nav><div class=logo><a href=https://erri120.github.io accesskey=h title="Home (Alt + H)">Home</a><div class=logo-switches></div></div><ul id=menu><li><a href=https://erri120.github.io/search/ title="Search (Alt + /)" accesskey=/><span>Search</span></a></li><li><a href=https://erri120.github.io/tags/ title=Tags><span>Tags</span></a></li><li><a href=https://erri120.github.io/archives/ title=Archive><span>Archive</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://erri120.github.io>Home</a>&nbsp;»&nbsp;<a href=https://erri120.github.io/posts/>Posts</a></div><h1 class=post-title>Advent of Code 2022: Day 5</h1><div class=post-meta><span title='2022-12-05 00:00:00 +0000 UTC'>2022-12-05</span>&nbsp;·&nbsp;10 min&nbsp;·&nbsp;2099 words&nbsp;·&nbsp;erri120&nbsp;|&nbsp;<a href=https://github.com/erri120/erri120.github.io/edit/master/content/posts/2022-12-05.md rel="noopener noreferrer" target=_blank>Suggest Changes</a></div></header><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><nav id=TableOfContents><ul><li><a href=#part-one>Part One</a></li><li><a href=#part-two>Part Two</a></li><li><a href=#conclusion>Conclusion</a></li></ul></nav></div></details></div><div class=post-content><p>Day 5 of the <a href=https://adventofcode.com>Advent of Code</a>. If you have no idea what this is, check my <a href=https://erri120.github.io/posts/2022-12-01/>post of the first day</a>.</p><h1 id=day-5-supply-stacks>Day 5: Supply Stacks<a hidden class=anchor aria-hidden=true href=#day-5-supply-stacks>#</a></h1><p>Links: <a href=https://adventofcode.com/2022/day/5>Puzzle Page</a>, <a href=https://github.com/erri120/advent-of-code-2022/tree/master/day-5>My Code</a></p><h2 id=part-one>Part One<a hidden class=anchor aria-hidden=true href=#part-one>#</a></h2><details><summary>Description</summary><p>The expedition can depart as soon as the final supplies have been unloaded from the ships. Supplies are stored in stacks of marked <strong>crates</strong>, but because the needed supplies are buried under many other crates, the crates need to be rearranged.</p><p>The ship has a <strong>giant cargo crane</strong> capable of moving crates between stacks. To ensure none of the crates get crushed or fall over, the crane operator will rearrange them in a series of carefully-planned steps. After the crates are rearranged, the desired crates will be at the top of each stack.</p><p>The Elves don&rsquo;t want to interrupt the crane operator during this delicate procedure, but they forgot to ask her <strong>which</strong> crate will end up where, and they want to be ready to unload them as soon as possible so they can embark.</p><p>They do, however, have a drawing of the starting stacks of crates <strong>and</strong> the rearrangement procedure (your puzzle input). For example:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>    [D]
+</span></span><span class=line><span class=cl>[N] [C]
+</span></span><span class=line><span class=cl>[Z] [M] [P]
+</span></span><span class=line><span class=cl> 1   2   3
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>move 1 from 2 to 1
+</span></span><span class=line><span class=cl>move 3 from 1 to 3
+</span></span><span class=line><span class=cl>move 2 from 2 to 1
+</span></span><span class=line><span class=cl>move 1 from 1 to 2
+</span></span></code></pre></td></tr></table></div></div><p>In this example, there are three stacks of crates. Stack 1 contains two crates: crate <code>Z</code> is on the bottom, and crate <code>N</code> is on top. Stack 2 contains three crates; from bottom to top, they are crates <code>M</code>, <code>C</code>, and <code>D</code>. Finally, stack 3 contains a single crate, <code>P</code>.</p><p>Then, the rearrangement procedure is given. In each step of the procedure, a quantity of crates is moved from one stack to a different stack. In the first step of the above rearrangement procedure, one crate is moved from stack 2 to stack 1, resulting in this configuration:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>[D]
+</span></span><span class=line><span class=cl>[N] [C]
+</span></span><span class=line><span class=cl>[Z] [M] [P]
+</span></span><span class=line><span class=cl> 1   2   3
+</span></span></code></pre></td></tr></table></div></div><p>In the second step, three crates are moved from stack 1 to stack 3. Crates are moved <strong>one at a time</strong>, so the first crate to be moved (<code>D</code>) ends up below the second and third crates:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>        [Z]
+</span></span><span class=line><span class=cl>        [N]
+</span></span><span class=line><span class=cl>    [C] [D]
+</span></span><span class=line><span class=cl>    [M] [P]
+</span></span><span class=line><span class=cl> 1   2   3
+</span></span></code></pre></td></tr></table></div></div><p>Then, both crates are moved from stack 2 to stack 1. Again, because crates are moved <strong>one at a time</strong>, crate <code>C</code> ends up below crate <code>M</code>:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>        [Z]
+</span></span><span class=line><span class=cl>        [N]
+</span></span><span class=line><span class=cl>[M]     [D]
+</span></span><span class=line><span class=cl>[C]     [P]
+</span></span><span class=line><span class=cl> 1   2   3
+</span></span></code></pre></td></tr></table></div></div><p>Finally, one crate is moved from stack 1 to stack 2:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>        [Z]
+</span></span><span class=line><span class=cl>        [N]
+</span></span><span class=line><span class=cl>        [D]
+</span></span><span class=line><span class=cl>[C] [M] [P]
+</span></span><span class=line><span class=cl> 1   2   3
+</span></span></code></pre></td></tr></table></div></div><p>The Elves just need to know <strong>which crate will end up on top of each stack</strong>; in this example, the top crates are <code>C</code> in stack 1, <code>M</code> in stack 2, and <code>Z</code> in stack 3, so you should combine these together and give the Elves the message <strong><code>CMZ</code></strong>.</p><p><strong>After the rearrangement procedure completes, what crate ends up on top of each stack?</strong></p></details><p>The hardest part about this puzzle is parsing the input file.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>    [D]
+</span></span><span class=line><span class=cl>[N] [C]
+</span></span><span class=line><span class=cl>[Z] [M] [P]
+</span></span><span class=line><span class=cl> 1   2   3
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>move 1 from 2 to 1
+</span></span><span class=line><span class=cl>move 3 from 1 to 3
+</span></span><span class=line><span class=cl>move 2 from 2 to 1
+</span></span><span class=line><span class=cl>move 1 from 1 to 2
+</span></span></code></pre></td></tr></table></div></div><p>The file has two regions, 1) the starting state of the stacks and 2) rearrangement procedures. Let&rsquo;s start by reading the file and separating those two regions.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=kt>var</span> <span class=n>input</span> <span class=p>=</span> <span class=k>await</span> <span class=n>File</span><span class=p>.</span><span class=n>ReadAllTextAsync</span><span class=p>(</span><span class=s>&#34;input.txt&#34;</span><span class=p>,</span> <span class=n>Encoding</span><span class=p>.</span><span class=n>UTF8</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>split</span> <span class=p>=</span> <span class=n>input</span><span class=p>.</span><span class=n>Split</span><span class=p>(</span><span class=s>&#34;\n\n&#34;</span><span class=p>,</span> <span class=n>StringSplitOptions</span><span class=p>.</span><span class=n>RemoveEmptyEntries</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>stackDefinitions</span> <span class=p>=</span> <span class=n>split</span><span class=p>[</span><span class=m>0</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>procedures</span> <span class=p>=</span> <span class=n>split</span><span class=p>[</span><span class=m>1</span><span class=p>];</span>
+</span></span></code></pre></td></tr></table></div></div><p>Similar to the <a href=https://erri120.github.io/posts/2022-12-01/>Day 1 puzzle</a> we use <a href=https://learn.microsoft.com/en-us/dotnet/api/system.string.split><code>String.Split</code></a> to separate the input at the empty line. Parsing the stack definitions seems scary, so let&rsquo;s parse the procedures first. Like in the <a href=https://erri120.github.io/posts/2022-12-04/>previous day</a> I decided to use a <a href=https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct#readonly-struct><code>readonly</code> struct</a> that stores the procedures:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=k>public</span> <span class=k>readonly</span> <span class=k>struct</span> <span class=nc>RearrangementProcedure</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=k>readonly</span> <span class=kt>int</span> <span class=n>Count</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=k>readonly</span> <span class=kt>int</span> <span class=n>From</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=k>readonly</span> <span class=kt>int</span> <span class=n>To</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=n>RearrangementProcedure</span><span class=p>(</span><span class=kt>int</span> <span class=n>count</span><span class=p>,</span> <span class=kt>int</span> <span class=k>from</span><span class=p>,</span> <span class=kt>int</span> <span class=n>to</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>Count</span> <span class=p>=</span> <span class=n>count</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>From</span> <span class=p>=</span> <span class=k>from</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>To</span> <span class=p>=</span> <span class=n>to</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=k>override</span> <span class=kt>string</span> <span class=n>ToString</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=s>$&#34;move {Count} from {From} to {To}&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>Parsing <code>move i from a to b</code> is pretty straight forward, and you can use a multitude of solutions. I decided to use a simple regex pattern to match a line.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=k>private</span> <span class=k>static</span> <span class=k>readonly</span> <span class=n>Regex</span> <span class=n>ParseRegex</span> <span class=p>=</span> <span class=k>new</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=s>@&#34;move (?&lt;count&gt;\d+) from (?&lt;from&gt;\d+) to (?&lt;to&gt;\d+)&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>RegexOptions</span><span class=p>.</span><span class=n>Compiled</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>TimeSpan</span><span class=p>.</span><span class=n>FromMilliseconds</span><span class=p>(</span><span class=m>500</span><span class=p>));</span>
+</span></span></code></pre></td></tr></table></div></div><p>The Regex implementation in <a href=https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regex>.NET</a> has quite a lot of nuances and options you can tweak to make it go faster. For one, we can use <a href=https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions><code>RegexOptions.Compiled</code></a> to create a <a href=https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-options#compiled-regular-expressions>compiled regex</a>. Such a regex is compiled to MSIL code instead of being interpreted, maximizing run-time performance at the expense of some initialization time. This is great since we will be parsing a lot of lines with this. The last parameter of the <a href=https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regex.-ctor#system-text-regularexpressions-regex-ctor(system-string-system-text-regularexpressions-regexoptions-system-timespan)>Regex Constructor</a> is a <a href=https://learn.microsoft.com/en-us/dotnet/api/system.timespan><code>TimeSpan</code></a> that specifies a time-out interval. This isn&rsquo;t required but considered good practice when using regex to prevent a denial of service attack.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=k>public</span> <span class=k>static</span> <span class=n>RearrangementProcedure</span> <span class=n>FromString</span><span class=p>(</span><span class=kt>string</span> <span class=n>line</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>match</span> <span class=p>=</span> <span class=n>ParseRegex</span><span class=p>.</span><span class=n>Match</span><span class=p>(</span><span class=n>line</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(!</span><span class=n>match</span><span class=p>.</span><span class=n>Success</span><span class=p>)</span> <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentException</span><span class=p>(</span><span class=s>$&#34;Invalid argument: {line}&#34;</span><span class=p>,</span> <span class=n>nameof</span><span class=p>(</span><span class=n>line</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>sCount</span> <span class=p>=</span> <span class=n>match</span><span class=p>.</span><span class=n>Groups</span><span class=p>[</span><span class=s>&#34;count&#34;</span><span class=p>].</span><span class=n>Value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>sFrom</span> <span class=p>=</span> <span class=n>match</span><span class=p>.</span><span class=n>Groups</span><span class=p>[</span><span class=s>&#34;from&#34;</span><span class=p>].</span><span class=n>Value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>sTo</span> <span class=p>=</span> <span class=n>match</span><span class=p>.</span><span class=n>Groups</span><span class=p>[</span><span class=s>&#34;to&#34;</span><span class=p>].</span><span class=n>Value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=k>new</span> <span class=n>RearrangementProcedure</span><span class=p>(</span><span class=kt>int</span><span class=p>.</span><span class=n>Parse</span><span class=p>(</span><span class=n>sCount</span><span class=p>),</span> <span class=kt>int</span><span class=p>.</span><span class=n>Parse</span><span class=p>(</span><span class=n>sFrom</span><span class=p>),</span> <span class=kt>int</span><span class=p>.</span><span class=n>Parse</span><span class=p>(</span><span class=n>sTo</span><span class=p>));</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>With our regex in hand, parsing a line is very straight forward. Since the regex includes named groups, we can access them very easily.</p><p>Now it&rsquo;s time to deal with the stacks:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>    [D]
+</span></span><span class=line><span class=cl>[N] [C]
+</span></span><span class=line><span class=cl>[Z] [M] [P]
+</span></span><span class=line><span class=cl> 1   2   3
+</span></span></code></pre></td></tr></table></div></div><p>Before parsing the input, we need to think about how we are going to represent these stacks. Each stack has a unique identifier and a collection of crates. The crates are just single characters, so we can use <code>char</code> for those. Since each stack has a unique identifier, a <a href=https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2><code>Dictionary&lt;TKey, TValue></code></a> with an <code>int</code> as the key type allows for easy access. The question is which collection type should we just for the crates. Thankfully .NET already comes with a built-in <a href=https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.stack-1><code>Stack&lt;T></code></a> class. Putting this all together our parsing function will have the following signature:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=k>private</span> <span class=k>static</span> <span class=n>Dictionary</span><span class=p>&lt;</span><span class=kt>int</span><span class=p>,</span> <span class=n>Stack</span><span class=p>&lt;</span><span class=kt>char</span><span class=p>&gt;&gt;</span> <span class=n>CreateStacks</span><span class=p>(</span><span class=kt>string</span> <span class=n>input</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><p>The beauty of advent of code is how much freedom you have in dealing with problems. Since you need to produce the correct result <strong>only once</strong>, your code doesn&rsquo;t have to work with every input. We can abuse this fact and create a very simple parser. Let&rsquo;s start by parsing all stack identifiers:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=kt>var</span> <span class=n>lines</span> <span class=p>=</span> <span class=n>input</span><span class=p>.</span><span class=n>Split</span><span class=p>(</span><span class=sc>&#39;\n&#39;</span><span class=p>,</span> <span class=n>StringSplitOptions</span><span class=p>.</span><span class=n>RemoveEmptyEntries</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>stackIDLine</span> <span class=p>=</span> <span class=n>lines</span><span class=p>.</span><span class=n>Last</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>stackIDs</span> <span class=p>=</span> <span class=n>stackIDLine</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=n>Where</span><span class=p>(</span><span class=kt>char</span><span class=p>.</span><span class=n>IsAsciiDigit</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=n>Select</span><span class=p>(</span><span class=n>c</span> <span class=p>=&gt;</span> <span class=kt>int</span><span class=p>.</span><span class=n>Parse</span><span class=p>(</span><span class=s>$&#34;{c}&#34;</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=n>ToArray</span><span class=p>();</span>
+</span></span></code></pre></td></tr></table></div></div><p>Since a C# <code>string</code> also implements <code>IEnumerable&lt;char></code> we can use LINQ extension methods with it. This code only works if there are less than 10 stacks. My input only had stacks 1 to 9.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=kt>var</span> <span class=n>stacks</span> <span class=p>=</span> <span class=n>stackIDs</span><span class=p>.</span><span class=n>ToDictionary</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=n>stackID</span> <span class=p>=&gt;</span> <span class=n>stackID</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>_</span> <span class=p>=&gt;</span> <span class=k>new</span> <span class=n>Stack</span><span class=p>&lt;</span><span class=kt>char</span><span class=p>&gt;(</span><span class=n>lines</span><span class=p>.</span><span class=n>Length</span> <span class=p>-</span> <span class=m>1</span><span class=p>));</span>
+</span></span></code></pre></td></tr></table></div></div><p>We want a <code>Dictionary&lt;int, Stack&lt;char>></code>, and we have already parsed the identifiers and put them into an array. The extension method <a href=https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.todictionary#system-linq-enumerable-todictionary-3(system-collections-generic-ienumerable((-0))-system-func((-0-1))-system-func((-0-2)))><code>Enumerable.ToDictionary</code></a> creates a dictionary from an enumerable according to specified key and element selector functions. The key is going to be the stack identifier but for the element we want a new <code>Stack&lt;T></code>. The constructor accepts an initial capacity, so I set it to the maximum number of crates.</p><p>Now it&rsquo;s time to talk about stacks. They represent a last-in-first-out (LIFO) collection and the essential stack functions are:</p><ul><li><code>push</code>: pushes a new value onto the stack</li><li><code>pop</code>: removes the first value off the stack and returns it</li><li><code>peak</code>: returns the first value without removing it</li></ul><p>LIFO means if we add <code>A</code>, <code>B</code> and <code>C</code> the value we get by using <code>pop</code> is <code>C</code> because it is the last-in and first-out. That being said, let&rsquo;s parse those crates:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=kt>var</span> <span class=n>enumerable</span> <span class=p>=</span> <span class=n>lines</span><span class=p>.</span><span class=n>Take</span><span class=p>(</span><span class=n>lines</span><span class=p>.</span><span class=n>Length</span> <span class=p>-</span> <span class=m>1</span><span class=p>).</span><span class=n>Reverse</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>foreach</span> <span class=p>(</span><span class=kt>var</span> <span class=n>line</span> <span class=k>in</span> <span class=n>enumerable</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>i</span> <span class=p>=</span> <span class=m>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>foreach</span> <span class=p>(</span><span class=kt>var</span> <span class=n>stackID</span> <span class=k>in</span> <span class=n>stackIDs</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kt>var</span> <span class=n>crate</span> <span class=p>=</span> <span class=n>line</span><span class=p>[</span><span class=n>i</span> <span class=p>+</span> <span class=m>1</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>        <span class=n>i</span> <span class=p>+=</span> <span class=m>4</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>crate</span> <span class=p>==</span> <span class=sc>&#39; &#39;</span><span class=p>)</span> <span class=k>continue</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>stacks</span><span class=p>[</span><span class=n>stackID</span><span class=p>].</span><span class=n>Push</span><span class=p>(</span><span class=n>crate</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>LIFO means we have to use <a href=https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.reverse><code>Enumerable.Reverse</code></a> and read the crates from bottom to top. This way the last-in and first-out is the top crate. As for parsing I&rsquo;m just using a counter <code>i</code> for the current position in the line and advance it by <code>+4</code> for every stack. Why 4? Because <code>[A]</code> is 4 characters. Once again we can make our lives very easy because the input only has this format. We don&rsquo;t have to make our code work with every possible input, only the one we have.</p><p>Now let&rsquo;s recap really quick: we have parsed all rearrangement procedures and stacks. Now we just need to iterate over all procedures and apply them on the stacks:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=k>private</span> <span class=k>static</span> <span class=k>void</span> <span class=n>ApplyProceduresOnStacks</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=n>IReadOnlyDictionary</span><span class=p>&lt;</span><span class=kt>int</span><span class=p>,</span> <span class=n>Stack</span><span class=p>&lt;</span><span class=kt>char</span><span class=p>&gt;&gt;</span> <span class=n>stacks</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>IEnumerable</span><span class=p>&lt;</span><span class=n>RearrangementProcedure</span><span class=p>&gt;</span> <span class=n>procedures</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>foreach</span> <span class=p>(</span><span class=kt>var</span> <span class=n>procedure</span> <span class=k>in</span> <span class=n>procedures</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kt>var</span> <span class=n>fromStack</span> <span class=p>=</span> <span class=n>stacks</span><span class=p>[</span><span class=n>procedure</span><span class=p>.</span><span class=n>From</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>        <span class=kt>var</span> <span class=n>toStack</span> <span class=p>=</span> <span class=n>stacks</span><span class=p>[</span><span class=n>procedure</span><span class=p>.</span><span class=n>To</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>        <span class=kt>var</span> <span class=n>count</span> <span class=p>=</span> <span class=n>procedure</span><span class=p>.</span><span class=n>Count</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>foreach</span> <span class=p>(</span><span class=kt>var</span> <span class=k>value</span> <span class=k>in</span> <span class=n>fromStack</span><span class=p>.</span><span class=n>Take</span><span class=p>(</span><span class=n>count</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>fromStack</span><span class=p>.</span><span class=n>Pop</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>            <span class=n>toStack</span><span class=p>.</span><span class=n>Push</span><span class=p>(</span><span class=k>value</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>A <code>Stack&lt;T></code> in .NET implements <code>IEnumerable&lt;T></code> meaning we can also fully use LINQ on it. Instead of using a <code>for-i</code> loop we can use <code>foreach</code> and <a href=https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.take><code>Enumerable.Take</code></a> to take the required number of crates, pop them from the stack and push them onto the other stack.</p><p>The last thing we need is putting all of this together and printing out the result:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=k>public</span> <span class=k>static</span> <span class=k>async</span> <span class=n>Task</span> <span class=n>Main</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>input</span> <span class=p>=</span> <span class=k>await</span> <span class=n>File</span><span class=p>.</span><span class=n>ReadAllTextAsync</span><span class=p>(</span><span class=s>&#34;input.txt&#34;</span><span class=p>,</span> <span class=n>Encoding</span><span class=p>.</span><span class=n>UTF8</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>split</span> <span class=p>=</span> <span class=n>input</span><span class=p>.</span><span class=n>Split</span><span class=p>(</span><span class=s>&#34;\n\n&#34;</span><span class=p>,</span> <span class=n>StringSplitOptions</span><span class=p>.</span><span class=n>RemoveEmptyEntries</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>stacks</span> <span class=p>=</span> <span class=n>CreateStacks</span><span class=p>(</span><span class=n>split</span><span class=p>[</span><span class=m>0</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>procedures</span> <span class=p>=</span> <span class=n>CreateRearrangementProcedures</span><span class=p>(</span><span class=n>split</span><span class=p>[</span><span class=m>1</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>ApplyProceduresOnStacks</span><span class=p>(</span><span class=n>stacks</span><span class=p>,</span> <span class=n>procedures</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=s>$&#34;Part One: {CreateMessage(stacks)}&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>private</span> <span class=k>static</span> <span class=kt>string</span> <span class=n>CreateMessage</span><span class=p>(</span><span class=n>IReadOnlyDictionary</span><span class=p>&lt;</span><span class=kt>int</span><span class=p>,</span> <span class=n>Stack</span><span class=p>&lt;</span><span class=kt>char</span><span class=p>&gt;&gt;</span> <span class=n>stacks</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>stacks</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=n>Select</span><span class=p>(</span><span class=n>kv</span> <span class=p>=&gt;</span> <span class=n>kv</span><span class=p>.</span><span class=n>Value</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=n>Select</span><span class=p>(</span><span class=n>stack</span> <span class=p>=&gt;</span> <span class=n>stack</span><span class=p>.</span><span class=n>First</span><span class=p>())</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=n>Aggregate</span><span class=p>(</span><span class=s>&#34;&#34;</span><span class=p>,</span> <span class=p>(</span><span class=n>a</span><span class=p>,</span> <span class=n>b</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=s>$&#34;{a}{b}&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=part-two>Part Two<a hidden class=anchor aria-hidden=true href=#part-two>#</a></h2><details><summary>Description</summary><p>As you watch the crane operator expertly rearrange the crates, you notice the process isn&rsquo;t following your prediction.</p><p>Some mud was covering the writing on the side of the crane, and you quickly wipe it away. The crane isn&rsquo;t a CrateMover 9000 - it&rsquo;s a <strong>CrateMover 9001</strong>.</p><p>The CrateMover 9001 is notable for many new and exciting features: air conditioning, leather seats, an extra cup holder, and the <strong>ability to pick up and move multiple crates at once</strong>.</p><p>Again considering the example above, the crates begin in the same configuration:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>    [D]
+</span></span><span class=line><span class=cl>[N] [C]
+</span></span><span class=line><span class=cl>[Z] [M] [P]
+</span></span><span class=line><span class=cl> 1   2   3
+</span></span></code></pre></td></tr></table></div></div><p>Moving a single crate from stack 2 to stack 1 behaves the same as before:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>[D]
+</span></span><span class=line><span class=cl>[N] [C]
+</span></span><span class=line><span class=cl>[Z] [M] [P]
+</span></span><span class=line><span class=cl> 1   2   3
+</span></span></code></pre></td></tr></table></div></div><p>However, the action of moving three crates from stack 1 to stack 3 means that those three moved crates <strong>stay in the same order</strong>, resulting in this new configuration:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>        [D]
+</span></span><span class=line><span class=cl>        [N]
+</span></span><span class=line><span class=cl>    [C] [Z]
+</span></span><span class=line><span class=cl>    [M] [P]
+</span></span><span class=line><span class=cl> 1   2   3
+</span></span></code></pre></td></tr></table></div></div><p>Next, as both crates are moved from stack 2 to stack 1, they <strong>retain their order</strong> as well:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>        [D]
+</span></span><span class=line><span class=cl>        [N]
+</span></span><span class=line><span class=cl>[C]     [Z]
+</span></span><span class=line><span class=cl>[M]     [P]
+</span></span><span class=line><span class=cl> 1   2   3
+</span></span></code></pre></td></tr></table></div></div><p>Finally, a single crate is still moved from stack 1 to stack 2, but now it&rsquo;s crate <code>C</code> that gets moved:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>        [D]
+</span></span><span class=line><span class=cl>        [N]
+</span></span><span class=line><span class=cl>        [Z]
+</span></span><span class=line><span class=cl>[M] [C] [P]
+</span></span><span class=line><span class=cl> 1   2   3
+</span></span></code></pre></td></tr></table></div></div><p>In this example, the CrateMover 9001 has put the crates in a totally different order: <strong><code>MCD</code></strong>.</p><p>Before the rearrangement process finishes, update your simulation so that the Elves know where they should stand to be ready to unload the final supplies. <strong>After the rearrangement procedure completes, what crate ends up on top of each stack?</strong></p></details><p>The second part is so easy to implement, we literally just have to change two lines:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=kt>var</span> <span class=n>enumerable</span> <span class=p>=</span> <span class=n>isPartOne</span> <span class=p>?</span> <span class=n>fromStack</span><span class=p>.</span><span class=n>Take</span><span class=p>(</span><span class=n>count</span><span class=p>).</span><span class=n>ToArray</span><span class=p>()</span> <span class=p>:</span> <span class=n>fromStack</span><span class=p>.</span><span class=n>Take</span><span class=p>(</span><span class=n>count</span><span class=p>).</span><span class=n>Reverse</span><span class=p>().</span><span class=n>ToArray</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>foreach</span> <span class=p>(</span><span class=kt>var</span> <span class=k>value</span> <span class=k>in</span> <span class=n>enumerable</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>fromStack</span><span class=p>.</span><span class=n>Pop</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>toStack</span><span class=p>.</span><span class=n>Push</span><span class=p>(</span><span class=k>value</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=conclusion>Conclusion<a hidden class=anchor aria-hidden=true href=#conclusion>#</a></h2><p>The puzzles are starting to become more interesting. Looking at the subreddit and discussions a lot of people have issues with parsing the input this time around which is unsurprising, given how scary it initially looks.</p><figure class=align-center><img loading=lazy src=https://i.redd.it/t7xsjh1ul04a1.png#center alt="Yeah, the 9000 series was alright and all, but nothing will ever top the CrateMover 7000s for all-around reliability."><figcaption><p><a href=https://www.reddit.com/r/adventofcode/comments/zcxzdi/2022_day_5_yeah_the_9000_series_was_alright_and/>https://www.reddit.com/r/adventofcode/comments/zcxzdi/2022_day_5_yeah_the_9000_series_was_alright_and/</a></p></figcaption></figure><figure class=align-center><img loading=lazy src=https://i.redd.it/kfh0t0y0k14a1.jpg#center alt="I know I am overthinking it"><figcaption><p><a href=https://www.reddit.com/r/adventofcode/comments/zd1hqy/2022_day_5_i_know_i_am_overthinking_it/>https://www.reddit.com/r/adventofcode/comments/zd1hqy/2022_day_5_i_know_i_am_overthinking_it/</a></p></figcaption></figure></div><footer class=post-footer><ul class=post-tags><li><a href=https://erri120.github.io/tags/advent-of-code-2022/>Advent of Code 2022</a></li><li><a href=https://erri120.github.io/tags/c#/>C#</a></li></ul><nav class=paginav><a class=next href=https://erri120.github.io/posts/2022-12-04/><span class=title>Next »</span><br><span>Advent of Code 2022: Day 4</span></a></nav><div class=share-buttons><a target=_blank rel="noopener noreferrer" aria-label="share Advent of Code 2022: Day 5 on twitter" href="https://twitter.com/intent/tweet/?text=Advent%20of%20Code%202022%3a%20Day%205&url=https%3a%2f%2ferri120.github.io%2fposts%2f2022-12-05%2f&hashtags=AdventofCode2022%2cC%23"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentcolor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zM195.519 424.544c135.939.0 210.268-112.643 210.268-210.268.0-3.218.0-6.437-.153-9.502 14.406-10.421 26.973-23.448 36.935-38.314-13.18 5.824-27.433 9.809-42.452 11.648 15.326-9.196 26.973-23.602 32.49-40.92-14.252 8.429-30.038 14.56-46.896 17.931-13.487-14.406-32.644-23.295-53.946-23.295-40.767.0-73.87 33.104-73.87 73.87.0 5.824.613 11.494 1.992 16.858-61.456-3.065-115.862-32.49-152.337-77.241-6.284 10.881-9.962 23.601-9.962 37.088.0 25.594 13.027 48.276 32.95 61.456-12.107-.307-23.448-3.678-33.41-9.196v.92c0 35.862 25.441 65.594 59.311 72.49-6.13 1.686-12.72 2.606-19.464 2.606-4.751.0-9.348-.46-13.946-1.38 9.349 29.426 36.628 50.728 68.965 51.341-25.287 19.771-57.164 31.571-91.8 31.571-5.977.0-11.801-.306-17.625-1.073 32.337 21.15 71.264 33.41 112.95 33.41z"/></svg></a><a target=_blank rel="noopener noreferrer" aria-label="share Advent of Code 2022: Day 5 on reddit" href="https://reddit.com/submit?url=https%3a%2f%2ferri120.github.io%2fposts%2f2022-12-05%2f&title=Advent%20of%20Code%202022%3a%20Day%205"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentcolor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zM446 265.638c0-22.964-18.616-41.58-41.58-41.58-11.211.0-21.361 4.457-28.841 11.666-28.424-20.508-67.586-33.757-111.204-35.278l18.941-89.121 61.884 13.157c.756 15.734 13.642 28.29 29.56 28.29 16.407.0 29.706-13.299 29.706-29.701.0-16.403-13.299-29.702-29.706-29.702-11.666.0-21.657 6.792-26.515 16.578l-69.105-14.69c-1.922-.418-3.939-.042-5.585 1.036-1.658 1.073-2.811 2.761-3.224 4.686l-21.152 99.438c-44.258 1.228-84.046 14.494-112.837 35.232-7.468-7.164-17.589-11.591-28.757-11.591-22.965.0-41.585 18.616-41.585 41.58.0 16.896 10.095 31.41 24.568 37.918-.639 4.135-.99 8.328-.99 12.576.0 63.977 74.469 115.836 166.33 115.836s166.334-51.859 166.334-115.836c0-4.218-.347-8.387-.977-12.493 14.564-6.47 24.735-21.034 24.735-38.001zM326.526 373.831c-20.27 20.241-59.115 21.816-70.534 21.816-11.428.0-50.277-1.575-70.522-21.82-3.007-3.008-3.007-7.882.0-10.889 3.003-2.999 7.882-3.003 10.885.0 12.777 12.781 40.11 17.317 59.637 17.317 19.522.0 46.86-4.536 59.657-17.321 3.016-2.999 7.886-2.995 10.885.008 3.008 3.011 3.003 7.882-.008 10.889zm-5.23-48.781c-16.373.0-29.701-13.324-29.701-29.698.0-16.381 13.328-29.714 29.701-29.714 16.378.0 29.706 13.333 29.706 29.714.0 16.374-13.328 29.698-29.706 29.698zM160.91 295.348c0-16.381 13.328-29.71 29.714-29.71 16.369.0 29.689 13.329 29.689 29.71.0 16.373-13.32 29.693-29.689 29.693-16.386.0-29.714-13.32-29.714-29.693z"/></svg></a></div></footer><script src=https://utteranc.es/client.js repo=erri120/erri120.github.io issue-term=pathname label=site-comment theme=github-light crossorigin=anonymous async></script></article></main><footer class=footer><span>&copy; 2022 <a href=https://erri120.github.io>erri120's random Blog</a></span>
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
