@@ -6,7 +6,16 @@
     <description>Recent content in Posts on erri120&#39;s random Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Mon, 05 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 06 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Advent of Code 2022: Day 6</title>
+      <link>https://erri120.github.io/posts/2022-12-06/</link>
+      <pubDate>Tue, 06 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://erri120.github.io/posts/2022-12-06/</guid>
+      <description>Day 6: Supply Stacks</description>
+    </item>
+    
     <item>
       <title>Advent of Code 2022: Day 5</title>
       <link>https://erri120.github.io/posts/2022-12-05/</link>
