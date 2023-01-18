@@ -1,0 +1,8 @@
+<script src="https://cdn.jsdelivr.net/npm/mermaid@9.3.0/dist/mermaid.min.js" integrity="sha256-QdTG1YTLLTwD3b95jLqFxpQX9uYuJMNAtVZgwKX4oYU=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    mermaid.initialize({
+        useMaxWidth: true,
+        htmlLabels: false
+    });
+</script>
+<pre class="mermaid" align="{{ if .Get "align" }}{{ .Get "align" }}{{ else }}center{{ end }}">{{ safeHTML .Inner }}</pre>
