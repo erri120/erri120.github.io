@@ -6,7 +6,16 @@
     <description>Recent content in Reverse Engineering on erri120&#39;s random Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Fri, 10 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/tags/reverse-engineering/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 18 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/tags/reverse-engineering/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Breaking EA Desktop&#39;s pathetic Encryption</title>
+      <link>https://erri120.github.io/posts/2023-01-18/</link>
+      <pubDate>Wed, 18 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://erri120.github.io/posts/2023-01-18/</guid>
+      <description>EA made a sad attempt to prevent me from reading their files. I&amp;rsquo;ll explain how I went about breaking their encryption.</description>
+    </item>
+    
     <item>
       <title>Fixing Anno 2070 by changing three bytes</title>
       <link>https://erri120.github.io/posts/2021-12-10/</link>

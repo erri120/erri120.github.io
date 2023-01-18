@@ -6,113 +6,14 @@
     <description>Recent content on erri120&#39;s random Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Mon, 12 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 18 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Advent of Code 2022: Day 12</title>
-      <link>https://erri120.github.io/posts/2022-12-12/</link>
-      <pubDate>Mon, 12 Dec 2022 00:00:00 +0000</pubDate>
+      <title>Breaking EA Desktop&#39;s pathetic Encryption</title>
+      <link>https://erri120.github.io/posts/2023-01-18/</link>
+      <pubDate>Wed, 18 Jan 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://erri120.github.io/posts/2022-12-12/</guid>
-      <description>Day 12: Hill Climbing Algorithm</description>
-    </item>
-    
-    <item>
-      <title>Advent of Code 2022: Day 11</title>
-      <link>https://erri120.github.io/posts/2022-12-11/</link>
-      <pubDate>Sun, 11 Dec 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://erri120.github.io/posts/2022-12-11/</guid>
-      <description>Day 11: Monkey in the Middle</description>
-    </item>
-    
-    <item>
-      <title>Advent of Code 2022: Day 10</title>
-      <link>https://erri120.github.io/posts/2022-12-10/</link>
-      <pubDate>Sat, 10 Dec 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://erri120.github.io/posts/2022-12-10/</guid>
-      <description>Day 10: Cathode-Ray Tube</description>
-    </item>
-    
-    <item>
-      <title>Advent of Code 2022: Day 9</title>
-      <link>https://erri120.github.io/posts/2022-12-09/</link>
-      <pubDate>Fri, 09 Dec 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://erri120.github.io/posts/2022-12-09/</guid>
-      <description>Day 9: Rope Bridge</description>
-    </item>
-    
-    <item>
-      <title>Advent of Code 2022: Day 8</title>
-      <link>https://erri120.github.io/posts/2022-12-08/</link>
-      <pubDate>Thu, 08 Dec 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://erri120.github.io/posts/2022-12-08/</guid>
-      <description>Day 8: Treetop Tree House</description>
-    </item>
-    
-    <item>
-      <title>Advent of Code 2022: Day 7</title>
-      <link>https://erri120.github.io/posts/2022-12-07/</link>
-      <pubDate>Wed, 07 Dec 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://erri120.github.io/posts/2022-12-07/</guid>
-      <description>Day 7: No Space Left On Device</description>
-    </item>
-    
-    <item>
-      <title>Advent of Code 2022: Day 6</title>
-      <link>https://erri120.github.io/posts/2022-12-06/</link>
-      <pubDate>Tue, 06 Dec 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://erri120.github.io/posts/2022-12-06/</guid>
-      <description>Day 6: Tuning Trouble</description>
-    </item>
-    
-    <item>
-      <title>Advent of Code 2022: Day 5</title>
-      <link>https://erri120.github.io/posts/2022-12-05/</link>
-      <pubDate>Mon, 05 Dec 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://erri120.github.io/posts/2022-12-05/</guid>
-      <description>Day 5: Supply Stacks</description>
-    </item>
-    
-    <item>
-      <title>Advent of Code 2022: Day 4</title>
-      <link>https://erri120.github.io/posts/2022-12-04/</link>
-      <pubDate>Sun, 04 Dec 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://erri120.github.io/posts/2022-12-04/</guid>
-      <description>Day 4: Camp Cleanup</description>
-    </item>
-    
-    <item>
-      <title>Advent of Code 2022: Day 3</title>
-      <link>https://erri120.github.io/posts/2022-12-03/</link>
-      <pubDate>Sat, 03 Dec 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://erri120.github.io/posts/2022-12-03/</guid>
-      <description>Day 3: Rucksack Reorganization</description>
-    </item>
-    
-    <item>
-      <title>Advent of Code 2022: Day 2</title>
-      <link>https://erri120.github.io/posts/2022-12-02/</link>
-      <pubDate>Fri, 02 Dec 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://erri120.github.io/posts/2022-12-02/</guid>
-      <description>Day 2: Rock Paper Scissors</description>
-    </item>
-    
-    <item>
-      <title>Advent of Code 2022: Day 1</title>
-      <link>https://erri120.github.io/posts/2022-12-01/</link>
-      <pubDate>Thu, 01 Dec 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://erri120.github.io/posts/2022-12-01/</guid>
-      <description>Day 1: Calorie Counting</description>
+      <guid>https://erri120.github.io/posts/2023-01-18/</guid>
+      <description>EA made a sad attempt to prevent me from reading their files. I&amp;rsquo;ll explain how I went about breaking their encryption.</description>
     </item>
     
     <item>
