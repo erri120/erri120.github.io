@@ -1,0 +1,9 @@
+# https://gohugo.io/content-management/image-processing/#imaging-configuration
+
+quality = 80
+resampleFilter = "Lanczos"
+
+[exif]
+disableDate = true
+disableLatLong = true
+excludeFields = ".*"
