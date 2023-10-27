@@ -1,3 +1,17 @@
+<meta name="color-scheme" content="light dark">
+
+{{ $resetStyles := resources.GetRemote "https://unpkg.com/normalize.css@8.0.1/normalize.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $resetStyles.Permalink }}" integrity="{{ $resetStyles.Data.Integrity }}">
+
+{{ $styles := resources.Get "styles.scss" | toCSS | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $styles.Permalink }}" integrity="{{ $styles.Data.Integrity }}">
+
+{{ $darkmodeInit := resources.Get "darkmode-init.js" | minify | fingerprint }}
+<script blocking="render" async src="{{ $darkmodeInit.Permalink }}" integrity="{{ $darkmodeInit.Data.Integrity }}"></script>
+
+{{ $darkmode := resources.Get "darkmode.js" | minify | fingerprint }}
+<script defer src="{{ $darkmode.Permalink }}" integrity="{{ $darkmode.Data.Integrity }}"></script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
