@@ -1,0 +1,16 @@
+<nav>
+    <a href="{{ "" | absLangURL }}">{{ i18n "home" | default "Home" }}</a>
+
+    {{ $url := replace .Parent.Permalink (printf "%s" site.BaseURL) "" }}
+    {{ $lang_url := strings.TrimPrefix (printf "%s/" .Lang) $url }}
+
+    {{ range $index, $element := split $lang_url "/" }}
+
+        {{ $pg := site.GetPage (printf "%s/" $element) }}
+
+        {{ if (and ($pg) (gt (len . ) 0)) }}
+            <a href="{{ $pg.Permalink }}">{{ $pg.Name }}</a>
+        {{ end }}
+
+    {{ end }}
+</nav>

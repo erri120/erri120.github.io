@@ -1,0 +1,29 @@
+{{ define "main" }}
+
+<article>
+    <header>
+        {{ partial "nav_breadcrumb.html" . }}
+
+        <h1>{{ .Title }}</h1>
+
+        {{ if .Description }}
+            <p>{{ .Description }}</p>
+        {{ end }}
+
+        <div>
+            {{ if not .Date.IsZero }}
+            <span><b>Published:</b> <time datetime="{{ (.Date | time.Format ("2006-01-02")) }}">{{ (.Date | time.Format ("2006-01-02")) }}</time></span>
+            {{ end }}
+            {{ if (gt .ReadingTime 0) }}
+            <span><b>Reading Time:</b> <time datetime="{{ (printf "PT%dM" .ReadingTime) }}">{{ .ReadingTime }} min</time></span>
+            {{ end }}
+            <span><b>Word Count:</b> {{ (printf "%d words" .WordCount ) }}</span>
+        </div>
+    </header>
+
+    <section>
+        {{ .Content }}
+    </section>
+</article>
+
+{{ end }}
