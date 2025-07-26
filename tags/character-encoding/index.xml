@@ -4,17 +4,16 @@
     <title>Character Encoding on erri120&#39;s random Blog</title>
     <link>https://erri120.github.io/tags/character-encoding/</link>
     <description>Recent content in Character Encoding on erri120&#39;s random Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo -- 0.148.1</generator>
     <language>en-US</language>
-    <lastBuildDate>Fri, 15 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/tags/character-encoding/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 29 Nov 2022 13:34:42 +0100</lastBuildDate>
+    <atom:link href="https://erri120.github.io/tags/character-encoding/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Everything about Unicode, Code Pages and Character Encoding</title>
       <link>https://erri120.github.io/posts/2022-04-15/</link>
       <pubDate>Fri, 15 Apr 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/posts/2022-04-15/</guid>
       <description>An in-depth post detailing the origins of Unicode, Code Pages and Character Encodings.</description>
     </item>
-    
   </channel>
 </rss>

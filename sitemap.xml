@@ -2,20 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://erri120.github.io/posts/2023-01-18/</loc>
-    <lastmod>2023-01-20T12:05:51+01:00</lastmod>
-  </url><url>
     <loc>https://erri120.github.io/</loc>
-    <lastmod>2023-01-20T12:05:51+01:00</lastmod>
+    <lastmod>2025-07-26T12:52:11+02:00</lastmod>
   </url><url>
     <loc>https://erri120.github.io/posts/</loc>
-    <lastmod>2023-01-20T12:05:51+01:00</lastmod>
-  </url><url>
-    <loc>https://erri120.github.io/tags/reverse-engineering/</loc>
-    <lastmod>2023-01-20T12:05:51+01:00</lastmod>
-  </url><url>
-    <loc>https://erri120.github.io/tags/</loc>
-    <lastmod>2023-01-20T12:05:51+01:00</lastmod>
+    <lastmod>2025-07-26T12:52:11+02:00</lastmod>
   </url><url>
     <loc>https://erri120.github.io/tags/c&#43;&#43;/</loc>
     <lastmod>2022-11-29T13:34:42+01:00</lastmod>
@@ -25,6 +16,9 @@
   </url><url>
     <loc>https://erri120.github.io/tags/i18n/</loc>
     <lastmod>2022-11-09T15:47:51+01:00</lastmod>
+  </url><url>
+    <loc>https://erri120.github.io/tags/</loc>
+    <lastmod>2022-11-29T13:34:42+01:00</lastmod>
   </url><url>
     <loc>https://erri120.github.io/tags/character-encoding/</loc>
     <lastmod>2022-11-29T13:34:42+01:00</lastmod>
@@ -39,6 +33,12 @@
     <lastmod>2022-11-29T13:34:42+01:00</lastmod>
   </url><url>
     <loc>https://erri120.github.io/posts/2021-12-10/</loc>
+    <lastmod>2022-11-29T13:34:42+01:00</lastmod>
+  </url><url>
+    <loc>https://erri120.github.io/tags/reverse-engineering/</loc>
+    <lastmod>2022-11-29T13:34:42+01:00</lastmod>
+  </url><url>
+    <loc>https://erri120.github.io/tags/ci/cd/</loc>
     <lastmod>2022-11-29T13:34:42+01:00</lastmod>
   </url><url>
     <loc>https://erri120.github.io/tags/game-development/</loc>
@@ -64,8 +64,6 @@
   </url><url>
     <loc>https://erri120.github.io/archives/</loc>
     <lastmod>2022-11-09T15:47:51+01:00</lastmod>
-  </url><url>
-    <loc>https://erri120.github.io/tags/ci/cd/</loc>
   </url><url>
     <loc>https://erri120.github.io/search/</loc>
     <lastmod>2022-11-09T15:47:51+01:00</lastmod>

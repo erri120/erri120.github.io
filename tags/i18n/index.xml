@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>i18n on erri120&#39;s random Blog</title>
+    <title>I18n on erri120&#39;s random Blog</title>
     <link>https://erri120.github.io/tags/i18n/</link>
-    <description>Recent content in i18n on erri120&#39;s random Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in I18n on erri120&#39;s random Blog</description>
+    <generator>Hugo -- 0.148.1</generator>
     <language>en-US</language>
-    <lastBuildDate>Thu, 05 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/tags/i18n/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 09 Nov 2022 15:47:51 +0100</lastBuildDate>
+    <atom:link href="https://erri120.github.io/tags/i18n/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Getting started with GNU gettext for C&#43;&#43;</title>
       <link>https://erri120.github.io/posts/2022-05-05/</link>
       <pubDate>Thu, 05 May 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/posts/2022-05-05/</guid>
       <description>GNU gettext is a very useful i18n and l10n tool that makes it easy to add translations in our code.</description>
     </item>
-    
   </channel>
 </rss>

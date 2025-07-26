@@ -4,35 +4,30 @@
     <title>RPG Maker on erri120&#39;s random Blog</title>
     <link>https://erri120.github.io/tags/rpg-maker/</link>
     <description>Recent content in RPG Maker on erri120&#39;s random Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo -- 0.148.1</generator>
     <language>en-US</language>
-    <lastBuildDate>Thu, 18 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/tags/rpg-maker/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 29 Nov 2022 13:34:42 +0100</lastBuildDate>
+    <atom:link href="https://erri120.github.io/tags/rpg-maker/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Reworking rpgmpacker: Moving from C&#43;&#43; to TypeScript</title>
       <link>https://erri120.github.io/posts/2021-11-18/</link>
       <pubDate>Thu, 18 Nov 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/posts/2021-11-18/</guid>
       <description>A quick post explaining my decision of moving from C++ to TypeScript for my project rpgmpacker.</description>
     </item>
-    
     <item>
       <title>Don&#39;t count frames to calculate time</title>
       <link>https://erri120.github.io/posts/2021-09-29/</link>
       <pubDate>Wed, 29 Sep 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/posts/2021-09-29/</guid>
       <description>RPG Maker MV/MZ uses the amount of rendered frames to calculate how long player has been playing the game. They sadly forgot that 60 frames do not always equal 1 second and that you can just use a timestamp instead.</description>
     </item>
-    
     <item>
       <title>CI/CD for RPG Maker Game Development</title>
       <link>https://erri120.github.io/posts/2021-02-04/</link>
       <pubDate>Thu, 04 Feb 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/posts/2021-02-04/</guid>
       <description>Are you working on a Game and want to automate your content delivery? RPG Maker MV/MZ have an inbuilt export option but you can&amp;#39;t automate it so I created rpgmpacker to help you with that.</description>
     </item>
-    
   </channel>
 </rss>

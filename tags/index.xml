@@ -4,107 +4,86 @@
     <title>Tags on erri120&#39;s random Blog</title>
     <link>https://erri120.github.io/tags/</link>
     <description>Recent content in Tags on erri120&#39;s random Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo -- 0.148.1</generator>
     <language>en-US</language>
-    <lastBuildDate>Wed, 18 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Reverse Engineering</title>
-      <link>https://erri120.github.io/tags/reverse-engineering/</link>
-      <pubDate>Wed, 18 Jan 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://erri120.github.io/tags/reverse-engineering/</guid>
-      <description></description>
-    </item>
-    
+    <lastBuildDate>Tue, 29 Nov 2022 13:34:42 +0100</lastBuildDate>
+    <atom:link href="https://erri120.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>C&#43;&#43;</title>
       <link>https://erri120.github.io/tags/c&#43;&#43;/</link>
       <pubDate>Thu, 05 May 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/tags/c&#43;&#43;/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>i18n</title>
+      <title>I18n</title>
       <link>https://erri120.github.io/tags/i18n/</link>
       <pubDate>Thu, 05 May 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/tags/i18n/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Character Encoding</title>
       <link>https://erri120.github.io/tags/character-encoding/</link>
       <pubDate>Fri, 15 Apr 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/tags/character-encoding/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Anno 2070</title>
       <link>https://erri120.github.io/tags/anno-2070/</link>
       <pubDate>Fri, 10 Dec 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/tags/anno-2070/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Assembly</title>
       <link>https://erri120.github.io/tags/assembly/</link>
       <pubDate>Fri, 10 Dec 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/tags/assembly/</guid>
       <description></description>
     </item>
-    
+    <item>
+      <title>Reverse Engineering</title>
+      <link>https://erri120.github.io/tags/reverse-engineering/</link>
+      <pubDate>Fri, 10 Dec 2021 00:00:00 +0000</pubDate>
+      <guid>https://erri120.github.io/tags/reverse-engineering/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>CI/CD</title>
+      <link>https://erri120.github.io/tags/ci/cd/</link>
+      <pubDate>Thu, 18 Nov 2021 00:00:00 +0000</pubDate>
+      <guid>https://erri120.github.io/tags/ci/cd/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Game Development</title>
       <link>https://erri120.github.io/tags/game-development/</link>
       <pubDate>Thu, 18 Nov 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/tags/game-development/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>RPG Maker</title>
       <link>https://erri120.github.io/tags/rpg-maker/</link>
       <pubDate>Thu, 18 Nov 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/tags/rpg-maker/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>TypeScript</title>
       <link>https://erri120.github.io/tags/typescript/</link>
       <pubDate>Thu, 18 Nov 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/tags/typescript/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>JavaScript</title>
       <link>https://erri120.github.io/tags/javascript/</link>
       <pubDate>Wed, 29 Sep 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/tags/javascript/</guid>
       <description></description>
     </item>
-    
-    <item>
-      <title>CI/CD</title>
-      <link>https://erri120.github.io/tags/ci/cd/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://erri120.github.io/tags/ci/cd/</guid>
-      <description></description>
-    </item>
-    
   </channel>
 </rss>

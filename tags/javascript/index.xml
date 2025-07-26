@@ -4,17 +4,16 @@
     <title>JavaScript on erri120&#39;s random Blog</title>
     <link>https://erri120.github.io/tags/javascript/</link>
     <description>Recent content in JavaScript on erri120&#39;s random Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo -- 0.148.1</generator>
     <language>en-US</language>
-    <lastBuildDate>Wed, 29 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 29 Nov 2022 13:34:42 +0100</lastBuildDate>
+    <atom:link href="https://erri120.github.io/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Don&#39;t count frames to calculate time</title>
       <link>https://erri120.github.io/posts/2021-09-29/</link>
       <pubDate>Wed, 29 Sep 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/posts/2021-09-29/</guid>
       <description>RPG Maker MV/MZ uses the amount of rendered frames to calculate how long player has been playing the game. They sadly forgot that 60 frames do not always equal 1 second and that you can just use a timestamp instead.</description>
     </item>
-    
   </channel>
 </rss>

@@ -4,73 +4,51 @@
     <title>erri120&#39;s random Blog</title>
     <link>https://erri120.github.io/</link>
     <description>Recent content on erri120&#39;s random Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo -- 0.148.1</generator>
     <language>en-US</language>
-    <lastBuildDate>Wed, 18 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://erri120.github.io/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Breaking EA Desktop&#39;s pathetic Encryption</title>
-      <link>https://erri120.github.io/posts/2023-01-18/</link>
-      <pubDate>Wed, 18 Jan 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://erri120.github.io/posts/2023-01-18/</guid>
-      <description>EA made a sad attempt to prevent me from reading their files. I&amp;rsquo;ll explain how I went about breaking their encryption.</description>
-    </item>
-    
+    <lastBuildDate>Tue, 29 Nov 2022 13:34:42 +0100</lastBuildDate>
+    <atom:link href="https://erri120.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Getting started with GNU gettext for C&#43;&#43;</title>
       <link>https://erri120.github.io/posts/2022-05-05/</link>
       <pubDate>Thu, 05 May 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/posts/2022-05-05/</guid>
       <description>GNU gettext is a very useful i18n and l10n tool that makes it easy to add translations in our code.</description>
     </item>
-    
     <item>
       <title>Everything about Unicode, Code Pages and Character Encoding</title>
       <link>https://erri120.github.io/posts/2022-04-15/</link>
       <pubDate>Fri, 15 Apr 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/posts/2022-04-15/</guid>
       <description>An in-depth post detailing the origins of Unicode, Code Pages and Character Encodings.</description>
     </item>
-    
     <item>
       <title>Fixing Anno 2070 by changing three bytes</title>
       <link>https://erri120.github.io/posts/2021-12-10/</link>
       <pubDate>Fri, 10 Dec 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/posts/2021-12-10/</guid>
       <description>Anno 2070 has been unplayable for multiple years but you can still buy it. This post will explain how you can fix the game by changing 3 bytes.</description>
     </item>
-    
     <item>
       <title>Reworking rpgmpacker: Moving from C&#43;&#43; to TypeScript</title>
       <link>https://erri120.github.io/posts/2021-11-18/</link>
       <pubDate>Thu, 18 Nov 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/posts/2021-11-18/</guid>
       <description>A quick post explaining my decision of moving from C++ to TypeScript for my project rpgmpacker.</description>
     </item>
-    
     <item>
       <title>Don&#39;t count frames to calculate time</title>
       <link>https://erri120.github.io/posts/2021-09-29/</link>
       <pubDate>Wed, 29 Sep 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/posts/2021-09-29/</guid>
       <description>RPG Maker MV/MZ uses the amount of rendered frames to calculate how long player has been playing the game. They sadly forgot that 60 frames do not always equal 1 second and that you can just use a timestamp instead.</description>
     </item>
-    
     <item>
       <title>CI/CD for RPG Maker Game Development</title>
       <link>https://erri120.github.io/posts/2021-02-04/</link>
       <pubDate>Thu, 04 Feb 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://erri120.github.io/posts/2021-02-04/</guid>
       <description>Are you working on a Game and want to automate your content delivery? RPG Maker MV/MZ have an inbuilt export option but you can&amp;#39;t automate it so I created rpgmpacker to help you with that.</description>
     </item>
-    
-    
-    
   </channel>
 </rss>
