@@ -1,0 +1,7 @@
+baseURL = "https://erri120.github.io"
+languageCode = "en-us"
+title = "erri120's website"
+
+# https://gohugo.io/templates/robots
+enableRobotsTXT = true
+
